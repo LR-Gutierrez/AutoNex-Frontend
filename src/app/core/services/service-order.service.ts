@@ -13,7 +13,7 @@ export class ServiceOrderService {
   private readonly api = inject(ApiService);
 
   private readonly ordersSignal = signal<ServiceOrderResponse[]>([]);
-  private readonly loadingSignal = signal(false);
+  private readonly loadingSignal = signal(true);
   private readonly errorSignal = signal<string | null>(null);
   private readonly paginationSignal = signal<PaginationMeta | null>(null);
 
