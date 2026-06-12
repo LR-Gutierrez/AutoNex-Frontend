@@ -45,45 +45,48 @@ import { emailValidator } from '../../../validators/email.validators';
     </ion-header>
 
     <ion-content class="ion-padding">
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <label class="field-label">Nombre Completo *</label>
-        <div class="input-wrapper">
-          <ion-icon name="person-outline" class="input-icon"></ion-icon>
-          <ion-input type="text" formControlName="fullName" placeholder="Nombre completo"></ion-input>
-        </div>
-        @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
-          <div class="error-msg">Requerido</div>
-        }
+      <div class="auth-container" style="padding-top: 0;">
+        <h2 class="auth-title" style="text-align: left;">{{ isEditMode() ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+          <label class="field-label">Nombre Completo *</label>
+          <div class="input-wrapper">
+            <ion-icon name="person-outline" class="input-icon"></ion-icon>
+            <ion-input type="text" formControlName="fullName" placeholder="Nombre completo"></ion-input>
+          </div>
+          @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
+            <div class="error-msg">Requerido</div>
+          }
 
-        <label class="field-label">Teléfono *</label>
-        <div class="input-wrapper">
-          <ion-icon name="call-outline" class="input-icon"></ion-icon>
-          <ion-input type="tel" formControlName="phone" placeholder="Número de teléfono"></ion-input>
-        </div>
-        @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
-          <div class="error-msg">Requerido</div>
-        }
+          <label class="field-label">Teléfono *</label>
+          <div class="input-wrapper">
+            <ion-icon name="call-outline" class="input-icon"></ion-icon>
+            <ion-input type="tel" formControlName="phone" placeholder="Número de teléfono"></ion-input>
+          </div>
+          @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+            <div class="error-msg">Requerido</div>
+          }
 
-        <label class="field-label">Email</label>
-        <div class="input-wrapper">
-          <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-          <ion-input type="email" formControlName="email" placeholder="tu@email.com"></ion-input>
-        </div>
-        @if (form.get('email')?.invalid && form.get('email')?.touched) {
-          <div class="error-msg">Email inválido</div>
-        }
+          <label class="field-label">Email</label>
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+            <ion-input type="email" formControlName="email" placeholder="tu@email.com"></ion-input>
+          </div>
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <div class="error-msg">Email inválido</div>
+          }
 
-        <label class="field-label">Dirección</label>
-        <div class="input-wrapper">
-          <ion-icon name="location-outline" class="input-icon"></ion-icon>
-          <ion-textarea formControlName="address" rows="3" placeholder="Dirección (opcional)"></ion-textarea>
-        </div>
+          <label class="field-label">Dirección</label>
+          <div class="input-wrapper">
+            <ion-icon name="location-outline" class="input-icon"></ion-icon>
+            <ion-textarea formControlName="address" rows="3" placeholder="Dirección (opcional)"></ion-textarea>
+          </div>
 
-        <ion-button type="submit" expand="block" class="submit-btn"
-                    [disabled]="form.invalid || saving()">
-          {{ saving() ? 'GUARDANDO...' : 'GUARDAR' }}
-        </ion-button>
-      </form>
+          <ion-button type="submit" expand="block" class="submit-btn"
+                      [disabled]="form.invalid || saving()">
+            {{ saving() ? 'GUARDANDO...' : 'GUARDAR' }}
+          </ion-button>
+        </form>
+      </div>
     </ion-content>
   `,
 })
