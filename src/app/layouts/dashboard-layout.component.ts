@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import {
   IonSplitPane,
   IonMenu,
@@ -14,9 +14,11 @@ import {
   IonLabel,
   IonRouterOutlet,
   IonRouterLink,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
+import { AuthService } from '../core/services/auth.service';
 
 interface MenuItem {
   path: string;
@@ -40,6 +42,7 @@ interface MenuItem {
     IonIcon,
     IonLabel,
     IonRouterOutlet,
+    IonButton,
     RouterLink,
   ],
   template: `
@@ -61,6 +64,13 @@ interface MenuItem {
               </ion-menu-toggle>
             }
           </ion-list>
+
+          <div class="absolute bottom-0 left-0 right-0 p-4">
+            <ion-button expand="block" fill="clear" color="medium" (click)="logout()">
+              <ion-icon name="log-out-outline" slot="start"></ion-icon>
+              Cerrar Sesión
+            </ion-button>
+          </div>
         </ion-content>
       </ion-menu>
 
@@ -69,6 +79,8 @@ interface MenuItem {
   `,
 })
 export class DashboardLayoutComponent {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   menuItems: MenuItem[] = [
     { path: '/dashboard', label: 'Dashboard', icon: 'grid-outline' },
     { path: '/clients', label: 'Clientes', icon: 'people-outline' },
@@ -88,5 +100,10 @@ export class DashboardLayoutComponent {
 
   constructor() {
     addIcons(allIcons);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
   }
 }

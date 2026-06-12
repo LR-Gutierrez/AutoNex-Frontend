@@ -1,0 +1,63 @@
+import { Injectable, inject, signal } from '@angular/core';
+import { Observable, tap, catchError, throwError } from 'rxjs';
+import { ApiService } from './api.service';
+import {
+  ClientResponse,
+  CreateClientRequest,
+  UpdateClientRequest,
+} from '../models/client.model';
+import { PaginationMeta, PagedResponse } from '../models/api-response.model';
+
+@Injectable({ providedIn: 'root' })
+export class ClientService {
+  private readonly api = inject(ApiService);
+
+  private readonly clientsSignal = signal<ClientResponse[]>([]);
+  private readonly loadingSignal = signal(false);
+  private readonly errorSignal = signal<string | null>(null);
+  private readonly paginationSignal = signal<PaginationMeta | null>(null);
+
+  readonly clients = this.clientsSignal.asReadonly();
+  readonly loading = this.loadingSignal.asReadonly();
+  readonly error = this.errorSignal.asReadonly();
+  readonly pagination = this.paginationSignal.asReadonly();
+
+  loadAll(): Observable<PagedResponse<ClientResponse>> {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    return this.api.getPaged<ClientResponse>('/clients').pipe(
+      tap(response => {
+        this.clientsSignal.set(response.items);
+        this.paginationSignal.set({
+          page: response.page,
+          pageSize: response.pageSize,
+          totalCount: response.totalCount,
+          totalPages: response.totalPages,
+        });
+        this.loadingSignal.set(false);
+      }),
+      catchError(err => {
+        this.errorSignal.set(err.message);
+        this.loadingSignal.set(false);
+        return throwError(() => err);
+      }),
+    );
+  }
+
+  getById(id: number): Observable<ClientResponse> {
+    return this.api.getById<ClientResponse>('/clients', id);
+  }
+
+  create(request: CreateClientRequest): Observable<ClientResponse> {
+    return this.api.post<ClientResponse>('/clients', request);
+  }
+
+  update(id: number, request: UpdateClientRequest): Observable<ClientResponse> {
+    return this.api.put<ClientResponse>('/clients', id, request);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.api.delete<void>('/clients', id);
+  }
+}

@@ -44,6 +44,6 @@ export const appRoutes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'auth/login',
+    redirectTo: 'dashboard',
   },
 ];
