@@ -9,13 +9,10 @@ import {
   IonButtons,
   IonBackButton,
   IonButton,
-  IonList,
-  IonItem,
-  IonLabel,
   IonInput,
   IonSelect,
   IonSelectOption,
-  IonNote,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
@@ -35,13 +32,10 @@ import { ClientResponse } from '../../../core/models/client.model';
     IonButtons,
     IonBackButton,
     IonButton,
-    IonList,
-    IonItem,
-    IonLabel,
     IonInput,
     IonSelect,
     IonSelectOption,
-    IonNote,
+    IonIcon,
   ],
   template: `
     <ion-header>
@@ -55,60 +49,63 @@ import { ClientResponse } from '../../../core/models/client.model';
 
     <ion-content class="ion-padding">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <ion-list>
-          <ion-item>
-            <ion-label>Cliente</ion-label>
-            <ion-select formControlName="clientId" placeholder="Seleccionar cliente">
-              @for (c of clients(); track c.id) {
-                <ion-select-option [value]="c.id">{{ c.fullName }}</ion-select-option>
-              }
-            </ion-select>
-          </ion-item>
-          @if (form.get('clientId')?.invalid && form.get('clientId')?.touched) {
-            <ion-note color="danger" class="px-4">El cliente es requerido</ion-note>
-          }
+        <label class="field-label">Cliente *</label>
+        <div class="input-wrapper select-wrapper">
+          <ion-select formControlName="clientId" placeholder="Seleccionar cliente">
+            @for (c of clients(); track c.id) {
+              <ion-select-option [value]="c.id">{{ c.fullName }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+        @if (form.get('clientId')?.invalid && form.get('clientId')?.touched) {
+          <div class="error-msg">Requerido</div>
+        }
 
-          <ion-item>
-            <ion-label position="floating">Marca</ion-label>
-            <ion-input formControlName="brand" type="text"></ion-input>
-          </ion-item>
-          @if (form.get('brand')?.invalid && form.get('brand')?.touched) {
-            <ion-note color="danger" class="px-4">La marca es requerida</ion-note>
-          }
+        <label class="field-label">Marca *</label>
+        <div class="input-wrapper">
+          <ion-icon name="car-outline" class="input-icon"></ion-icon>
+          <ion-input type="text" formControlName="brand" placeholder="Marca del vehículo"></ion-input>
+        </div>
+        @if (form.get('brand')?.invalid && form.get('brand')?.touched) {
+          <div class="error-msg">Requerido</div>
+        }
 
-          <ion-item>
-            <ion-label position="floating">Modelo</ion-label>
-            <ion-input formControlName="model" type="text"></ion-input>
-          </ion-item>
-          @if (form.get('model')?.invalid && form.get('model')?.touched) {
-            <ion-note color="danger" class="px-4">El modelo es requerido</ion-note>
-          }
+        <label class="field-label">Modelo *</label>
+        <div class="input-wrapper">
+          <ion-icon name="car-outline" class="input-icon"></ion-icon>
+          <ion-input type="text" formControlName="model" placeholder="Modelo del vehículo"></ion-input>
+        </div>
+        @if (form.get('model')?.invalid && form.get('model')?.touched) {
+          <div class="error-msg">Requerido</div>
+        }
 
-          <ion-item>
-            <ion-label position="floating">Año</ion-label>
-            <ion-input formControlName="year" type="number"></ion-input>
-          </ion-item>
-          @if (form.get('year')?.invalid && form.get('year')?.touched) {
-            <ion-note color="danger" class="px-4">Año inválido</ion-note>
-          }
+        <label class="field-label">Año *</label>
+        <div class="input-wrapper">
+          <ion-icon name="calendar-outline" class="input-icon"></ion-icon>
+          <ion-input type="number" formControlName="year" placeholder="Año"></ion-input>
+        </div>
+        @if (form.get('year')?.invalid && form.get('year')?.touched) {
+          <div class="error-msg">Año inválido</div>
+        }
 
-          <ion-item>
-            <ion-label position="floating">Placa</ion-label>
-            <ion-input formControlName="licensePlate" type="text"></ion-input>
-          </ion-item>
-          @if (form.get('licensePlate')?.invalid && form.get('licensePlate')?.touched) {
-            <ion-note color="danger" class="px-4">La placa es requerida</ion-note>
-          }
+        <label class="field-label">Placa *</label>
+        <div class="input-wrapper">
+          <ion-icon name="document-text-outline" class="input-icon"></ion-icon>
+          <ion-input type="text" formControlName="licensePlate" placeholder="Placa"></ion-input>
+        </div>
+        @if (form.get('licensePlate')?.invalid && form.get('licensePlate')?.touched) {
+          <div class="error-msg">Requerido</div>
+        }
 
-          <ion-item>
-            <ion-label position="floating">VIN (opcional)</ion-label>
-            <ion-input formControlName="vin" type="text"></ion-input>
-          </ion-item>
-        </ion-list>
+        <label class="field-label">VIN (opcional)</label>
+        <div class="input-wrapper">
+          <ion-icon name="barcode-outline" class="input-icon"></ion-icon>
+          <ion-input type="text" formControlName="vin" placeholder="Número de VIN"></ion-input>
+        </div>
 
-        <ion-button type="submit" expand="block" class="mt-6"
+        <ion-button type="submit" expand="block" class="submit-btn"
                     [disabled]="form.invalid || saving()">
-          {{ saving() ? 'Guardando...' : 'Guardar' }}
+          {{ saving() ? 'GUARDANDO...' : 'GUARDAR' }}
         </ion-button>
       </form>
     </ion-content>

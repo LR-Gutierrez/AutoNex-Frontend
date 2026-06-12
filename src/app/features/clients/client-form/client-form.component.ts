@@ -9,12 +9,9 @@ import {
   IonButtons,
   IonBackButton,
   IonButton,
-  IonList,
-  IonItem,
-  IonLabel,
   IonInput,
   IonTextarea,
-  IonNote,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
@@ -33,12 +30,9 @@ import { emailValidator } from '../../../validators/email.validators';
     IonButtons,
     IonBackButton,
     IonButton,
-    IonList,
-    IonItem,
-    IonLabel,
     IonInput,
     IonTextarea,
-    IonNote,
+    IonIcon,
   ],
   template: `
     <ion-header>
@@ -52,40 +46,42 @@ import { emailValidator } from '../../../validators/email.validators';
 
     <ion-content class="ion-padding">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <ion-list>
-          <ion-item>
-            <ion-label position="floating">Nombre Completo</ion-label>
-            <ion-input formControlName="fullName" type="text"></ion-input>
-          </ion-item>
-          @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
-            <ion-note color="danger" class="px-4">El nombre es requerido</ion-note>
-          }
+        <label class="field-label">Nombre Completo *</label>
+        <div class="input-wrapper">
+          <ion-icon name="person-outline" class="input-icon"></ion-icon>
+          <ion-input type="text" formControlName="fullName" placeholder="Nombre completo"></ion-input>
+        </div>
+        @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
+          <div class="error-msg">Requerido</div>
+        }
 
-          <ion-item>
-            <ion-label position="floating">Teléfono</ion-label>
-            <ion-input formControlName="phone" type="tel"></ion-input>
-          </ion-item>
-          @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
-            <ion-note color="danger" class="px-4">El teléfono es requerido</ion-note>
-          }
+        <label class="field-label">Teléfono *</label>
+        <div class="input-wrapper">
+          <ion-icon name="call-outline" class="input-icon"></ion-icon>
+          <ion-input type="tel" formControlName="phone" placeholder="Número de teléfono"></ion-input>
+        </div>
+        @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+          <div class="error-msg">Requerido</div>
+        }
 
-          <ion-item>
-            <ion-label position="floating">Email</ion-label>
-            <ion-input formControlName="email" type="email"></ion-input>
-          </ion-item>
-          @if (form.get('email')?.invalid && form.get('email')?.touched) {
-            <ion-note color="danger" class="px-4">Email inválido</ion-note>
-          }
+        <label class="field-label">Email</label>
+        <div class="input-wrapper">
+          <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+          <ion-input type="email" formControlName="email" placeholder="tu@email.com"></ion-input>
+        </div>
+        @if (form.get('email')?.invalid && form.get('email')?.touched) {
+          <div class="error-msg">Email inválido</div>
+        }
 
-          <ion-item>
-            <ion-label position="floating">Dirección</ion-label>
-            <ion-textarea formControlName="address" rows="3"></ion-textarea>
-          </ion-item>
-        </ion-list>
+        <label class="field-label">Dirección</label>
+        <div class="input-wrapper">
+          <ion-icon name="location-outline" class="input-icon"></ion-icon>
+          <ion-textarea formControlName="address" rows="3" placeholder="Dirección (opcional)"></ion-textarea>
+        </div>
 
-        <ion-button type="submit" expand="block" class="mt-6"
+        <ion-button type="submit" expand="block" class="submit-btn"
                     [disabled]="form.invalid || saving()">
-          {{ saving() ? 'Guardando...' : 'Guardar' }}
+          {{ saving() ? 'GUARDANDO...' : 'GUARDAR' }}
         </ion-button>
       </form>
     </ion-content>
