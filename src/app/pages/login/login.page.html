@@ -3,13 +3,19 @@
     <!-- Logo y título -->
     <div class="logo-section">
       <div class="logo-wrapper">
-        <img src="assets/images/logo.svg" alt="Logo" class="logo" *ngIf="logoExists" />
+        <img
+          src="assets/images/logo.png"
+          alt="Logo"
+          class="logo"
+          *ngIf="logoExists"
+        />
         <div class="logo-placeholder" *ngIf="!logoExists">
           <ion-icon name="airplane"></ion-icon>
         </div>
       </div>
       <h1 class="company-name">
-        <span class="first-four">aero</span>expo c.a.
+        <span class="first-four">Auto</span>Nex
+        <span class="company-sub">GUI&amp;CAR, C.A.</span>
       </h1>
       <p class="login-subtitle">Iniciar Sesión</p>
     </div>
@@ -20,13 +26,23 @@
       <div class="input-group">
         <div class="input-wrapper">
           <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-          <ion-input type="email" formControlName="email" placeholder="Correo electrónico"
-            class="custom-input"></ion-input>
+          <ion-input
+            type="email"
+            formControlName="email"
+            placeholder="Correo electrónico"
+            class="custom-input"
+          ></ion-input>
         </div>
-        <div class="error-message"
-          *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)">
-          <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo es requerido</span>
-          <span *ngIf="loginForm.get('email')?.errors?.['invalidEmail']">Correo inválido</span>
+        <div
+          class="error-message"
+          *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)"
+        >
+          <span *ngIf="loginForm.get('email')?.errors?.['required']"
+            >El correo es requerido</span
+          >
+          <span *ngIf="loginForm.get('email')?.errors?.['invalidEmail']"
+            >Correo inválido</span
+          >
         </div>
       </div>
 
@@ -34,26 +50,44 @@
       <div class="input-group">
         <div class="input-wrapper">
           <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-          <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Contraseña"
-            class="custom-input"></ion-input>
-          <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" class="toggle-password"
-            (click)="togglePassword()"></ion-icon>
+          <ion-input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Contraseña"
+            class="custom-input"
+          ></ion-input>
+          <ion-icon
+            [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+            class="toggle-password"
+            (click)="togglePassword()"
+          ></ion-icon>
         </div>
-        <div class="error-message"
-          *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)">
-          <span *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
+        <div
+          class="error-message"
+          *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
+        >
+          <span *ngIf="loginForm.get('password')?.errors?.['required']"
+            >La contraseña es requerida</span
+          >
         </div>
       </div>
 
       <!-- Login Button -->
-      <ion-button expand="block" type="submit" class="login-button" [disabled]="loginForm.invalid">
+      <ion-button
+        expand="block"
+        type="submit"
+        class="login-button"
+        [disabled]="loginForm.invalid"
+      >
         INICIAR SESIÓN
         <ion-icon slot="end" name="arrow-forward"></ion-icon>
       </ion-button>
 
       <!-- Forgot Password -->
       <div class="forgot-password">
-        <a href="#" (click)="forgotPassword($event)">¿Olvidaste tu contraseña?</a>
+        <a href="#" (click)="forgotPassword($event)"
+          >¿Olvidaste tu contraseña?</a
+        >
       </div>
 
       <!-- Create Account -->
@@ -65,11 +99,19 @@
     <!-- Language Selector -->
     <div class="language-selector">
       <div class="language-option">
-        <img src="https://flagcdn.com/w40/ve.png" alt="Español" class="flag-icon" />
+        <img
+          src="https://flagcdn.com/w40/ve.png"
+          alt="Español"
+          class="flag-icon"
+        />
         <span>Español</span>
       </div>
       <div class="language-option">
-        <img src="https://flagcdn.com/w40/us.png" alt="English" class="flag-icon" />
+        <img
+          src="https://flagcdn.com/w40/us.png"
+          alt="English"
+          class="flag-icon"
+        />
         <span>English</span>
       </div>
       <span class="language-label">Idioma / Language</span>
