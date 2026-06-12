@@ -46,7 +46,7 @@ interface MenuItem {
     RouterLink,
   ],
   template: `
-    <ion-split-pane contentId="main-content">
+    <ion-split-pane contentId="main-content" class="dashboard-theme">
       <ion-menu contentId="main-content">
         <ion-header>
           <ion-toolbar color="primary">

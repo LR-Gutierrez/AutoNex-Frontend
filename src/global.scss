@@ -35,3 +35,168 @@
  */
 
  @import "./app/app.scss";
+
+/* === Dashboard Theme (mismo estilo que Auth) === */
+.dashboard-theme {
+  --page-background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+
+  ion-content {
+    --background: var(--page-background);
+    --color: var(--text-primary);
+  }
+
+  ion-content.inputs-are-focusable {
+    --background: var(--page-background);
+  }
+
+  ion-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: none;
+    color: var(--text-primary);
+
+    ion-card-title,
+    ion-card-subtitle {
+      color: var(--text-primary);
+    }
+
+    ion-card-content {
+      color: var(--text-secondary);
+    }
+  }
+
+  ion-card-header {
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+  }
+
+  ion-list {
+    background: transparent;
+  }
+
+  ion-item {
+    --background: transparent;
+    --color: var(--text-primary);
+    --border-color: var(--card-border);
+    --detail-icon-color: var(--text-secondary);
+    --detail-icon-opacity: 1;
+  }
+
+  ion-label {
+    color: var(--text-primary);
+
+    h2 {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    p {
+      color: var(--text-secondary);
+    }
+  }
+
+  ion-note {
+    color: var(--text-secondary);
+  }
+
+  ion-badge {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  ion-searchbar {
+    --background: rgba(255, 255, 255, 0.05);
+    --color: var(--text-primary);
+    --placeholder-color: var(--text-secondary);
+    --icon-color: var(--text-secondary);
+    --border-radius: 10px;
+    --box-shadow: none;
+    padding: 0 0 12px;
+  }
+
+  ion-skeleton-text {
+    --background: rgba(255, 255, 255, 0.1);
+    --border-radius: 4px;
+  }
+
+  ion-button {
+    --border-radius: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    &[fill="clear"] {
+      --color: var(--text-secondary);
+    }
+  }
+
+  .submit-btn,
+  ion-button[expand="block"] {
+    --background: linear-gradient(135deg, #d31d1d 0%, #a01515 100%);
+    --background-hover: linear-gradient(135deg, #e02020 0%, #b01818 100%);
+    --box-shadow: 0 4px 16px rgba(211, 29, 29, 0.4);
+    min-height: 48px;
+    text-transform: uppercase;
+
+    &:hover:not([disabled]) {
+      --box-shadow: 0 6px 20px rgba(211, 29, 29, 0.6);
+    }
+
+    &[disabled] {
+      --background: rgba(255, 255, 255, 0.1);
+      --color: rgba(255, 255, 255, 0.3);
+      --box-shadow: none;
+    }
+  }
+
+  ion-infinite-scroll-content {
+    --color: var(--text-secondary);
+  }
+
+  ion-refresher {
+    --color: var(--text-secondary);
+  }
+
+  .text-gray-500 {
+    color: var(--text-secondary) !important;
+  }
+
+  .text-green-600 {
+    color: #2dd36f !important;
+  }
+
+  .text-red-600 {
+    color: #ff6b6b !important;
+  }
+}
+
+.dashboard-theme ion-menu {
+  --ion-background-color: #121212;
+  --ion-text-color: #ffffff;
+
+  ion-header ion-toolbar {
+    --background: linear-gradient(135deg, #d31d1d 0%, #a01515 100%);
+  }
+
+  ion-content {
+    --background: #16213e;
+  }
+
+  ion-item {
+    --background: transparent;
+    --color: rgba(255, 255, 255, 0.8);
+
+    &:hover {
+      --background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  ion-icon {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
