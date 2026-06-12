@@ -1,0 +1,172 @@
+<ion-content [fullscreen]="true">
+  <ion-grid class="ion-no-padding ion-no-margin background-opts" [ngStyle]="background">
+    <ion-row>
+      <ion-col class="header-container">
+        <ion-header class="ion-no-border">
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button (click)="logout()" color="danger">
+                <ion-icon class="white-icon" slot="icon-only" name="log-out-outline"></ion-icon>
+              </ion-button>
+              <ion-button (click)="goToSettings()">
+                <ion-icon class="white-icon" slot="icon-only" name="options"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <div class="profile ion-padding">
+          <div class="profile-user">
+            <ion-thumbnail>
+              <img *ngIf="currentUser?.profile_photo" [src]="currentUser.profile_photo" />
+              <ion-icon *ngIf="!currentUser?.profile_photo" name="person-circle" class="default-avatar"></ion-icon>
+            </ion-thumbnail>
+            <ul class="profile-text ion-padding-horizontal">
+              <li>{{ currentUser?.first_name }} {{ currentUser?.last_name }}</li>
+              <li>{{ currentUser?.email }}</li>
+              <li *ngIf="currentUser?.profession">{{ currentUser.profession }}</li>
+            </ul>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid class="ion-padding-horizontal borders">
+    <ion-row class="user-info-section">
+      <ion-col>
+        <div class="user-details">
+          <div class="detail-item" *ngIf="currentUser?.roles?.length">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            <span>{{ currentUser.roles.join(', ') }}</span>
+          </div>
+          <div class="detail-item" *ngIf="currentUser?.country">
+            <ion-icon name="globe-outline"></ion-icon>
+            <span>{{ currentUser.country }}</span>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-segment [(ngModel)]="tabType" color="dark" mode="md">
+          <ion-segment-button value="posts">
+            <div class="tab-container">
+              <ion-icon name="document"></ion-icon>
+              <span>Publicaciones</span>
+            </div>
+          </ion-segment-button>
+          <ion-segment-button value="photos">
+            <div class="tab-container">
+              <ion-icon name="images"></ion-icon>
+              <span>Fotos</span>
+            </div>
+          </ion-segment-button>
+          <ion-segment-button value="info">
+            <div class="tab-container">
+              <ion-icon name="information-circle"></ion-icon>
+              <span>Info</span>
+            </div>
+          </ion-segment-button>
+        </ion-segment>
+
+        <div [ngSwitch]="tabType">
+          <!-- Posts -->
+          <ion-row *ngSwitchCase="'posts'" class="ion-no-padding">
+            <ion-col>
+              <app-feed-card *ngFor="let item of feeds" [avatar]="item.avatar" [name]="item.name" [date]="item.date"
+                [images]="item.images" [likes]="item.likes" [comments]="item.comments" [separator]="false">
+              </app-feed-card>
+              <div class="empty-state" *ngIf="!feeds || feeds.length === 0">
+                <ion-icon name="document-text-outline"></ion-icon>
+                <p>No tienes publicaciones aún</p>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <!-- Photos -->
+          <ion-row *ngSwitchCase="'photos'" class="ion-padding-vertical">
+            <ion-col>
+              <div class="grid-gallery" *ngIf="pictures?.length">
+                <img *ngFor="let pic of pictures" class="image-element" [src]="pic" (click)="openModal(pic)" />
+              </div>
+              <div class="empty-state" *ngIf="!pictures || pictures.length === 0">
+                <ion-icon name="images-outline"></ion-icon>
+                <p>No tienes fotos aún</p>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <!-- Info -->
+          <ion-row *ngSwitchCase="'info'" class="ion-padding-vertical">
+            <ion-col>
+              <ion-list lines="none" class="info-list">
+                <ion-item>
+                  <ion-icon name="person-outline" slot="start"></ion-icon>
+                  <ion-label>
+                    <h3>Nombre completo</h3>
+                    <p>{{ currentUser?.first_name }} {{ currentUser?.last_name }}</p>
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon name="mail-outline" slot="start"></ion-icon>
+                  <ion-label>
+                    <h3>Correo electrónico</h3>
+                    <p>{{ currentUser?.email }}</p>
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon name="call-outline" slot="start"></ion-icon>
+                  <ion-label>
+                    <h3>Teléfono</h3>
+                    <p [class.empty-field]="!currentUser?.phone">{{ currentUser?.phone || 'No especificado' }}</p>
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon name="briefcase-outline" slot="start"></ion-icon>
+                  <ion-label>
+                    <h3>Profesión</h3>
+                    <p [class.empty-field]="!currentUser?.profession">{{ currentUser?.profession || 'No especificado' }}
+                    </p>
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon name="people-outline" slot="start"></ion-icon>
+                  <ion-label>
+                    <h3>Género</h3>
+                    <p [class.empty-field]="!currentUser?.gender">
+                      {{ currentUser?.gender === 'male' ? 'Masculino' : currentUser?.gender === 'female' ? 'Femenino' :
+                      currentUser?.gender === 'prefer_not_to_say' ? 'Prefiero no responder' : 'No especificado' }}
+                    </p>
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon name="globe-outline" slot="start"></ion-icon>
+                  <ion-label>
+                    <h3>País de origen</h3>
+                    <p [class.empty-field]="!currentUser?.country">{{ currentUser?.country || 'No especificado' }}</p>
+                  </ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon name="logo-linkedin" slot="start"></ion-icon>
+                  <ion-label>
+                    <h3>LinkedIn</h3>
+                    <a *ngIf="currentUser?.linkedin" [href]="currentUser?.linkedin" target="_blank">Ver perfil</a>
+                    <p *ngIf="!currentUser?.linkedin" class="empty-field">No especificado</p>
+                  </ion-label>
+                </ion-item>
+                <ion-item *ngIf="currentUser?.roles?.length">
+                  <ion-icon name="shield-outline" slot="start"></ion-icon>
+                  <ion-label>
+                    <h3>Rol</h3>
+                    <p>{{ currentUser.roles.join(', ') }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

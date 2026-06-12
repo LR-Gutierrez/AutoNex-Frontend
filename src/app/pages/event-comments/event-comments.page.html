@@ -1,0 +1,108 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Event Comments</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Información del evento actual -->
+  <div class="event-info-card">
+    <div class="event-header">
+      <div class="event-status">
+        <div class="status-indicator live"></div>
+        <span class="status-text">Live Event</span>
+      </div>
+      <div class="event-time">{{ currentEvent.duration }}</div>
+    </div>
+
+    <h2 class="event-title">{{ currentEvent.title }}</h2>
+
+    <div class="event-meta">
+      <div class="meta-item">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>{{ currentEvent.location }}</span>
+      </div>
+      <div class="meta-item">
+        <ion-icon name="people-outline"></ion-icon>
+        <span>{{ currentEvent.attendees }} attendees</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de comentarios -->
+  <div class="comments-section">
+    <div class="section-header">
+      <h3>Comments ({{ comments.length }})</h3>
+      <ion-button fill="clear" size="small" (click)="sortComments()">
+        <ion-icon slot="start" name="swap-vertical-outline"></ion-icon>
+        Sort
+      </ion-button>
+    </div>
+
+    <div class="comments-list">
+      <div class="comment-item" *ngFor="let comment of comments">
+        <ion-avatar class="comment-avatar">
+          <img [src]="comment.avatar" />
+        </ion-avatar>
+
+        <div class="comment-content">
+          <div class="comment-header">
+            <div class="user-info">
+              <span class="user-name">{{ comment.userName }}</span>
+              <span class="comment-time">{{ comment.time }}</span>
+            </div>
+            <ion-button fill="clear" size="small" class="more-btn">
+              <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
+            </ion-button>
+          </div>
+
+          <p class="comment-text">{{ comment.text }}</p>
+
+          <div class="comment-actions">
+            <ion-button fill="clear" size="small" [color]="comment.liked ? 'primary' : 'medium'"
+              (click)="toggleLike(comment)">
+              <ion-icon slot="start" [name]="comment.liked ? 'heart' : 'heart-outline'"></ion-icon>
+              {{ comment.likes }}
+            </ion-button>
+
+            <ion-button fill="clear" size="small" color="medium" (click)="replyToComment(comment)">
+              <ion-icon slot="start" name="chatbubble-outline"></ion-icon>
+              Reply
+            </ion-button>
+          </div>
+
+          <!-- Respuestas -->
+          <div class="replies" *ngIf="comment.replies && comment.replies.length > 0">
+            <div class="reply-item" *ngFor="let reply of comment.replies">
+              <ion-avatar class="reply-avatar">
+                <img [src]="reply.avatar" />
+              </ion-avatar>
+              <div class="reply-content">
+                <span class="reply-user">{{ reply.userName }}</span>
+                <span class="reply-text">{{ reply.text }}</span>
+                <span class="reply-time">{{ reply.time }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input de nuevo comentario (fijo en la parte inferior) -->
+  <div class="comment-input-container">
+    <ion-avatar class="input-avatar">
+      <img [src]="currentUser.avatar" />
+    </ion-avatar>
+    <ion-input [(ngModel)]="newComment" placeholder="Add a comment..." class="comment-input"
+      (keyup.enter)="sendComment()"></ion-input>
+    <ion-button fill="clear" [disabled]="!newComment || newComment.trim() === ''" (click)="sendComment()">
+      <ion-icon slot="icon-only" name="send"></ion-icon>
+    </ion-button>
+  </div>
+</ion-content>

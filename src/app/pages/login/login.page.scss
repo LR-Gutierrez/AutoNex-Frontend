@@ -1,0 +1,450 @@
+.login-content {
+  --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 24px;
+  position: relative;
+}
+
+// Logo y título
+.logo-section {
+  text-align: center;
+  margin-bottom: 48px;
+  animation: fadeInDown 0.6s ease-out;
+
+  .logo-wrapper {
+    margin-bottom: 16px;
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+    }
+
+    .logo-placeholder {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #d31d1d 0%, #a01515 100%);
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(211, 29, 29, 0.4);
+
+      ion-icon {
+        font-size: 64px;
+        color: white;
+      }
+    }
+  }
+
+  .company-name {
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+    margin: 0 0 8px 0;
+    letter-spacing: 2px;
+  }
+
+  .first-four {
+    font-weight: 600;
+    color: #d31d1d;
+  }
+
+  .login-subtitle {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    font-weight: 300;
+    font-style: italic;
+  }
+}
+
+// Formulario
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+
+  .input-group {
+    margin-bottom: 20px;
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 0 16px;
+      transition: all 0.3s ease;
+
+      &:focus-within {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(211, 29, 29, 0.5);
+        box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+      }
+
+      .input-icon {
+        font-size: 20px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      .custom-input {
+        --background: transparent;
+        --color: white;
+        --placeholder-color: rgba(255, 255, 255, 0.4);
+        --padding-start: 0;
+        --padding-end: 0;
+        font-size: 15px;
+        flex: 1;
+      }
+
+      .toggle-password {
+        font-size: 20px;
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+    }
+
+    .error-message {
+      font-size: 12px;
+      color: #ff6b6b;
+      margin-top: 6px;
+      margin-left: 16px;
+      animation: shake 0.3s ease;
+    }
+  }
+
+  .login-button {
+    --background: linear-gradient(135deg, #d31d1d 0%, #a01515 100%);
+    --background-hover: linear-gradient(135deg, #e02020 0%, #b01818 100%);
+    --border-radius: 12px;
+    --box-shadow: 0 4px 16px rgba(211, 29, 29, 0.4);
+    height: 52px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-top: 8px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+
+    &:hover:not([disabled]) {
+      --box-shadow: 0 6px 20px rgba(211, 29, 29, 0.6);
+      transform: translateY(-2px);
+    }
+
+    &:disabled {
+      --background: rgba(255, 255, 255, 0.1);
+      --color: rgba(255, 255, 255, 0.3);
+      --box-shadow: none;
+    }
+
+    ion-icon {
+      margin-left: 8px;
+    }
+  }
+
+  .forgot-password {
+    text-align: center;
+    margin-top: 16px;
+
+    a {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+      text-decoration: none;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #d31d1d;
+      }
+    }
+  }
+
+  .create-account {
+    text-align: center;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    span {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: white;
+      }
+    }
+  }
+}
+
+// Selector de idioma
+.language-selector {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 32px;
+  animation: fadeIn 0.6s ease-out 0.4s both;
+
+  .language-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .flag-icon {
+      width: 20px;
+      height: 15px;
+      border-radius: 2px;
+    }
+
+    span {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+    }
+  }
+
+  .language-label {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 11px;
+    font-style: italic;
+  }
+}
+
+// Iconos sociales
+.social-icons {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  animation: fadeIn 0.6s ease-out 0.6s both;
+
+  .social-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(211, 29, 29, 0.2);
+      color: #d31d1d;
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Credenciales de desarrollo
+.dev-credentials {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 100;
+
+  ion-button {
+    --border-color: rgba(255, 255, 255, 0.2);
+    --color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+    height: 32px;
+  }
+
+  .dev-info {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    margin: 4px 0 0 0;
+  }
+}
+
+// Animaciones
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+// Modo claro
+@media (prefers-color-scheme: light) {
+  .login-content {
+    --background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  }
+
+  .login-container {
+    .logo-section {
+      .company-name {
+        color: #1a1a2e;
+      }
+
+      .login-subtitle {
+        color: rgba(0, 0, 0, 0.6);
+      }
+    }
+
+    .login-form {
+      .input-group {
+        .input-wrapper {
+          background: white;
+          border-color: rgba(0, 0, 0, 0.1);
+
+          &:focus-within {
+            background: white;
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+          }
+
+          .input-icon {
+            color: rgba(0, 0, 0, 0.4);
+          }
+
+          .custom-input {
+            --color: #1a1a2e;
+            --placeholder-color: rgba(0, 0, 0, 0.4);
+          }
+
+          .toggle-password {
+            color: rgba(0, 0, 0, 0.4);
+
+            &:hover {
+              color: rgba(0, 0, 0, 0.7);
+            }
+          }
+        }
+      }
+
+      .forgot-password a {
+        color: rgba(0, 0, 0, 0.6);
+      }
+
+      .create-account {
+        border-top-color: rgba(0, 0, 0, 0.1);
+
+        span {
+          color: rgba(0, 0, 0, 0.7);
+
+          &:hover {
+            color: #1a1a2e;
+          }
+        }
+      }
+    }
+
+    .language-selector {
+      .language-option {
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+
+        &:hover {
+          background: rgba(211, 29, 29, 0.05);
+        }
+
+        span {
+          color: rgba(0, 0, 0, 0.7);
+        }
+      }
+
+      .language-label {
+        color: rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .social-icons {
+      .social-icon {
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        color: rgba(0, 0, 0, 0.6);
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 374px) {
+  .login-container {
+    padding: 24px 16px;
+  }
+
+  .logo-section {
+    margin-bottom: 32px !important;
+
+    .logo-wrapper {
+      .logo,
+      .logo-placeholder {
+        width: 100px !important;
+        height: 100px !important;
+      }
+    }
+
+    .company-name {
+      font-size: 24px !important;
+    }
+  }
+}

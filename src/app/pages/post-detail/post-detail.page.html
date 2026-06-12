@@ -1,0 +1,99 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/explore" text=""></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card class="ion-no-margin">
+          <ion-card-title>
+            <ion-item lines="none" class="ion-no-padding">
+              <ion-avatar slot="start">
+                <img [src]="post.avatar" />
+              </ion-avatar>
+              <ion-label>
+                <h2 class="item-title">{{ post.name }}</h2>
+                <p class="item-subtitle">{{ post.date | humanizeDate }}</p>
+              </ion-label>
+              <ion-button slot="end" fill="outline" size="small" color="primary">
+                Follow
+              </ion-button>
+            </ion-item>
+          </ion-card-title>
+          <ion-card-content class="ion-no-padding">
+            <swiper-container pagination="true" slides-per-view="1" space-between="6" centered-slides="true">
+              <swiper-slide *ngFor="let item of post.images">
+                <img src="{{ item }}" />
+              </swiper-slide>
+            </swiper-container>
+            <div class="card-footer">
+              <div class="icon-container">
+                <ul>
+                  <li>
+                    <ion-item lines="none">
+                      <ion-icon color="danger" name="heart"></ion-icon>
+                      <ion-label>{{ post.likes }}</ion-label>
+                    </ion-item>
+                  </li>
+                  <li>
+                    <ion-item lines="none">
+                      <ion-icon color="light" name="chatbubble"></ion-icon>
+                      <ion-label>{{ post.comments.total }}</ion-label>
+                    </ion-item>
+                  </li>
+                  <li>
+                    <ion-item lines="none">
+                      <ion-icon color="light" name="eye"></ion-icon>
+                      <ion-label>{{ post.views }}</ion-label>
+                    </ion-item>
+                  </li>
+                </ul>
+              </div>
+              <ion-buttons slot="end">
+                <ion-button class="circle-btn" fill="clear" size="small" shape="round" color="light">
+                  <ion-icon slot="icon-only" name="bookmark"></ion-icon>
+                </ion-button>
+                <ion-button class="circle-btn" fill="clear" size="small" shape="round" color="light">
+                  <ion-icon slot="icon-only" name="arrow-redo"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-no-padding">
+
+        <ion-list class="ion-no-padding">
+          <ion-item lines="none" *ngFor="let cm of post.comments.latest_comments">
+            <ion-text class="comment"><span class="user-comment">{{cm.user}}</span>
+              <span>{{cm.comment}}</span></ion-text>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ion-button fill="clear" size="small" (click)="navigateToComments()">View all comments</ion-button>
+  <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+    <ion-item lines="none">
+      <ion-input type="text" placeholder="Write your comment" formControlName="comment"></ion-input>
+      <ion-button slot="end" class="circle-btn" fill="clear" size="small" shape="round" color="primary" type="submit">
+        <ion-icon slot="icon-only" name="paper-plane"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </form>
+</ion-footer>

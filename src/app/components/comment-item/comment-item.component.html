@@ -1,0 +1,32 @@
+<div class="comment-container">
+  <div class="comment-avatar">
+    <ion-avatar>
+      <img [src]="comment?.avatar" />
+    </ion-avatar>
+  </div>
+  <div class="comment-area">
+    <div class="comment" [ngClass]="{'light': light }">
+      <span class="user-comment">{{ comment?.user }}</span>
+      <span>{{ comment?.comment }}</span>
+    </div>
+    <ul class="info-bar" [ngClass]="{'light': light }">
+      <li>{{ comment?.time | humanizeDate }}</li>
+      <li *ngIf="comment?.likes">{{ comment?.likes }} likes</li>
+      <li><a>Reply</a></li>
+    </ul>
+  </div>
+  <div class="comment-button">
+    <ion-button
+      fill="clear"
+      size="small"
+      shape="round"
+      [color]="isActive ? 'primary' : 'light'"
+      (click)="isActive = !isActive"
+    >
+      <ion-icon
+        slot="icon-only"
+        [name]="isActive ? 'heart' : 'heart-outline'"
+      ></ion-icon>
+    </ion-button>
+  </div>
+</div>

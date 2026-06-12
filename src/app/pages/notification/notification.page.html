@@ -1,0 +1,47 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/explore" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notificaciones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-no-padding">
+        <ion-item lines="none" class="section">
+          <ion-text>
+            <h5 class="section-title">Nuevas Notificaciones</h5>
+          </ion-text>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-no-padding">
+        <ion-list class="ion-no-padding">
+          <app-notification-item *ngFor="let item of notifications" [avatar]="item.avatar" [username]="item.username"
+            [time]="item.time | humanizeDate" [message]="item.message"></app-notification-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-no-padding">
+        <ion-item lines="none" class="section">
+          <ion-text>
+            <h5 class="section-title">Notificaciones Anteriores</h5>
+          </ion-text>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-no-padding">
+        <ion-list class="ion-no-padding">
+          <app-notification-item *ngFor="let item of notifications" [avatar]="item.avatar" [username]="item.username"
+            [time]="item.time | humanizeDate" [message]="item.message"></app-notification-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

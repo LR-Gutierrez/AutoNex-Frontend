@@ -1,0 +1,68 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/messages" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-item lines="none" class="ion-no-padding user-container">
+      <ion-thumbnail slot="start" [ngClass]="{ active: data.active }">
+        <img [src]="data.avatar" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2 class="item-title">{{ data.user }}</h2>
+        <ng-container *ngIf="data.time; else noTime">
+          <p class="item-subtitle">{{ data.time }}</p>
+        </ng-container>
+        <ng-template #noTime>
+          <p class="item-subtitle">
+            <ng-container *ngIf="data.active; else elseActive">
+              Online1
+            </ng-container>
+            <ng-template #elseActive> Offline </ng-template>
+          </p>
+        </ng-template>
+      </ion-label>
+    </ion-item>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+<ion-grid>
+  <ion-row *ngFor="let message of messages">
+      <ion-col size="9" *ngIf="currentUser !== message.user" class="message left-bubble">
+        <p>{{ message.message }}</p>
+        <p class="time">{{ message.time | humanizeDate }}</p>
+      </ion-col>
+      <ion-col size="9" offset="3" *ngIf="currentUser === message.user" class="message right-bubble">
+        <p>{{ message.message }}</p>
+        <p class="time">{{ message.time | humanizeDate }}</p>
+      </ion-col>
+  </ion-row>
+</ion-grid>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <form [formGroup]="messageForm" (ngSubmit)="submitMessage()">
+    <ion-item lines="none">
+      <ion-input
+        type="text"
+        placeholder="Write your message"
+        formControlName="message"
+      ></ion-input>
+      <ion-button
+        slot="end"
+        class="circle-btn"
+        fill="clear"
+        size="small"
+        shape="round"
+        color="primary"
+        type="submit"
+      >
+        <ion-icon slot="icon-only" name="paper-plane"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </form>
+</ion-footer>

@@ -1,0 +1,84 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.ios .container {
+  height: 100% !important;
+}
+
+.background-opts {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1000pt rgba(0, 0, 0, 0.3);
+  --background: transparent;
+  max-height: 50%;
+}
+
+ion-header ion-toolbar {
+  --background: transparent;
+}
+
+h1.title {
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--ion-color-dark);
+  margin-bottom: 8px;
+}
+
+ion-text {
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.action-button {
+  --border-radius: 8px;
+  --box-shadow: none !important;
+  min-height: 48px;
+  box-shadow: none !important;
+
+  span {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    text-transform: initial;
+  }
+}
+
+
+.white {
+  background: #ffffff;
+  border-radius: 16px 16px 0 0;
+  position: absolute;
+  bottom: 0;
+}
+
+ion-grid {
+  width: 100%;
+}
+
+/* iPhone X ----------- */
+@media only screen and (max-device-height: 812px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3) {
+  /* Styles */
+  .background-opts {
+    max-height: 60%;
+  }
+}
+
+@media only screen and (max-device-height: 823px) and (orientation: portrait) {
+  /* Styles */
+  .background-opts {
+    max-height: 60%;
+  }
+}
+
+/* iPhone XS Max, XR ----------- */
+@media only screen and (max-device-height: 896px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3) {
+  /* Styles */
+  .background-opts {
+    max-height: 60%;
+  }
+}

@@ -1,0 +1,249 @@
+// Tarjeta del selector de fecha
+.date-selector-card {
+  background: var(--ion-card-background, #ffffff);
+  border-radius: 24px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.date-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--ion-text-color);
+}
+
+.month-selector {
+  --border-radius: 20px;
+  --border-color: var(--ion-color-medium);
+  --color: var(--ion-text-color);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  height: 40px;
+  text-transform: none;
+  font-weight: 500;
+
+  ion-icon {
+    margin-left: 8px;
+    font-size: 18px;
+  }
+}
+
+// Calendario
+.calendar {
+  .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+
+    .day-label {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ion-color-medium);
+    }
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+
+    .calendar-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ion-text-color);
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:not(.empty):hover {
+        background: rgba(var(--ion-color-primary-rgb), 0.1);
+      }
+
+      &.empty {
+        cursor: default;
+      }
+
+      &.selected {
+        background: var(--ion-color-primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.4);
+      }
+
+      &.today:not(.selected) {
+        border: 2px solid var(--ion-color-primary);
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+}
+
+// Lista de eventos
+.schedule-list {
+  .schedule-item {
+    display: grid;
+    grid-template-columns: 80px 40px 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+    position: relative;
+
+    // Columna de hora
+    .time-column {
+      display: flex;
+      align-items: flex-start;
+      padding-top: 4px;
+
+      .time-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ion-text-color);
+      }
+    }
+
+    // Columna de timeline
+    .timeline-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+
+      .timeline-dot {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 3px solid var(--ion-color-medium);
+        background: var(--ion-background-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        transition: all 0.3s ease;
+
+        ion-icon {
+          font-size: 14px;
+          color: white;
+        }
+
+        &.completed {
+          background: var(--ion-color-medium);
+          border-color: var(--ion-color-medium);
+        }
+
+        &.active {
+          background: var(--ion-color-primary);
+          border-color: var(--ion-color-primary);
+          box-shadow: 0 0 0 4px rgba(var(--ion-color-primary-rgb), 0.2);
+        }
+      }
+
+      .timeline-line {
+        width: 2px;
+        flex: 1;
+        background: var(--ion-color-light);
+        position: absolute;
+        top: 24px;
+        bottom: -24px;
+        z-index: 1;
+      }
+    }
+
+    // Contenido del evento
+    .event-content {
+      background: var(--ion-card-background, #ffffff);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+
+      &.active {
+        background: rgba(var(--ion-color-primary-rgb), 0.08);
+        border-left: 4px solid var(--ion-color-primary);
+        padding-left: 12px;
+      }
+
+      .event-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        color: var(--ion-text-color);
+      }
+
+      .event-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .event-detail {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 13px;
+          color: var(--ion-color-medium);
+
+          ion-icon {
+            font-size: 16px;
+            color: var(--ion-color-primary);
+          }
+        }
+      }
+    }
+
+    // Estado completado
+    &.completed {
+      .time-column .time-text {
+        color: var(--ion-color-medium);
+      }
+
+      .event-content {
+        opacity: 0.7;
+
+        .event-title {
+          color: var(--ion-color-medium);
+        }
+      }
+    }
+  }
+}
+
+// Modo oscuro
+@media (prefers-color-scheme: dark) {
+  .date-selector-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .calendar {
+    .calendar-grid {
+      .calendar-day {
+        &:not(.empty):hover {
+          background: rgba(var(--ion-color-primary-rgb), 0.2);
+        }
+      }
+    }
+  }
+
+  .schedule-list {
+    .schedule-item {
+      .event-content {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+        &.active {
+          background: rgba(var(--ion-color-primary-rgb), 0.15);
+        }
+      }
+    }
+  }
+}

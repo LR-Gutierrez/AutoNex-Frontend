@@ -1,0 +1,292 @@
+// Información del evento actual
+.event-info-card {
+  background: var(--ion-card-background, #ffffff);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  .event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+
+    .event-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .status-indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+
+        &.live {
+          background: #ff4444;
+          animation: pulse 2s infinite;
+        }
+      }
+
+      .status-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: #ff4444;
+        text-transform: uppercase;
+      }
+    }
+
+    .event-time {
+      font-size: 13px;
+      color: var(--ion-color-medium);
+      font-weight: 500;
+    }
+  }
+
+  .event-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: var(--ion-text-color);
+  }
+
+  .event-meta {
+    display: flex;
+    gap: 16px;
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--ion-color-medium);
+
+      ion-icon {
+        font-size: 16px;
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+// Sección de comentarios
+.comments-section {
+  padding: 0 16px 80px 16px;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-top: 8px;
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--ion-text-color);
+    }
+
+    ion-button {
+      --color: var(--ion-color-medium);
+      text-transform: none;
+      font-weight: 500;
+    }
+  }
+}
+
+// Lista de comentarios
+.comments-list {
+  .comment-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+
+    .comment-content {
+      flex: 1;
+      min-width: 0;
+
+      .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+
+        .user-info {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+
+          .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ion-text-color);
+          }
+
+          .comment-time {
+            font-size: 12px;
+            color: var(--ion-color-medium);
+          }
+        }
+
+        .more-btn {
+          --padding-start: 8px;
+          --padding-end: 8px;
+          margin: -8px -8px 0 0;
+        }
+      }
+
+      .comment-text {
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--ion-text-color);
+        margin: 0 0 8px 0;
+        word-wrap: break-word;
+      }
+
+      .comment-actions {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+
+        ion-button {
+          --padding-start: 8px;
+          --padding-end: 8px;
+          height: 32px;
+          font-size: 13px;
+          text-transform: none;
+
+          ion-icon {
+            font-size: 18px;
+          }
+        }
+      }
+
+      // Respuestas
+      .replies {
+        margin-top: 12px;
+        padding-left: 12px;
+        border-left: 2px solid var(--ion-color-light);
+
+        .reply-item {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 12px;
+
+          .reply-avatar {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+          }
+
+          .reply-content {
+            flex: 1;
+            background: var(--ion-color-light);
+            border-radius: 12px;
+            padding: 8px 12px;
+
+            .reply-user {
+              font-size: 13px;
+              font-weight: 600;
+              color: var(--ion-text-color);
+              display: block;
+              margin-bottom: 4px;
+            }
+
+            .reply-text {
+              font-size: 13px;
+              color: var(--ion-text-color);
+              display: block;
+              margin-bottom: 4px;
+              line-height: 1.4;
+            }
+
+            .reply-time {
+              font-size: 11px;
+              color: var(--ion-color-medium);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Input de comentario
+.comment-input-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--ion-background-color);
+  border-top: 1px solid var(--ion-border-color, #e0e0e0);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+
+  .input-avatar {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+  }
+
+  .comment-input {
+    flex: 1;
+    --background: var(--ion-color-light);
+    --padding-start: 16px;
+    --padding-end: 16px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+
+  ion-button {
+    --padding-start: 12px;
+    --padding-end: 12px;
+    margin: 0;
+
+    ion-icon {
+      font-size: 24px;
+    }
+  }
+}
+
+// Modo oscuro
+@media (prefers-color-scheme: dark) {
+  .event-info-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .comment-input-container {
+    border-top-color: #3a3a3a;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .replies {
+    border-left-color: #3a3a3a !important;
+
+    .reply-content {
+      background: rgba(255, 255, 255, 0.05) !important;
+    }
+  }
+}

@@ -1,0 +1,52 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/post-detail" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Comments</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-no-padding" *ngFor="let item of comments">
+        <app-comment-item [comment]="item"></app-comment-item>
+        <ng-container *ngIf="item?.replies">
+          <ion-row class="ion-no-padding">
+            <ion-col class="reply ion-no-padding" *ngFor="let reply of item.replies">
+              <app-comment-item [comment]="reply"></app-comment-item>
+            </ion-col>
+          </ion-row>
+        </ng-container>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+    <ion-item lines="none">
+      <ion-input
+        type="text"
+        placeholder="Write your comment"
+        formControlName="comment"
+      ></ion-input>
+      <ion-button
+        slot="end"
+        class="circle-btn"
+        fill="clear"
+        size="small"
+        shape="round"
+        color="primary"
+        type="submit"
+      >
+        <ion-icon slot="icon-only" name="paper-plane"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </form>
+</ion-footer>

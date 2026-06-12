@@ -1,0 +1,227 @@
+.ios .safe-area {
+  padding-top: calc(constant(safe-area-inset-top) + 4px);
+  padding-top: calc(env(safe-area-inset-top) + 4px);
+}
+
+.section {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+
+  .section-title {
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 500 !important;
+    line-height: 22px;
+    margin: 0;
+    letter-spacing: 0.2px;
+  }
+
+  a {
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--ion-color-primary);
+    margin: 0;
+  }
+}
+
+.item-title {
+  font-weight: 500 !important;
+  color: var(--ion-color-dark) !important;
+}
+
+.item-subtitle {
+  color: var(--ion-color-medium) !important;
+  font-weight: 300 !important;
+  font-size: 13px !important;
+}
+
+.small-button {
+  --border-radius: 50%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 48px;
+  height: 48px;
+}
+
+.story-button {
+  --border-radius: 50%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 52px;
+  height: 52px;
+  --padding-start: 0;
+  --padding-end: 0;
+  --box-shadow: none;
+  --background: #eff3ff;
+
+  ion-icon {
+    font-size: 24px;
+    color: var(--ion-color-primary);
+  }
+}
+
+.swiper-pagination-bullet {
+  background: #fff;
+}
+
+.onboarding .swiper-pagination-bullet {
+  background: var(--ion-color-secondary) !important;
+}
+
+.swiper-slide img {
+  width: max-content;
+}
+
+.gradient-button {
+  --background: radial-gradient(
+    circle at top left,
+    var(--ion-color-secondary),
+    var(--ion-color-primary)
+  );
+}
+
+// ── Loading Aeroexpo ──
+.loader-container {
+  --background: #121212;
+  --spinner-color: #d31d1d;
+
+  .loading-wrapper {
+    border-radius: 16px !important;
+    padding: 24px 32px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.loader-text {
+  margin: 16px 0 0 0 !important;
+  color: #e0e0e0;
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.loader {
+  display: block;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto;
+  position: relative;
+  border: 3px solid rgba(211, 29, 29, 0.15);
+  border-top-color: #d31d1d;
+  border-radius: 50%;
+  animation: aero-spin 0.8s linear infinite;
+}
+
+.loader-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: #d31d1d;
+  border-radius: 50%;
+  animation: aero-pulse 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes aero-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes aero-pulse {
+  from {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+.modal-container .modal-wrapper {
+  height: 65vh;
+  width: 80vw;
+  border-radius: 16px;
+}
+
+.buttons-modal .modal-wrapper {
+  margin: 16px;
+  height: 10vh;
+  position: relative;
+  top: 37vh;
+  box-shadow: 0px 1px 12px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
+.avatars {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+  margin-top: 8px;
+
+  .avatar-item {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    width: 16px;
+  }
+
+  li.avatar-item:nth-child(1) {
+    z-index: 1;
+  }
+  li.avatar-item:nth-child(2) {
+    z-index: 2;
+  }
+  li.avatar-item:nth-child(3) {
+    z-index: 3;
+  }
+  li.avatar-item:nth-child(4) {
+    z-index: 4;
+  }
+  li.avatar-item:nth-child(5) {
+    z-index: 5;
+  }
+
+  img.avatar-img {
+    border: 2px solid rgba(255, 255, 255, 1);
+    border-radius: 50%;
+    display: block;
+    height: 30px;
+    width: 30px;
+    max-width: 30px;
+  }
+
+  .avatar-numbers {
+    border: 2px solid rgba(255, 255, 255, 1);
+    border-radius: 50%;
+    display: block;
+    height: 30px;
+    width: 30px;
+    max-width: 30px;
+    background: var(--ion-color-primary);
+    text-align: center;
+    line-height: 23px;
+
+    span {
+      color: #fff;
+      font-size: 10px;
+    }
+
+    span::before {
+      content: "+";
+    }
+  }
+}

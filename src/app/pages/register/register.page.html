@@ -1,0 +1,125 @@
+<ion-content [fullscreen]="true" class="register-content">
+  <div class="register-container">
+    <!-- Logo -->
+    <div class="logo-section">
+      <div class="logo-wrapper">
+        <img src="assets/images/logo.svg" alt="Logo" class="logo" />
+      </div>
+      <h1 class="company-name">
+        <span class="highlight">aero</span>expo c.a.
+      </h1>
+    </div>
+
+    <h2 class="register-title">Registro de Nuevo Usuario</h2>
+
+    <form [formGroup]="registerForm" (ngSubmit)="signUp()" class="register-form">
+      <!-- Nombre y Apellido en fila -->
+      <div class="row">
+        <div class="col">
+          <label class="field-label">Nombre *</label>
+          <div class="input-wrapper">
+            <ion-input type="text" formControlName="first_name" placeholder="Tu nombre"></ion-input>
+          </div>
+          <div class="error-msg"
+            *ngIf="registerForm.get('first_name')?.invalid && registerForm.get('first_name')?.touched">
+            <span *ngIf="registerForm.get('first_name')?.errors?.['required']">Requerido</span>
+          </div>
+        </div>
+        <div class="col">
+          <label class="field-label">Apellido *</label>
+          <div class="input-wrapper">
+            <ion-input type="text" formControlName="last_name" placeholder="Tu apellido"></ion-input>
+          </div>
+          <div class="error-msg"
+            *ngIf="registerForm.get('last_name')?.invalid && registerForm.get('last_name')?.touched">
+            <span *ngIf="registerForm.get('last_name')?.errors?.['required']">Requerido</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <label class="field-label">Correo electrónico *</label>
+      <div class="input-wrapper">
+        <ion-input type="email" formControlName="email" placeholder="tu@email.com"></ion-input>
+      </div>
+      <div class="error-msg" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        <span *ngIf="registerForm.get('email')?.errors?.['required']">Requerido</span>
+        <span *ngIf="registerForm.get('email')?.errors?.['invalidEmail']">Correo inválido</span>
+      </div>
+
+      <!-- Teléfono -->
+      <label class="field-label">Teléfono</label>
+      <div class="input-wrapper">
+        <ion-input type="tel" formControlName="phone" placeholder="Tu número de teléfono"></ion-input>
+      </div>
+      <div class="error-msg" *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
+        <span *ngIf="registerForm.get('phone')?.errors?.['pattern']">Solo números</span>
+      </div>
+
+      <!-- Profesión y Género en fila -->
+      <div class="row">
+        <div class="col col-large">
+          <label class="field-label">Profesión</label>
+          <div class="input-wrapper">
+            <ion-input type="text" formControlName="profession" placeholder="Ej: Ingeniero, Diseñad..."></ion-input>
+          </div>
+        </div>
+        <div class="col col-small">
+          <label class="field-label">Género</label>
+          <div class="input-wrapper select-wrapper">
+            <ion-select formControlName="gender" placeholder="Selecciona" interface="alert" cancelText="Cancelar"
+              okText="Aceptar">
+              <ion-select-option *ngFor="let g of genderOptions" [value]="g.value">{{ g.label }}</ion-select-option>
+            </ion-select>
+          </div>
+        </div>
+      </div>
+
+      <!-- País -->
+      <label class="field-label">País de origen</label>
+      <div class="input-wrapper">
+        <ion-input type="text" formControlName="country" placeholder="Ej: Venezuela, Colombia..."></ion-input>
+      </div>
+
+      <!-- LinkedIn -->
+      <label class="field-label">LinkedIn (opcional)</label>
+      <div class="input-wrapper">
+        <ion-input type="url" formControlName="linkedin" placeholder="https://linkedin.com/in/tu-perfil"></ion-input>
+      </div>
+      <div class="error-msg" *ngIf="registerForm.get('linkedin')?.invalid && registerForm.get('linkedin')?.touched">
+        <span *ngIf="registerForm.get('linkedin')?.errors?.['pattern']">Enlace de LinkedIn inválido</span>
+      </div>
+
+      <!-- Contraseña -->
+      <label class="field-label">Contraseña *</label>
+      <div class="input-wrapper password-field">
+        <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+          placeholder="Mínimo 8 caracteres"></ion-input>
+        <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" class="toggle-password"
+          (click)="togglePassword()"></ion-icon>
+      </div>
+      <div class="error-msg" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        <span *ngIf="registerForm.get('password')?.errors?.['required']">Requerida</span>
+        <span *ngIf="registerForm.get('password')?.errors?.['invalidPassword']">
+          {{registerForm.get('password')?.errors?.['message']}}
+        </span>
+      </div>
+
+      <!-- Términos -->
+      <p class="terms-text">
+        Al registrarte, aceptas nuestros <a href="#">Términos de servicio</a>
+        y <a href="#">Política de privacidad</a>.
+      </p>
+
+      <!-- Botón -->
+      <ion-button [disabled]="registerForm.invalid" expand="block" type="submit" class="submit-btn">
+        CREAR CUENTA
+      </ion-button>
+
+      <!-- Link login -->
+      <p class="login-link">
+        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+      </p>
+    </form>
+  </div>
+</ion-content>

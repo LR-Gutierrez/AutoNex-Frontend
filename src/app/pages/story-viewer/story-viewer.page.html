@@ -1,0 +1,57 @@
+<ion-content [fullscreen]="true" slot="fixed">
+  <swiper-container #swiperEl [attr.initial-slide]="slideOpts?.initialSlide" allow-touch-move="false">
+    <swiper-slide *ngFor="let item of stories">
+      <div class="media-container" *ngFor="let hist of item.items; index as i;">
+        <ng-container *ngIf="i == currentUserHistoryIndex">
+          <ng-container *ngIf="hist.type === 1;else elseMedia">
+            <video muted="false" autoplay="false" playsinline preload="auto" [src]="hist.media"></video>
+          </ng-container>
+          <ng-template #elseMedia>
+            <img [src]="hist.media" />
+          </ng-template>
+        </ng-container>
+      </div>
+      <div class="data-container">
+        <ion-toolbar class="black-gradient-top">
+          <ion-item lines="none" class="progress-bar">
+            <ng-container *ngFor="let hist of item.items; index as j;">
+              <ion-progress-bar *ngIf="hist.seen" value="1"></ion-progress-bar>
+              <ion-progress-bar *ngIf="!hist.seen && currentUserHistoryIndex == j" [value]="progressTime">
+              </ion-progress-bar>
+              <ion-progress-bar *ngIf="!hist.seen && currentUserHistoryIndex != j" value="0">
+              </ion-progress-bar>
+            </ng-container>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-avatar slot="start">
+              <img [src]="item.userPicture" />
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ item.userName }}</h2>
+              <p>{{ item.date | humanizeDate }}</p>
+            </ion-label>
+            <ion-buttons slot="end" class="ion-padding-bottom">
+              <ion-button (click)="close()">
+                <ion-icon slot="icon-only" name="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+        </ion-toolbar>
+        <div class="middle-container" (click)="onClick($event)"></div>
+        <div class="comments-container black-gradient-bottom">
+          <div class="ion-padding comments">
+
+          </div>
+          <form [formGroup]="commentForm" (ngSubmit)="submitComment()">
+            <ion-item lines="none">
+              <ion-input type="text" placeholder="Write your comment" formControlName="comment"></ion-input>
+              <ion-button slot="end" class="circle-btn" fill="clear" size="small" shape="round" type="submit">
+                <ion-icon slot="icon-only" name="paper-plane"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </form>
+        </div>
+      </div>
+    </swiper-slide>
+  </swiper-container>
+</ion-content>

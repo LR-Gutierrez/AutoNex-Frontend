@@ -1,0 +1,27 @@
+<div class="notif-container">
+  <div class="notif-avatar">
+    <ion-thumbnail>
+      <img [src]="avatar" />
+    </ion-thumbnail>
+  </div>
+  <div class="notif-area">
+    <div class="message-container">
+      <span class="username">{{ username }}</span>
+      <span>{{ message }}</span>
+    </div>
+    <span class="time">{{ time }}</span>
+  </div>
+  <div class="notif-button">
+    <ion-button
+      fill="clear"
+      size="small"
+      shape="round"
+      color="light"
+    >
+      <ion-icon
+        slot="icon-only"
+        name="close"
+      ></ion-icon>
+    </ion-button>
+  </div>
+</div>

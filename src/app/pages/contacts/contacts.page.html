@@ -1,0 +1,29 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/messages" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Contacts</ion-title>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+          animated
+          placeholder="Filter contacts"
+        ></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4" sizeMd="3" sizeLg="2" sizeXl="2" *ngFor="let item of users">
+        <app-contact-card (click)="navigateToChat(item)" [image]="item.avatar" [name]="item.user" [isActive]="item.active"></app-contact-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

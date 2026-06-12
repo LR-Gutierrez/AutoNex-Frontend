@@ -1,0 +1,15 @@
+<ion-item lines="none" class="ion-no-padding">
+  <ion-thumbnail slot="start" [ngClass]="{ active: active }">
+    <img [src]="avatar" />
+  </ion-thumbnail>
+  <ion-label class="ion-no-margin">
+    <div class="text-container">
+      <h2 class="item-title">{{ user }}</h2>
+      <span>{{ time }}</span>
+    </div>
+    <div class="text-container">
+      <p class="item-subtitle">{{ message }}</p>
+      <ion-badge color="success" mode="ios" *ngIf="messageCount">{{ messageCount }}</ion-badge>
+    </div>
+  </ion-label>
+</ion-item>

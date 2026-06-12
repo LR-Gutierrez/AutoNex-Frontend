@@ -1,0 +1,20 @@
+<ion-item lines="none" class="">
+  <ion-thumbnail slot="start">
+      <img [src]="image">
+  </ion-thumbnail>
+  <ion-label>
+    <p class="caption">{{ from }}-{{ to }}  {{ date }}</p>
+    <p class="title">{{ name }}</p>
+    <p class="caption">{{ location }}</p>
+    <ul class="avatars">
+      <li class="avatar-item" *ngFor="let item of avatars">
+        <img [src]="item" class="avatar-img" />
+      </li>
+      <li class="avatar-item">
+        <div class="avatar-numbers">
+          <span>{{ total }}</span>
+        </div>
+      </li>
+    </ul>
+  </ion-label>
+</ion-item>

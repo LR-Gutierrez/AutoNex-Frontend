@@ -1,0 +1,136 @@
+<ion-header class="ion-no-border transparent-header">
+  <ion-toolbar class="transparent-toolbar">
+    <ion-buttons slot="start">
+      <ion-button class="header-btn">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button class="header-btn" (click)="toggleFullscreen()">
+        <ion-icon slot="icon-only" [name]="isFullscreen ? 'contract-outline' : 'expand-outline'"></ion-icon>
+      </ion-button>
+      <ion-button class="header-btn">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" [scrollY]="!isFullscreen">
+  <!-- Video Player Container -->
+  <div class="video-container" [class.fullscreen]="isFullscreen">
+    <!-- Live Indicator -->
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      <span>LIVE</span>
+      <span class="viewer-count">{{ viewerCount }} watching</span>
+    </div>
+
+    <!-- YouTube Player -->
+    <div class="youtube-player" [class.fullscreen]="isFullscreen">
+      <iframe [src]="videoUrl" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+
+    <!-- Video Controls Overlay (solo visible en hover) -->
+    <div class="video-controls" *ngIf="!isFullscreen">
+      <ion-button fill="clear" class="control-btn" (click)="togglePlay()">
+        <ion-icon [name]="isPlaying ? 'pause' : 'play'"></ion-icon>
+      </ion-button>
+      <div class="volume-control">
+        <ion-icon name="volume-high"></ion-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stream Info (solo visible cuando no está en fullscreen) -->
+  <div class="stream-info" *ngIf="!isFullscreen">
+    <div class="info-header">
+      <div class="stream-title">
+        <h2>{{ streamTitle }}</h2>
+        <div class="stream-meta">
+          <span class="live-status">
+            <ion-icon name="radio-button-on"></ion-icon>
+            Live now
+          </span>
+          <span class="separator">•</span>
+          <span>Started {{ streamStartTime }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Channel Info -->
+    <div class="channel-info">
+      <ion-avatar class="channel-avatar">
+        <img [src]="channelAvatar" />
+      </ion-avatar>
+      <div class="channel-details">
+        <h3>{{ channelName }}</h3>
+        <p>{{ subscriberCount }} subscribers</p>
+      </div>
+      <ion-button color="primary" class="subscribe-btn">
+        Subscribe
+      </ion-button>
+    </div>
+
+    <!-- Stream Stats -->
+    <div class="stream-stats">
+      <div class="stat-item">
+        <ion-icon name="eye-outline"></ion-icon>
+        <span>{{ viewerCount }} viewers</span>
+      </div>
+      <div class="stat-item">
+        <ion-icon name="thumbs-up-outline"></ion-icon>
+        <span>{{ likes }}</span>
+      </div>
+      <div class="stat-item">
+        <ion-icon name="chatbubble-outline"></ion-icon>
+        <span>{{ commentCount }} comments</span>
+      </div>
+      <div class="stat-item">
+        <ion-icon name="share-social-outline"></ion-icon>
+        <span>Share</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="description-section">
+      <h3>About this stream</h3>
+      <p class="description-text" [class.expanded]="descriptionExpanded">
+        {{ streamDescription }}
+      </p>
+      <ion-button fill="clear" size="small" (click)="descriptionExpanded = !descriptionExpanded">
+        {{ descriptionExpanded ? 'Show less' : 'Show more' }}
+      </ion-button>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <ion-button expand="block" fill="outline" (click)="goToComments()">
+        <ion-icon slot="start" name="chatbubbles-outline"></ion-icon>
+        View Live Comments
+      </ion-button>
+      <ion-button expand="block" fill="outline" (click)="goToSchedule()">
+        <ion-icon slot="start" name="calendar-outline"></ion-icon>
+        View Event Schedule
+      </ion-button>
+    </div>
+
+    <!-- Related Streams -->
+    <div class="related-section">
+      <h3>Related Live Streams</h3>
+      <div class="related-stream" *ngFor="let stream of relatedStreams">
+        <img [src]="stream.thumbnail" class="related-thumbnail" />
+        <div class="related-info">
+          <h4>{{ stream.title }}</h4>
+          <p>{{ stream.channel }}</p>
+          <div class="related-meta">
+            <span class="live-badge-small">LIVE</span>
+            <span>{{ stream.viewers }} watching</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

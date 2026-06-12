@@ -1,0 +1,44 @@
+<ion-content [fullscreen]="true"> 
+  <div class="container">
+    <ion-grid class="ion-padding-horizontal background-opts" [ngStyle]="background">
+      <ion-row class="ion-padding-vertical">
+        <ion-col size="9" class="ion-padding-vertical">
+         
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-grid class="ion-padding white">
+      <ion-row class="ion-padding-horizontal">
+        <ion-col size="9" class="ion-padding-vertical">
+          <h1 class="title ion-no-padding ion-no-margin">Welcome to Ionic Social</h1>
+          <ion-text color="light">Choose a option to continue</ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-padding-horizontal">
+        <ion-col class="ion-text-center">
+        <ion-button class="action-button gradient-button ion-margin-top" expand="block" fill="solid" (click)="goToLogin()">
+          <ion-icon name="mail" class="ion-padding-end"></ion-icon>
+          <span>Continue with email</span>
+        </ion-button>
+        <ion-button class="action-button ion-margin-top" expand="block" fill="outline" color="medium">
+          <ion-icon name="logo-google" class="ion-padding-end"></ion-icon>
+          <span>Continue with Google</span>
+        </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-padding-horizontal">
+        <ion-col class="ion-text-center">
+          <ion-text color="medium">OR</ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-padding-horizontal">
+        <ion-col class="ion-padding-bottom">
+          <ion-button class="action-button ion-margin-top" expand="block" fill="outline" color="medium" (click)="goToRegister()">
+            <ion-icon name="person-add" class="ion-padding-end"></ion-icon>
+            <span>Create an account</span>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

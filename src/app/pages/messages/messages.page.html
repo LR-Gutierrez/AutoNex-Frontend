@@ -1,0 +1,69 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Messages</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-horizontal">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="ion-padding-bottom">
+        <ion-searchbar
+          class="ion-no-padding"
+          animated
+          placeholder="Filter messages"
+        ></ion-searchbar>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col class="ion-no-padding">
+        <ion-list>
+          <ion-item-sliding *ngFor="let item of messages">
+            <ion-item-options side="start">
+              <ion-item-option>
+                <ion-button
+                  class="ion-no-padding"
+                  fill="clear"
+                  size="small"
+                  shape="round"
+                  color="secondary"
+                >
+                  <ion-icon
+                    slot="icon-only"
+                    name="bookmark"
+                  ></ion-icon> </ion-button
+              ></ion-item-option>
+            </ion-item-options>
+            <app-message-list-item
+              [avatar]="item.avatar"
+              [user]="item.user"
+              [time]="item.time"
+              [message]="item.message"
+              [active]="item.active"
+              [messageCount]="item.messageCount"
+              (click)="navigateToChat(item)"
+            ></app-message-list-item>
+            <ion-item-options side="end">
+              <ion-item-option>
+                <ion-button
+                  class="ion-no-padding"
+                  fill="clear"
+                  size="small"
+                  shape="round"
+                  color="danger"
+                >
+                  <ion-icon slot="icon-only" name="trash"></ion-icon>
+                </ion-button>
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="navigateToContacts()">
+      <ion-icon name="chatbubbles"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

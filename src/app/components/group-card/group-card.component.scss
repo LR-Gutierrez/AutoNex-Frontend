@@ -1,0 +1,24 @@
+ion-card {
+  border-radius: 10px;
+  box-shadow: none !important;
+  --background: #f6f6f6;
+  min-height: 175px;
+}
+
+ion-thumbnail {
+  --border-radius: 50%;
+  --size: 64px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 16px;
+}
+
+ion-card-title {
+  font-size: 16px;
+  margin-bottom: 4px;
+  line-height: 22px;
+}
+
+ion-card-subtitle {
+  font-size: 13px;
+}

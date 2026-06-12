@@ -1,0 +1,69 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Cronograma</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Selector de fecha -->
+  <div class="date-selector-card">
+    <div class="date-header">
+      <h2 class="date-title">Appointment date</h2>
+      <ion-button fill="outline" class="month-selector">
+        <span>{{ selectedMonth }}</span>
+        <ion-icon slot="end" name="chevron-down-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Calendario -->
+    <div class="calendar">
+      <div class="calendar-header">
+        <div class="day-label" *ngFor="let day of weekDays">{{ day }}</div>
+      </div>
+      <div class="calendar-grid">
+        <div class="calendar-day" *ngFor="let day of calendarDays" [class.selected]="day.selected"
+          [class.today]="day.today" [class.empty]="!day.number" (click)="selectDay(day)">
+          <span *ngIf="day.number">{{ day.number }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de eventos del día -->
+  <div class="schedule-list">
+    <div class="schedule-item" *ngFor="let event of dayEvents" [class.active]="event.active"
+      [class.completed]="event.completed">
+      <!-- Hora -->
+      <div class="time-column">
+        <span class="time-text">{{ event.time }}</span>
+      </div>
+
+      <!-- Timeline -->
+      <div class="timeline-column">
+        <div class="timeline-dot" [class.active]="event.active" [class.completed]="event.completed">
+          <ion-icon *ngIf="event.completed" name="checkmark-outline"></ion-icon>
+        </div>
+        <div class="timeline-line" *ngIf="!event.isLast"></div>
+      </div>
+
+      <!-- Contenido del evento -->
+      <div class="event-content" [class.active]="event.active">
+        <h3 class="event-title">{{ event.title }}</h3>
+        <div class="event-details">
+          <div class="event-detail">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ event.location }}</span>
+          </div>
+          <div class="event-detail">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ event.date }}</span>
+          </div>
+          <div class="event-detail">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>{{ event.duration }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

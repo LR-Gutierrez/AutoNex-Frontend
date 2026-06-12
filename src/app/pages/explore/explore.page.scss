@@ -1,0 +1,20 @@
+.half-padding {
+  padding: 8px 0;
+}
+
+// Secciones visibles en ambos modos
+.section {
+  ion-text {
+    h5 {
+      color: var(--ion-text-color, #000);
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+    font-size: 14px;
+  }
+}

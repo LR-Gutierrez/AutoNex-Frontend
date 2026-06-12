@@ -1,0 +1,303 @@
+// === MODO OSCURO (por defecto) ===
+.register-content {
+  --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px 24px;
+  min-height: 100%;
+}
+
+// Logo
+.logo-section {
+  text-align: center;
+  margin-bottom: 16px;
+  animation: fadeInDown 0.6s ease-out;
+
+  .logo-wrapper .logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+
+  .company-name {
+    font-size: 18px;
+    font-weight: 400;
+    color: #ffffff;
+    margin: 8px 0 0;
+
+    .highlight {
+      color: #d31d1d;
+      font-weight: 600;
+    }
+  }
+}
+
+.register-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+  margin: 0 0 24px;
+}
+
+// Form
+.register-form {
+  width: 100%;
+  max-width: 400px;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.input-wrapper {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &:focus-within {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(211, 29, 29, 0.5);
+    box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+  }
+
+  ion-input {
+    --color: #ffffff;
+    --placeholder-color: rgba(255, 255, 255, 0.4);
+    --padding-start: 12px;
+    --padding-end: 12px;
+    font-size: 14px;
+    min-height: 42px;
+  }
+}
+
+.select-wrapper {
+  ion-select {
+    color: #ffffff;
+    --placeholder-color: rgba(255, 255, 255, 0.4);
+    padding: 0 12px;
+    width: 100%;
+    min-height: 42px;
+    font-size: 14px;
+  }
+}
+
+// Filas
+.row {
+  display: flex;
+  gap: 12px;
+
+  .col {
+    flex: 1;
+  }
+  .col-large {
+    flex: 1.3;
+  }
+  .col-small {
+    flex: 0.7;
+  }
+}
+
+// Password
+.password-field {
+  display: flex;
+  align-items: center;
+
+  ion-input {
+    flex: 1;
+  }
+
+  .toggle-password {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 20px;
+    padding-right: 12px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+// Errores
+.error-msg {
+  font-size: 11px;
+  color: #ff6b6b;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  animation: shake 0.3s ease;
+}
+
+// Términos
+.terms-text {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  margin: 16px 0;
+
+  a {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+}
+
+// Botón
+.submit-btn {
+  --background: linear-gradient(135deg, #d31d1d 0%, #a01515 100%);
+  --background-hover: linear-gradient(135deg, #e02020 0%, #b01818 100%);
+  --border-radius: 12px;
+  --box-shadow: 0 4px 16px rgba(211, 29, 29, 0.4);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 1px;
+  min-height: 48px;
+  margin: 0;
+  text-transform: uppercase;
+
+  &:hover:not([disabled]) {
+    --box-shadow: 0 6px 20px rgba(211, 29, 29, 0.6);
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    --background: rgba(255, 255, 255, 0.1);
+    --color: rgba(255, 255, 255, 0.3);
+    --box-shadow: none;
+  }
+}
+
+// Link login
+.login-link {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 16px;
+
+  a {
+    color: #ffffff;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}
+
+// === MODO CLARO ===
+@media (prefers-color-scheme: light) {
+  .register-content {
+    --background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  }
+
+  .register-container {
+    .logo-section .company-name {
+      color: #1a1a2e;
+    }
+
+    .register-title {
+      color: #1a1a2e;
+    }
+
+    .field-label {
+      color: #1a1a2e;
+    }
+
+    .input-wrapper {
+      background: #ffffff;
+      border-color: rgba(0, 0, 0, 0.1);
+
+      &:focus-within {
+        background: #ffffff;
+        border-color: #d31d1d;
+        box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+      }
+
+      ion-input {
+        --color: #1a1a2e;
+        --placeholder-color: rgba(0, 0, 0, 0.4);
+      }
+    }
+
+    .select-wrapper ion-select {
+      color: #1a1a2e;
+      --placeholder-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .password-field .toggle-password {
+      color: rgba(0, 0, 0, 0.4);
+
+      &:hover {
+        color: rgba(0, 0, 0, 0.7);
+      }
+    }
+
+    .terms-text {
+      color: rgba(0, 0, 0, 0.5);
+
+      a {
+        color: #1a1a2e;
+      }
+    }
+
+    .login-link {
+      color: rgba(0, 0, 0, 0.6);
+
+      a {
+        color: #1a1a2e;
+      }
+    }
+  }
+}
+
+// Animaciones
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+// Responsive
+@media (max-width: 374px) {
+  .register-container {
+    padding: 24px 16px;
+  }
+}

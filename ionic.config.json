@@ -1,0 +1,7 @@
+{
+  "name": "AutoNex",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

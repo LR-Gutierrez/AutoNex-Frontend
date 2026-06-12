@@ -1,0 +1,12 @@
+<ion-card class="ion-no-margin">
+  <ion-card-content class="ion-no-padding">
+    <img [src]="image" />
+    <div class="data-container">
+      <img class="avatar" [src]="avatar" />
+      <ul>
+        <li class="text">{{ name }}</li>
+        <li class="caption">{{ date | humanizeDate }}</li>
+      </ul>
+    </div>
+  </ion-card-content>
+</ion-card>

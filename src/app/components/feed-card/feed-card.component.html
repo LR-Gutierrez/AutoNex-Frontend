@@ -1,0 +1,46 @@
+<ion-card class="ion-no-margin">
+  <ion-card-title>
+    <ion-item lines="none" class="ion-no-padding">
+      <ion-avatar slot="start">
+        <img [src]="avatar" />
+      </ion-avatar>
+      <ion-label>
+        <h2 class="item-title">{{ name }}</h2>
+        <p class="item-subtitle">{{ date | humanizeDate }}</p>
+      </ion-label>
+      <ion-button slot="end" fill="clear" size="small" shape="round">
+        <ion-icon slot="icon-only" name="ellipsis-horizontal"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-card-title>
+  <ion-card-content class="ion-no-padding">
+    <swiper-container pagination="true" slides-per-view="1" space-between="6" centered-slides="true">
+      <swiper-slide *ngFor="let item of images">
+        <img src="{{ item }}" />
+      </swiper-slide>
+    </swiper-container>
+
+    <div class="card-footer">
+      <div class="icon-container">
+        <ul>
+          <li>
+            <ion-item lines="none">
+              <ion-icon color="danger" name="heart"></ion-icon>
+              <ion-label>{{ likes }}</ion-label>
+            </ion-item>
+          </li>
+          <li>
+            <ion-item lines="none">
+              <ion-icon name="chatbubble"></ion-icon>
+              <ion-label>{{ comments }}</ion-label>
+            </ion-item>
+          </li>
+        </ul>
+      </div>
+      <ion-button slot="end" fill="clear" size="small" shape="round">
+        <ion-icon slot="icon-only" name="arrow-redo"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-card-content>
+</ion-card>
+<div *ngIf="separator" class="separator ion-margin-top"></div>

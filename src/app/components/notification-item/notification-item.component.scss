@@ -1,0 +1,57 @@
+ion-thumbnail {
+  --border-radius: 10px;
+  width: 50px;
+  height: 50px;
+}
+
+ion-button {
+  --border-radius: 50%;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.message-container {
+  font-size: 12px;
+  color: var(--ion-color-dark);
+  font-weight: 400;
+  line-height: 16px;
+
+  .username {
+    font-weight: 500;
+    padding-right: 4px;
+  }
+}
+
+.time {
+  font-size: 12px;
+  color: var(--ion-color-light);
+}
+
+.notif-container {
+  display: grid;
+  grid-template-columns: max-content auto max-content;
+  grid-template-rows: 1fr;
+  gap: 0px 10px;
+  grid-template-areas: "avatar message button";
+  grid-auto-columns: auto;
+  padding-bottom: 16px;
+}
+
+.notif-area {
+  grid-area: message;
+  line-height: 1.25em;
+}
+
+.notif-avatar {
+  grid-area: avatar;
+  width: fit-content;
+}
+
+.notif-button {
+  grid-area: button;
+  width: fit-content;
+}
