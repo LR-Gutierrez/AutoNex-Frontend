@@ -7,6 +7,7 @@ import {
   UpdateVehicleRequest,
 } from '../models/vehicle.model';
 import { PaginationMeta, PagedResponse } from '../models/api-response.model';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class VehicleService {
@@ -22,11 +23,11 @@ export class VehicleService {
   readonly error = this.errorSignal.asReadonly();
   readonly pagination = this.paginationSignal.asReadonly();
 
-  loadAll(): Observable<PagedResponse<VehicleResponse>> {
+  loadAll(params?: HttpParams): Observable<PagedResponse<VehicleResponse>> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.api.getPaged<VehicleResponse>('/vehicles').pipe(
+    return this.api.getPaged<VehicleResponse>('/vehicles', params).pipe(
       tap(response => {
         this.vehiclesSignal.set(response.items);
         this.paginationSignal.set({

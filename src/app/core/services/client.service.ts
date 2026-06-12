@@ -7,6 +7,7 @@ import {
   UpdateClientRequest,
 } from '../models/client.model';
 import { PaginationMeta, PagedResponse } from '../models/api-response.model';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class ClientService {
@@ -22,11 +23,11 @@ export class ClientService {
   readonly error = this.errorSignal.asReadonly();
   readonly pagination = this.paginationSignal.asReadonly();
 
-  loadAll(): Observable<PagedResponse<ClientResponse>> {
+  loadAll(params?: HttpParams): Observable<PagedResponse<ClientResponse>> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.api.getPaged<ClientResponse>('/clients').pipe(
+    return this.api.getPaged<ClientResponse>('/clients', params).pipe(
       tap(response => {
         this.clientsSignal.set(response.items);
         this.paginationSignal.set({
