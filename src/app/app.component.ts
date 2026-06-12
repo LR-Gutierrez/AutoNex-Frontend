@@ -1,26 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { AuthStateService } from './core/services/auth-state.service';
 
 @Component({
-  standalone: false,
   selector: 'app-root',
+  standalone: true,
+  imports: [IonApp, IonRouterOutlet],
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {
-    this.initializeApp();
-  }
+  private readonly authState = inject(AuthStateService);
+  private readonly router = inject(Router);
 
-  initializeApp() {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/tabs/live-stream']);
-    } else {
-      this.router.navigate(['/login']);
+  constructor() {
+    if (this.authState.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
     }
   }
 }

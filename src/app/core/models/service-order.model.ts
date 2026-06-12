@@ -1,0 +1,55 @@
+export enum ServiceOrderStatus {
+  Open = 'Open',
+  InProgress = 'InProgress',
+  Completed = 'Completed',
+  Cancelled = 'Cancelled',
+}
+
+export interface ServiceOrderResponse {
+  id: number;
+  vehicleId: number;
+  vehicleInfo: string;
+  clientId: number;
+  clientName: string;
+  userId: number;
+  userName: string;
+  currentKm: number;
+  date: string;
+  status: ServiceOrderStatus;
+  totalAmount: number;
+  notes?: string;
+  createdAt: string;
+  items: ServiceOrderItemResponse[];
+}
+
+export interface ServiceOrderItemResponse {
+  id: number;
+  serviceId: number;
+  serviceName: string;
+  serviceVariantId?: number;
+  serviceVariantName?: string;
+  consumableId?: number;
+  consumableName?: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface CreateServiceOrderRequest {
+  vehicleId: number;
+  clientId: number;
+  currentKm: number;
+  notes?: string;
+  items: CreateServiceOrderItemRequest[];
+}
+
+export interface CreateServiceOrderItemRequest {
+  serviceId: number;
+  serviceVariantId?: number;
+  consumableId?: number;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface UpdateServiceOrderStatusRequest {
+  status: ServiceOrderStatus;
+}
