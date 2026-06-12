@@ -82,10 +82,9 @@ export class LoginPage implements OnInit {
   async presentLoading() {
     this.loading = await this.loadingController.create({
       cssClass: 'loader-container',
-      message:
-        '<span class="loader"><span class="loader-inner"></span></span><p class="loader-text">Iniciando sesión...</p>',
+      message: 'Iniciando sesión...',
       duration: 10000,
-      spinner: null,
+      spinner: 'circular',
       backdropDismiss: false,
     });
     await this.loading.present();

@@ -84,8 +84,11 @@ export class RegisterPage implements OnInit {
 
   async presentLoading() {
     this.loading = await this.loadingController.create({
+      cssClass: 'loader-container',
       message: 'Registrando...',
-      spinner: 'crescent',
+      spinner: 'circular',
+      duration: 10000,
+      backdropDismiss: false,
     });
     await this.loading.present();
   }
