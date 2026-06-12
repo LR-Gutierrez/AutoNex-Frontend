@@ -35,12 +35,3 @@
  */
 
  @import "./app/app.scss";
-
-ion-router-outlet {
-  --page-transition-duration: 0ms;
-  --page-transition-delay: 0ms;
-}
-
-ion-content::part(scroll) {
-  overscroll-behavior: contain;
-}

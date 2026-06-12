@@ -15,7 +15,7 @@ export class FinancialRecordService {
   private readonly api = inject(ApiService);
 
   private readonly recordsSignal = signal<FinancialRecordResponse[]>([]);
-  private readonly loadingSignal = signal(true);
+  private readonly loadingSignal = signal(false);
   private readonly errorSignal = signal<string | null>(null);
   private readonly paginationSignal = signal<PaginationMeta | null>(null);
   private readonly summarySignal = signal<FinancialSummaryResponse | null>(null);
