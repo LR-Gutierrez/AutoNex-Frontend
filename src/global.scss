@@ -36,6 +36,33 @@
 
  @import "./app/app.scss";
 
+/* === Brand Typography reusable === */
+.app-brand {
+  text-align: center;
+}
+
+.app-brand-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+  line-height: 1.2;
+}
+
+.app-brand-highlight {
+  color: var(--ion-color-primary, #d31d1d);
+}
+
+.app-brand-subtitle {
+  display: block;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
 /* === Dashboard Theme (mismo estilo que Auth) === */
 .dashboard-theme {
   --page-background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
