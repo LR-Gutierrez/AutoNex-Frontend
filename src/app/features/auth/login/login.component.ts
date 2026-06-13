@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LoadingController, AlertController } from '@ionic/angular';
@@ -11,7 +11,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
-import { emailValidator } from '../../../validators/email.validators';
+import { emailValidator } from '../../../shared/validators/email.validators';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -30,7 +30,7 @@ import { AuthService } from '../../../core/services/auth.service';
     <ion-content [fullscreen]="true" class="login-content">
       <div class="login-container">
         <!-- Logo y título -->
-        <div class="logo-section">
+        <div class="logo-section" [class.reveal]="reveal()">
           <div class="logo-wrapper">
             <img
               src="assets/images/logo.png"
@@ -50,7 +50,12 @@ import { AuthService } from '../../../core/services/auth.service';
         </div>
 
         <!-- Formulario -->
-        <form [formGroup]="loginForm" (ngSubmit)="signIn()" class="login-form">
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="signIn()"
+          class="login-form"
+          [class.reveal]="reveal()"
+        >
           <!-- Email -->
           <div class="input-group">
             <div class="input-wrapper">
@@ -126,7 +131,7 @@ import { AuthService } from '../../../core/services/auth.service';
         </form>
 
         <!-- Language Selector -->
-        <div class="language-selector">
+        <div class="language-selector" [class.reveal]="reveal()">
           <div class="language-option">
             <img
               src="https://flagcdn.com/w40/ve.png"
@@ -147,7 +152,7 @@ import { AuthService } from '../../../core/services/auth.service';
         </div>
 
         <!-- Social Icons -->
-        <div class="social-icons">
+        <div class="social-icons" [class.reveal]="reveal()">
           <ion-icon name="logo-twitter" class="social-icon"></ion-icon>
           <ion-icon name="logo-facebook" class="social-icon"></ion-icon>
           <ion-icon name="logo-instagram" class="social-icon"></ion-icon>
@@ -158,6 +163,12 @@ import { AuthService } from '../../../core/services/auth.service';
   `,
   styles: [
     `
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     .login-content {
       --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     }
@@ -175,7 +186,12 @@ import { AuthService } from '../../../core/services/auth.service';
     .logo-section {
       text-align: center;
       margin-bottom: 48px;
-      animation: fadeInDown 0.6s ease-out;
+      opacity: 0;
+
+      &.reveal {
+        opacity: 1;
+        transition: opacity 0.6s ease-out;
+      }
 
       .logo-wrapper {
         margin-bottom: 8px;
@@ -237,7 +253,12 @@ import { AuthService } from '../../../core/services/auth.service';
     .login-form {
       width: 100%;
       max-width: 400px;
-      animation: fadeInUp 0.6s ease-out 0.2s both;
+      opacity: 0;
+
+      &.reveal {
+        opacity: 1;
+        transition: opacity 0.6s ease-out 0.2s;
+      }
 
       .input-group {
         margin-bottom: 20px;
@@ -293,7 +314,6 @@ import { AuthService } from '../../../core/services/auth.service';
           color: #ff6b6b;
           margin-top: 6px;
           margin-left: 16px;
-          animation: shake 0.3s ease;
         }
       }
 
@@ -367,7 +387,12 @@ import { AuthService } from '../../../core/services/auth.service';
       align-items: center;
       gap: 16px;
       margin-top: 32px;
-      animation: fadeIn 0.6s ease-out 0.4s both;
+      opacity: 0;
+
+      &.reveal {
+        opacity: 1;
+        transition: opacity 0.6s ease-out 0.4s;
+      }
 
       .language-option {
         display: flex;
@@ -406,7 +431,12 @@ import { AuthService } from '../../../core/services/auth.service';
       display: flex;
       gap: 16px;
       margin-top: 24px;
-      animation: fadeIn 0.6s ease-out 0.6s both;
+      opacity: 0;
+
+      &.reveal {
+        opacity: 1;
+        transition: opacity 0.6s ease-out 0.6s;
+      }
 
       .social-icon {
         width: 40px;
@@ -543,47 +573,12 @@ import { AuthService } from '../../../core/services/auth.service';
         }
       }
     }
-
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
     `,
   ],
 })
 export class LoginComponent implements OnInit {
+  readonly reveal = signal(false);
+
   loginForm!: FormGroup;
   loading: any;
   showPassword = false;
@@ -604,6 +599,10 @@ export class LoginComponent implements OnInit {
       email: [null, [Validators.required, emailValidator]],
       password: [null, [Validators.required, Validators.minLength(1)]],
     });
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.reveal.set(true));
   }
 
   async signIn() {

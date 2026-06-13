@@ -25,6 +25,7 @@
     "esModuleInterop": true,
     "useDefineForClassFields": false
   },
+  "exclude": ["src/app/pages/**"],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

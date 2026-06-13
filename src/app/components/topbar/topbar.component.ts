@@ -19,10 +19,10 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
-import { AuthStateService } from '../core/services/auth-state.service';
-import { AuthService } from '../core/services/auth.service';
-import { UserAvatarComponent } from '../components/user-avatar/user-avatar.component';
-import { PageTitleService } from '../core/services/page-title.service';
+import { AuthStateService } from '../../core/services/auth-state.service';
+import { AuthService } from '../../core/services/auth.service';
+import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
+import { PageTitleService } from '../../core/services/page-title.service';
 
 @Component({
   selector: 'app-topbar',

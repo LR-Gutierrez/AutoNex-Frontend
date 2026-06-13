@@ -12,8 +12,8 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
-import { emailValidator } from '../../../validators/email.validators';
-import { passwordValidator } from '../../../validators/password.validator';
+import { emailValidator } from '../../../shared/validators/email.validators';
+import { passwordValidator } from '../../../shared/validators/password.validator';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../core/models/user.model';
 
@@ -30,11 +30,10 @@ import { UserRole } from '../../../core/models/user.model';
     IonSelectOption,
     IonIcon,
   ],
-  styleUrls: ['../auth-styles.scss'],
   template: `
     <ion-content [fullscreen]="true" class="auth-content">
       <div class="auth-container">
-        <div class="logo-section">
+        <div class="logo-section" [class.reveal]="reveal()">
           <div class="logo-wrapper">
             <img src="assets/images/logo.png" alt="Logo" class="logo" />
           </div>
@@ -44,9 +43,9 @@ import { UserRole } from '../../../core/models/user.model';
           </h1>
         </div>
 
-        <h2 class="auth-title">Registro de Nuevo Usuario</h2>
+        <h2 class="auth-title" [class.reveal]="reveal()">Registro de Nuevo Usuario</h2>
 
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form" [class.reveal]="reveal()">
           <label class="field-label">Nombre Completo *</label>
           <div class="input-wrapper">
             <ion-icon name="person-outline" class="input-icon"></ion-icon>
@@ -118,6 +117,301 @@ import { UserRole } from '../../../core/models/user.model';
       </div>
     </ion-content>
   `,
+  styles: [
+    `
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .auth-content {
+      --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    .auth-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+
+    .logo-section {
+      text-align: center;
+      margin-bottom: 32px;
+      opacity: 0;
+
+      &.reveal {
+        opacity: 1;
+        transition: opacity 0.6s ease-out;
+      }
+
+      .logo-wrapper {
+        margin-bottom: 8px;
+
+        .logo {
+          width: 120px;
+          height: 120px;
+          object-fit: contain;
+        }
+      }
+
+      .company-name {
+        font-size: 28px;
+        font-weight: 600;
+        color: white;
+        margin: 0;
+        letter-spacing: 2px;
+      }
+
+      .first-four {
+        color: #d31d1d;
+      }
+
+      .company-sub {
+        display: block;
+        font-size: 13px;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 1px;
+        margin-top: 2px;
+      }
+    }
+
+    .auth-title {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0 0 24px 0;
+      letter-spacing: 1px;
+      opacity: 0;
+
+      &.reveal {
+        opacity: 1;
+        transition: opacity 0.6s ease-out 0.2s;
+      }
+    }
+
+    .auth-form {
+      width: 100%;
+      max-width: 400px;
+      opacity: 0;
+
+      &.reveal {
+        opacity: 1;
+        transition: opacity 0.6s ease-out 0.2s;
+      }
+
+      .field-label {
+        display: block;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 13px;
+        margin-bottom: 6px;
+        margin-left: 4px;
+      }
+
+      .input-wrapper {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 0 14px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+
+        &:focus-within {
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(211, 29, 29, 0.5);
+          box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+        }
+
+        ion-icon.input-icon {
+          font-size: 20px;
+          color: rgba(255, 255, 255, 0.5);
+          margin-right: 12px;
+          flex-shrink: 0;
+        }
+
+        ion-input {
+          --background: transparent;
+          --color: white;
+          --placeholder-color: rgba(255, 255, 255, 0.4);
+          --padding-start: 0;
+          --padding-end: 0;
+          font-size: 15px;
+          flex: 1;
+        }
+
+        .toggle-password {
+          font-size: 20px;
+          color: rgba(255, 255, 255, 0.5);
+          cursor: pointer;
+          flex-shrink: 0;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: rgba(255, 255, 255, 0.8);
+          }
+        }
+      }
+
+      .select-wrapper {
+        padding: 0;
+
+        ion-select {
+          --padding-start: 14px;
+          --padding-end: 14px;
+          width: 100%;
+          --color: white;
+          --placeholder-color: rgba(255, 255, 255, 0.4);
+        }
+      }
+
+      .error-msg {
+        font-size: 12px;
+        color: #ff6b6b;
+        margin-top: -14px;
+        margin-bottom: 14px;
+        margin-left: 4px;
+      }
+
+      .terms-text {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        margin: 0 0 20px;
+        line-height: 1.5;
+
+        a {
+          color: #d31d1d;
+          text-decoration: none;
+        }
+      }
+
+      .submit-btn {
+        --background: linear-gradient(135deg, #d31d1d 0%, #a01515 100%);
+        --background-hover: linear-gradient(135deg, #e02020 0%, #b01818 100%);
+        --border-radius: 12px;
+        --box-shadow: 0 4px 16px rgba(211, 29, 29, 0.4);
+        height: 52px;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+
+        &:hover:not([disabled]) {
+          --box-shadow: 0 6px 20px rgba(211, 29, 29, 0.6);
+          transform: translateY(-2px);
+        }
+
+        &:disabled {
+          --background: rgba(255, 255, 255, 0.1);
+          --color: rgba(255, 255, 255, 0.3);
+          --box-shadow: none;
+        }
+      }
+
+      .auth-link {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        margin: 0;
+
+        a {
+          color: rgba(255, 255, 255, 0.9);
+          cursor: pointer;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: white;
+          }
+        }
+      }
+    }
+
+    @media (prefers-color-scheme: light) {
+      .auth-content {
+        --background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+      }
+
+      .auth-container {
+        .company-name {
+          color: #1a1a2e;
+        }
+
+        .auth-title {
+          color: rgba(0, 0, 0, 0.8);
+        }
+      }
+
+      .auth-form {
+        .field-label {
+          color: rgba(0, 0, 0, 0.6);
+        }
+
+        .input-wrapper {
+          background: white;
+          border-color: rgba(0, 0, 0, 0.1);
+
+          &:focus-within {
+            background: white;
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+          }
+
+          ion-icon.input-icon {
+            color: rgba(0, 0, 0, 0.4);
+          }
+
+          ion-input {
+            --color: #1a1a2e;
+            --placeholder-color: rgba(0, 0, 0, 0.4);
+          }
+
+          .toggle-password {
+            color: rgba(0, 0, 0, 0.4);
+
+            &:hover {
+              color: rgba(0, 0, 0, 0.7);
+            }
+          }
+        }
+
+        .select-wrapper ion-select {
+          --color: #1a1a2e;
+          --placeholder-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .terms-text {
+          color: rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-link {
+          color: rgba(0, 0, 0, 0.6);
+
+          a {
+            color: rgba(0, 0, 0, 0.8);
+
+            &:hover {
+              color: #1a1a2e;
+            }
+          }
+        }
+      }
+    }
+
+    @media (max-width: 374px) {
+      .auth-container {
+        padding: 24px 16px;
+      }
+    }
+    `,
+  ],
 })
 export class RegisterComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -125,6 +419,7 @@ export class RegisterComponent implements OnInit {
   private readonly alertController = inject(AlertController);
   private readonly authService = inject(AuthService);
 
+  readonly reveal = signal(false);
   readonly showPassword = signal(false);
   readonly saving = signal(false);
   readonly errorMessage = signal('');
@@ -142,6 +437,10 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.reveal.set(true));
+  }
 
   async onSubmit() {
     if (this.form.invalid) return;

@@ -1,0 +1,16 @@
+<div
+  class="user-avatar"
+  [style.width.px]="size"
+  [style.height.px]="size"
+>
+  @if (photoUrl && !imgError) {
+    <img
+      [src]="photoUrl"
+      [alt]="name"
+      class="avatar-img"
+      (error)="imgError = true"
+    />
+  } @else {
+    <img src="assets/icon/user_4_fill.svg" alt="" class="avatar-fallback" />
+  }
+</div>

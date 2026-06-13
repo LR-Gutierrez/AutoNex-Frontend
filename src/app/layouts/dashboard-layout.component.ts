@@ -15,7 +15,7 @@ import {
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
 import { AuthService } from '../core/services/auth.service';
-import { TopbarComponent } from '../layouts/topbar.component';
+import { TopbarComponent } from '../components/topbar/topbar.component';
 
 interface MenuItem {
   path: string;

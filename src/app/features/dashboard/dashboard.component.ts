@@ -9,7 +9,6 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardSubtitle,
-  IonIcon,
   IonLabel,
   IonList,
   IonItem,
@@ -17,8 +16,6 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonSkeletonText,
-  IonButton,
-  IonAvatar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
@@ -41,7 +38,6 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     IonCardHeader,
     IonCardTitle,
     IonCardSubtitle,
-    IonIcon,
     IonLabel,
     IonList,
     IonItem,
@@ -49,8 +45,6 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     IonRefresher,
     IonRefresherContent,
     IonSkeletonText,
-    IonButton,
-    IonAvatar,
     EnumLabelPipe,
   ],
   styles: `
