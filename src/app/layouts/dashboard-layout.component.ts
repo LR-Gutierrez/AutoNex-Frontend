@@ -15,6 +15,7 @@ import {
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
 import { AuthService } from '../core/services/auth.service';
+import { TopbarComponent } from '../layouts/topbar.component';
 
 interface MenuItem {
   path: string;
@@ -37,6 +38,7 @@ interface MenuItem {
     IonRouterOutlet,
     IonButton,
     RouterLink,
+    TopbarComponent, // ← IMPORTANTE: agregar el TopbarComponent
   ],
   styles: `
     :host {
@@ -50,31 +52,42 @@ interface MenuItem {
       --app-sidebar-accent: var(--ion-color-danger, #ff3b30);
       --app-sidebar-title: #ffffff;
       --app-sidebar-subtitle: #7c7c92;
-      --app-sidebar-width: min(20vw, 360px);
+    }
+
+    /* Layout principal */
+    .layout-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     ion-split-pane {
-      --side-width: var(--app-sidebar-width);
-      --side-max-width: var(--app-sidebar-width);
+      flex: 1;
+      --side-width: 280px;
+      --side-max-width: 280px;
+      --border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
     ion-menu {
-      --width: var(--app-sidebar-width);
-      --max-width: var(--app-sidebar-width);
-      --background: transparent;
-      --ion-background-color: transparent;
-      --ion-item-background: transparent;
-      --border: 1px solid var(--app-sidebar-border);
-      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.28);
+      --width: 280px;
+      --max-width: 280px;
+      --min-width: 280px;
     }
 
     .menu-content {
       --background: var(--app-sidebar-bg);
-      --padding-start: 14px;
-      --padding-end: 14px;
-      --padding-top: 14px;
-      --padding-bottom: 14px;
-      position: relative;
+      --padding-start: 0;
+      --padding-end: 0;
+      --padding-top: 0;
+      --padding-bottom: 0;
+    }
+
+    .menu-shell {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 14px;
+      box-sizing: border-box;
     }
 
     .brand-card {
@@ -83,6 +96,7 @@ interface MenuItem {
       gap: 14px;
       padding: 14px 10px 22px;
       margin-bottom: 12px;
+      flex-shrink: 0;
     }
 
     .brand-logo {
@@ -99,6 +113,7 @@ interface MenuItem {
       color: var(--app-sidebar-accent);
       box-shadow: inset 0 0 0 1px rgba(255, 59, 48, 0.12);
       flex-shrink: 0;
+      overflow: hidden;
     }
 
     .brand-logo-img {
@@ -112,21 +127,30 @@ interface MenuItem {
       min-width: 0;
     }
 
-    .brand-text .app-brand-title {
+    .app-brand-title {
       font-size: 20px;
       margin: 0;
+      color: var(--app-sidebar-title);
       letter-spacing: 0.02em;
+      line-height: 1.1;
     }
 
-    .brand-text .app-brand-subtitle {
+    .app-brand-highlight {
+      color: var(--app-sidebar-accent);
+    }
+
+    .app-brand-subtitle {
+      display: block;
       font-size: 10px;
       letter-spacing: 0.14em;
-      margin-top: 2px;
+      margin-top: 4px;
+      color: var(--app-sidebar-subtitle);
     }
 
     .menu-list {
       background: transparent;
       padding: 6px 0;
+      flex: 1 1 auto;
     }
 
     .menu-toggle {
@@ -165,6 +189,7 @@ interface MenuItem {
       margin-right: 14px;
       padding-left: 14px;
       transition: color 0.2s ease;
+      flex-shrink: 0;
     }
 
     .menu-item ion-label {
@@ -198,10 +223,9 @@ interface MenuItem {
     }
 
     .menu-footer {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: max(14px, env(safe-area-inset-bottom));
+      margin-top: 16px;
+      padding-top: 12px;
+      flex-shrink: 0;
     }
 
     .footer-button {
@@ -216,6 +240,7 @@ interface MenuItem {
       font-weight: 700;
       letter-spacing: 0.01em;
       text-transform: none;
+      margin: 0;
     }
 
     .footer-button ion-icon {
@@ -223,69 +248,97 @@ interface MenuItem {
       margin-right: 6px;
     }
 
-    .menu-spacer {
-      height: 84px;
+    /* Contenido principal con topbar */
+    .main-content-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+    }
+
+    ion-router-outlet {
+      flex: 1;
+      width: 100%;
     }
 
     @media (max-width: 991px) {
       ion-menu {
-        --width: 280px;
-        --max-width: 280px;
+        --width: min(86vw, 320px);
+        --max-width: min(86vw, 320px);
+        --min-width: 0;
+      }
+
+      .menu-item ion-icon {
+        padding-left: 14px;
+      }
+
+      .menu-shell {
+        padding-bottom: max(14px, env(safe-area-inset-bottom));
       }
     }
   `,
   template: `
-    <ion-split-pane contentId="main-content">
-      <ion-menu contentId="main-content" type="overlay">
-        <ion-content class="menu-content">
-          <div class="brand-card">
-            <div class="brand-logo">
-              <img src="assets/images/logo.png" alt="AutoNex" class="brand-logo-img" />
-            </div>
+    <div class="layout-container">
+      <ion-split-pane contentId="main-content" class="dashboard-theme">
+        <ion-menu contentId="main-content" menuId="main-menu" type="overlay">
+          <ion-content class="menu-content" [scrollY]="true">
+            <div class="menu-shell">
+              <div class="brand-card">
+                <div class="brand-logo">
+                  <img
+                    src="assets/images/logo.png"
+                    alt="AutoNex"
+                    class="brand-logo-img"
+                  />
+                </div>
 
-            <div class="brand-text app-brand">
-              <h2 class="app-brand-title">
-                <span class="app-brand-highlight">Auto</span>Nex
-                <span class="app-brand-subtitle">GUI&amp;CAR, C.A.</span>
-              </h2>
-            </div>
-          </div>
+                <div class="brand-text">
+                  <h2 class="app-brand-title">
+                    <span class="app-brand-highlight">Auto</span>Nex
+                    <span class="app-brand-subtitle">GUI&amp;CAR, C.A.</span>
+                  </h2>
+                </div>
+              </div>
 
-          <ion-list class="menu-list">
-            @for (item of menuItems; track item.path) {
-              <ion-menu-toggle auto-hide="false" class="menu-toggle">
-                <ion-item
-                  class="menu-item"
-                  [class.active]="isActive(item.path)"
-                  [routerLink]="item.path"
-                  routerDirection="root"
-                  lines="none"
-                  detail="false"
+              <ion-list class="menu-list">
+                @for (item of menuItems; track item.path) {
+                  <ion-menu-toggle auto-hide="false" class="menu-toggle">
+                    <ion-item
+                      class="menu-item"
+                      [class.active]="isActive(item.path)"
+                      [routerLink]="item.path"
+                      routerDirection="root"
+                      lines="none"
+                      detail="false"
+                    >
+                      <ion-icon [name]="item.icon" slot="start"></ion-icon>
+                      <ion-label>{{ item.label }}</ion-label>
+                    </ion-item>
+                  </ion-menu-toggle>
+                }
+              </ion-list>
+
+              <div class="menu-footer">
+                <ion-button
+                  expand="block"
+                  class="footer-button"
+                  (click)="goToNewService()"
                 >
-                  <ion-icon [name]="item.icon" slot="start"></ion-icon>
-                  <ion-label>{{ item.label }}</ion-label>
-                </ion-item>
-              </ion-menu-toggle>
-            }
-          </ion-list>
+                  <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                  Nuevo Servicio
+                </ion-button>
+              </div>
+            </div>
+          </ion-content>
+        </ion-menu>
 
-          <div class="menu-spacer"></div>
-
-          <div class="menu-footer">
-            <ion-button
-              expand="block"
-              class="footer-button"
-              (click)="goToNewService()"
-            >
-              <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-              Nuevo Servicio
-            </ion-button>
-          </div>
-        </ion-content>
-      </ion-menu>
-
-      <ion-router-outlet id="main-content"></ion-router-outlet>
-    </ion-split-pane>
+        <div class="main-content-wrapper" id="main-content">
+          <app-topbar />
+          <!-- ← AQUÍ SE INCLUYE EL TOPBAR -->
+          <ion-router-outlet></ion-router-outlet>
+        </div>
+      </ion-split-pane>
+    </div>
   `,
 })
 export class DashboardLayoutComponent {
