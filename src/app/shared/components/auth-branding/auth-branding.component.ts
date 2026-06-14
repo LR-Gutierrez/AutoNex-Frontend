@@ -10,203 +10,67 @@ import { RevealDirective } from '../../directives/reveal.directive';
     '[class.layout-horizontal]': 'layout === "horizontal"',
   },
   template: `
-    <div class="branding" [appReveal]="revealDelay" [class.with-subtitle]="!!subtitle">
-      <div class="logo-cell">
-        @if (logoSrc) {
-          <img
-            [src]="logoSrc"
-            alt="AutoNex"
-            class="logo-img"
-            [class.logo-fill]="layout === 'horizontal'"
-            [style.width.px]="layout === 'vertical' ? logoSize : undefined"
-            [style.height.px]="layout === 'vertical' ? logoSize : undefined"
-          />
-        } @else {
-          <div
-            class="logo-fallback"
-            [style.width.px]="layout === 'vertical' ? logoSize : undefined"
-            [style.height.px]="layout === 'vertical' ? logoSize : undefined"
-          >
-            <ion-icon [name]="placeholderIcon"></ion-icon>
-          </div>
-        }
-      </div>
-
-      <div class="text-cell">
-        <h1 class="brand-title">
-          <span class="brand-accent">Auto</span>Nex
-          <span class="brand-subtitle-line">GUI&amp;CAR, C.A.</span>
-        </h1>
-        @if (subtitle) {
-          <p class="brand-subtitle">{{ subtitle }}</p>
-        }
-      </div>
+    <div
+      [appReveal]="revealDelay"
+      class="opacity-0 transition-opacity duration-[600ms] [&.revealed]:opacity-100"
+      [class.text-center]="layout !== 'horizontal'"
+      [class.flex]="layout === 'horizontal'"
+      [class.items-center]="layout === 'horizontal'"
+      [class.gap-3.5]="layout === 'horizontal'"
+      [class.mb-12]="!!subtitle && layout !== 'horizontal'"
+      [class.mb-8]="!subtitle && layout !== 'horizontal'"
+      [class.max-[374px]:!mb-8]="!!subtitle && layout !== 'horizontal'"
+    >
+      @if (layout === 'horizontal') {
+        <div class="w-[42px] h-[42px] rounded-[12px] grid place-items-center bg-gradient-to-br from-[rgba(255,59,48,0.22)] to-[rgba(255,59,48,0.06)] shadow-[inset_0_0_0_1px_rgba(255,59,48,0.12)] shrink-0 overflow-hidden">
+          @if (logoSrc) {
+            <img [src]="logoSrc" alt="AutoNex" class="w-full h-full object-contain rounded-[10px]" />
+          } @else {
+            <ion-icon [name]="placeholderIcon" class="text-[20px] text-[#d31d1d]"></ion-icon>
+          }
+        </div>
+        <div>
+          <h1 class="text-[20px] font-semibold tracking-[0.02em] leading-[1.1] m-0 text-(--app-text)">
+            <span class="text-[#d31d1d]">Auto</span>Nex
+            <span class="block text-[10px] font-light tracking-[0.14em] text-[#7c7c92] mt-1">GUI&amp;CAR, C.A.</span>
+          </h1>
+          @if (subtitle) {
+            <p class="text-sm font-light italic text-(--app-text-muted) m-0 mt-2">{{ subtitle }}</p>
+          }
+        </div>
+      } @else {
+        <div class="mb-2">
+          @if (logoSrc) {
+            <img
+              [src]="logoSrc"
+              alt="AutoNex"
+              class="object-contain mx-auto max-[374px]:!w-[100px] max-[374px]:!h-[100px]"
+              [style.width.px]="logoSize"
+              [style.height.px]="logoSize"
+            />
+          } @else {
+            <div
+              class="mx-auto bg-gradient-to-br from-[#d31d1d] to-[#a01515] rounded-[30px] shadow-[0_8px_24px_rgba(211,29,29,0.4)] flex items-center justify-center max-[374px]:!w-[100px] max-[374px]:!h-[100px]"
+              [style.width.px]="logoSize"
+              [style.height.px]="logoSize"
+            >
+              <ion-icon [name]="placeholderIcon" class="text-[40%] text-white"></ion-icon>
+            </div>
+          }
+        </div>
+        <div>
+          <h1 class="text-[28px] font-semibold tracking-[2px] leading-[1.1] m-0 text-(--app-text) max-[374px]:text-[24px]">
+            <span class="text-[#d31d1d]">Auto</span>Nex
+            <span class="block text-[13px] font-light tracking-[1px] text-[#7c7c92] mt-0.5">GUI&amp;CAR, C.A.</span>
+          </h1>
+          @if (subtitle) {
+            <p class="text-base font-light italic text-(--app-text-muted) m-0 mt-2">{{ subtitle }}</p>
+          }
+        </div>
+      }
     </div>
   `,
-  styles: [
-    `
-    :host {
-      --brand-title-color: white;
-      --brand-accent-color: #d31d1d;
-      --brand-subtitle-color: rgba(255, 255, 255, 0.6);
-      --brand-subtitle2-color: #7c7c92;
-      --brand-gap: 0;
-    }
-
-    .branding {
-      opacity: 0;
-      transition: opacity 0.6s ease-out;
-
-      &.revealed {
-        opacity: 1;
-      }
-    }
-
-    /* ── VERTICAL (default: auth pages) ── */
-    :host:not(.layout-horizontal) .branding {
-      text-align: center;
-
-      &.with-subtitle {
-        margin-bottom: 48px;
-      }
-
-      &:not(.with-subtitle) {
-        margin-bottom: 32px;
-      }
-    }
-
-    :host:not(.layout-horizontal) .logo-cell {
-      margin-bottom: 8px;
-    }
-
-    :host:not(.layout-horizontal) .logo-fallback {
-      margin: 0 auto;
-      background: var(--brand-logo-bg, linear-gradient(135deg, #d31d1d 0%, #a01515 100%));
-      border-radius: 30px;
-      box-shadow: var(--brand-logo-shadow, 0 8px 24px rgba(211, 29, 29, 0.4));
-    }
-
-    /* ── HORIZONTAL (sidebar / footer) ── */
-    :host.layout-horizontal .branding {
-      display: flex;
-      align-items: center;
-      gap: var(--brand-gap, 14px);
-    }
-
-    :host.layout-horizontal .logo-cell {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, rgba(255, 59, 48, 0.22), rgba(255, 59, 48, 0.06));
-      box-shadow: inset 0 0 0 1px rgba(255, 59, 48, 0.12);
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    :host.layout-horizontal .logo-img.logo-fill {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 10px;
-    }
-
-    :host.layout-horizontal .logo-fallback {
-      border-radius: 0;
-      box-shadow: none;
-      background: transparent;
-
-      ion-icon {
-        font-size: 20px;
-        color: var(--brand-accent-color);
-      }
-    }
-
-    :host.layout-horizontal .brand-title {
-      font-size: 20px;
-      letter-spacing: 0.02em;
-    }
-
-    :host.layout-horizontal .brand-subtitle-line {
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      margin-top: 4px;
-    }
-
-    /* ── SHARED: LOGO ── */
-    .logo-img {
-      object-fit: contain;
-    }
-
-    .logo-fallback {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      ion-icon {
-        font-size: 40%;
-        color: white;
-      }
-    }
-
-    /* ── SHARED: TEXT ── */
-    .brand-title {
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--brand-title-color);
-      margin: 0;
-      letter-spacing: 2px;
-      line-height: 1.1;
-    }
-
-    .brand-accent {
-      color: var(--brand-accent-color);
-    }
-
-    .brand-subtitle-line {
-      display: block;
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--brand-subtitle2-color);
-      letter-spacing: 1px;
-      margin-top: 2px;
-    }
-
-    .brand-subtitle {
-      font-size: 16px;
-      color: var(--brand-subtitle-color);
-      margin: 8px 0 0;
-      font-weight: 300;
-      font-style: italic;
-    }
-
-    /* ── LIGHT MODE ── */
-    @media (prefers-color-scheme: light) {
-      :host:not(.layout-horizontal) {
-        --brand-title-color: #1a1a2e;
-        --brand-subtitle-color: rgba(0, 0, 0, 0.6);
-      }
-    }
-
-    /* ── SMALL SCREEN ── */
-    @media (max-width: 374px) {
-      :host:not(.layout-horizontal) .branding.with-subtitle {
-        margin-bottom: 32px;
-      }
-
-      :host:not(.layout-horizontal) .logo-img,
-      :host:not(.layout-horizontal) .logo-fallback {
-        width: 100px !important;
-        height: 100px !important;
-      }
-
-      :host:not(.layout-horizontal) .brand-title {
-        font-size: 24px;
-      }
-    }
-    `,
-  ],
+  styles: [],
 })
 export class AuthBrandingComponent {
   @Input() layout: 'vertical' | 'horizontal' = 'vertical';

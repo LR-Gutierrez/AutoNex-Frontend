@@ -9,14 +9,30 @@ import { RevealDirective } from '../../directives/reveal.directive';
   selector: 'app-text-input',
   standalone: true,
   imports: [ReactiveFormsModule, IonInput, IonIcon, MaskitoDirective, RevealDirective],
+  styles: `
+    :host {
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --input-border: rgba(255, 255, 255, 0.1);
+      --input-focus-bg: rgba(255, 255, 255, 0.08);
+      --input-focus-border: rgba(211, 29, 29, 0.5);
+      --input-focus-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+      --input-icon: rgba(255, 255, 255, 0.5);
+      --input-icon-hover: rgba(255, 255, 255, 0.8);
+      --input-placeholder: rgba(255, 255, 255, 0.4);
+      --input-error: #ff6b6b;
+    }
+  `,
   template: `
-    <div class="field-group" [appReveal]="revealDelay">
+    <div class="mb-5 opacity-0 transition-opacity duration-[600ms] [&.revealed]:opacity-100" [appReveal]="revealDelay">
       @if (label) {
-        <label class="field-label">{{ label }}</label>
+        <label class="block text-(--app-text-muted) text-[13px] mb-1.5 ml-1">{{ label }}</label>
       }
-      <div class="input-wrapper" [class.has-password-toggle]="showPasswordToggle">
+      <div
+        class="flex items-center bg-[var(--input-bg)] border border-[var(--input-border)] rounded-[12px] px-4 transition-all duration-300 focus-within:bg-[var(--input-focus-bg)] focus-within:border-[var(--input-focus-border)] focus-within:shadow-[var(--input-focus-shadow)]"
+        [class.pr-2]="showPasswordToggle"
+      >
         @if (icon) {
-          <ion-icon [name]="icon" class="input-icon"></ion-icon>
+          <ion-icon [name]="icon" class="text-[20px] text-[var(--input-icon)] mr-3 shrink-0"></ion-icon>
         }
         <ion-input
           [type]="effectiveType"
@@ -24,141 +40,27 @@ import { RevealDirective } from '../../directives/reveal.directive';
           [placeholder]="placeholder"
           [maskito]="mask"
           [maskitoElement]="maskitoPredicate"
+          class="flex-1 text-[15px]"
+          style="--background: transparent; --color: var(--app-text); --placeholder-color: var(--input-placeholder); --padding-start: 0; --padding-end: 0"
         ></ion-input>
         @if (showPasswordToggle) {
           <ion-icon
             [name]="isPasswordVisible ? 'eye-off-outline' : 'eye-outline'"
-            class="toggle-password"
+            class="text-[20px] text-[var(--input-icon)] cursor-pointer shrink-0 transition-colors duration-300 hover:text-[var(--input-icon-hover)]"
             (click)="togglePassword()"
           ></ion-icon>
         }
       </div>
       @if (control.invalid && (control.dirty || control.touched)) {
-        <div class="error-message">
-          @for (msg of activeErrors; track msg) {
+        <div class="text-xs text-[var(--input-error)] mt-1.5 ml-4">
+          @for (msg of activeErrors; track msg; let i = $index) {
+            @if (i > 0) { <span class="mx-1">•</span> }
             <span>{{ msg }}</span>
           }
         </div>
       }
     </div>
   `,
-  styles: [
-    `
-    .field-group {
-      margin-bottom: 20px;
-      opacity: 0;
-      transition: opacity 0.6s ease-out;
-
-      &.revealed {
-        opacity: 1;
-      }
-    }
-
-    .field-label {
-      display: block;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 13px;
-      margin-bottom: 6px;
-      margin-left: 4px;
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 0 16px;
-      transition: all 0.3s ease;
-
-      &:focus-within {
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(211, 29, 29, 0.5);
-        box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
-      }
-
-      &.has-password-toggle {
-        padding-right: 8px;
-      }
-
-      ion-icon.input-icon {
-        font-size: 20px;
-        color: rgba(255, 255, 255, 0.5);
-        margin-right: 12px;
-        flex-shrink: 0;
-      }
-
-      ion-input {
-        --background: transparent;
-        --color: white;
-        --placeholder-color: rgba(255, 255, 255, 0.4);
-        --padding-start: 0;
-        --padding-end: 0;
-        font-size: 15px;
-        flex: 1;
-      }
-
-      .toggle-password {
-        font-size: 20px;
-        color: rgba(255, 255, 255, 0.5);
-        cursor: pointer;
-        flex-shrink: 0;
-        transition: color 0.3s ease;
-
-        &:hover {
-          color: rgba(255, 255, 255, 0.8);
-        }
-      }
-    }
-
-    .error-message {
-      font-size: 12px;
-      color: #ff6b6b;
-      margin-top: 6px;
-      margin-left: 16px;
-
-      span + span {
-        &::before {
-          content: ' • ';
-        }
-      }
-    }
-
-    @media (prefers-color-scheme: light) {
-      .field-label {
-        color: rgba(0, 0, 0, 0.6);
-      }
-
-      .input-wrapper {
-        background: white;
-        border-color: rgba(0, 0, 0, 0.18);
-
-        &:focus-within {
-          background: white;
-          border-color: rgba(0, 0, 0, 0.4);
-          box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
-        }
-
-        ion-icon.input-icon {
-          color: rgba(0, 0, 0, 0.7);
-        }
-
-        ion-input {
-          --color: #1a1a2e;
-          --placeholder-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .toggle-password {
-          color: rgba(0, 0, 0, 0.7);
-
-          &:hover {
-            color: rgba(0, 0, 0, 0.7);
-          }
-        }
-      }
-    }
-    `,
-  ],
 })
 export class TextInputComponent {
   @Input({ required: true }) control!: any;

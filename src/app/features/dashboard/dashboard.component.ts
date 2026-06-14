@@ -1,16 +1,6 @@
-// dashboard.component.ts - VERSIÓN SIMPLIFICADA (SIN HEADER)
-
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonLabel,
-  IonList,
-  IonItem,
   IonBadge,
   IonSkeletonText,
 } from '@ionic/angular/standalone';
@@ -23,7 +13,6 @@ import { FinancialRecordService } from '../../core/services/financial-record.ser
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { PageTitleService } from '../../core/services/page-title.service';
-import { UserRole } from '../../core/models/user.model';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 
 @Component({
@@ -31,14 +20,6 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
   standalone: true,
   imports: [
     RouterLink,
-    IonCard,
-    IonCardContent,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardSubtitle,
-    IonLabel,
-    IonList,
-    IonItem,
     IonBadge,
     IonSkeletonText,
     EnumLabelPipe,
@@ -46,445 +27,108 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
   styles: `
     :host {
       display: block;
-      --dashboard-bg: var(--app-bg);
-      --dashboard-surface: var(--app-surface);
-      --dashboard-surface-2: var(--app-surface-2);
-      --dashboard-border: var(--app-border);
-      --dashboard-text: var(--app-text);
-      --dashboard-text-muted: var(--app-text-muted);
-      --dashboard-accent: var(--app-accent);
-      --dashboard-accent-soft: var(--app-accent-soft);
-      --dashboard-success: var(--app-success);
-      --dashboard-warning: var(--app-warning);
-      --dashboard-shadow: var(--app-shadow);
-    }
-
-    .dashboard-shell {
-      padding: 20px;
-      color: var(--dashboard-text);
-      box-sizing: border-box;
-    }
-
-    .hero {
-      margin-bottom: 20px;
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: 34px;
-      line-height: 1.1;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--dashboard-text);
-    }
-
-    .hero p {
-      margin: 6px 0 0;
-      color: var(--dashboard-text-muted);
-      font-size: 14px;
-    }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-
-    .kpi-card {
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
-      border: 1px solid var(--dashboard-border);
-      border-radius: 18px;
-      box-shadow: var(--dashboard-shadow);
-      min-width: 0;
-      padding: 18px;
-      min-height: 122px;
-      box-sizing: border-box;
-    }
-
-    .kpi-label {
-      color: var(--dashboard-text-muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 14px;
-    }
-
-    .kpi-value-row {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .kpi-value {
-      font-size: 40px;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.04em;
-      color: var(--dashboard-text);
-      min-width: 0;
-      word-break: break-word;
-    }
-
-    .kpi-meta {
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .kpi-meta.positive {
-      background: rgba(34, 197, 94, 0.12);
-      color: #4ade80;
-    }
-
-    .kpi-meta.warning {
-      background: rgba(245, 158, 11, 0.12);
-      color: #fbbf24;
-    }
-
-    .kpi-meta.danger {
-      background: rgba(255, 59, 48, 0.12);
-      color: #ff5a52;
-    }
-
-    ion-card.panel-card {
-      margin: 0;
-      --background: transparent;
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
-      border: 1px solid var(--dashboard-border);
-      border-radius: 18px;
-      box-shadow: var(--dashboard-shadow);
-      min-width: 0;
-      width: 100%;
-    }
-
-    .dashboard-main {
-      display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(300px, 0.95fr);
-      gap: 20px;
-      margin-bottom: 20px;
-      min-width: 0;
-    }
-
-    .panel-card ion-card,
-    .panel-card ion-list,
-    .panel-card ion-item {
-      --background: transparent;
-      background: transparent;
-    }
-
-    .panel-card ion-card-header {
-      padding-bottom: 6px;
-    }
-
-    .panel-card ion-card-title {
-      color: var(--dashboard-text);
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .panel-card ion-card-subtitle {
-      color: var(--dashboard-text-muted);
-    }
-
-    .orders-table {
-      display: grid;
-      gap: 8px;
-      min-width: 0;
-    }
-
-    .orders-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: center;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      transition: 0.2s ease;
-      text-decoration: none;
-      min-width: 0;
-      box-sizing: border-box;
-    }
-
-    .orders-row:hover {
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .orders-row h3 {
-      margin: 0 0 4px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--dashboard-text);
-      overflow-wrap: anywhere;
-    }
-
-    .orders-row p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--dashboard-text-muted);
-      overflow-wrap: anywhere;
-    }
-
-    .status-badge {
-      --padding-start: 10px;
-      --padding-end: 10px;
-      --padding-top: 6px;
-      --padding-bottom: 6px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 700;
-      justify-self: end;
-    }
-
-    .mini-panel {
-      display: grid;
-      gap: 14px;
-      min-width: 0;
-    }
-
-    .alert-box,
-    .finance-box {
-      padding: 18px;
-      border-radius: 18px;
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
-      border: 1px solid var(--dashboard-border);
-      box-shadow: var(--dashboard-shadow);
-      box-sizing: border-box;
-      min-width: 0;
-    }
-
-    .alert-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      min-width: 0;
-    }
-
-    .alert-item:last-child {
-      border-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .alert-ring {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      border: 2px solid rgba(255, 59, 48, 0.4);
-      color: #ff5a52;
-      font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .finance-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .finance-stat {
-      text-align: center;
-      padding: 14px 10px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      min-width: 0;
-      box-sizing: border-box;
-    }
-
-    .finance-value {
-      display: block;
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 6px;
-      overflow-wrap: anywhere;
-    }
-
-    .finance-label {
-      color: var(--dashboard-text-muted);
-      font-size: 12px;
-    }
-
-    .text-success {
-      color: #4ade80;
-    }
-
-    .text-danger {
-      color: #ff6b63;
-    }
-
-    .empty-state {
-      padding: 24px;
-      text-align: center;
-      color: var(--dashboard-text-muted);
-    }
-
-    @media (max-width: 1200px) {
-      .kpi-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .dashboard-main {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 767px) {
-      .dashboard-shell {
-        padding: 14px;
-      }
-
-      .hero h1 {
-        font-size: 28px;
-      }
-
-      .kpi-grid,
-      .finance-grid,
-      .dashboard-main {
-        grid-template-columns: 1fr;
-      }
-
-      .orders-row {
-        grid-template-columns: 1fr;
-      }
-
-      .status-badge {
-        justify-self: start;
-      }
+      --card-bg: linear-gradient(180deg, rgba(30,32,52,0.96), rgba(24,25,42,0.96));
     }
   `,
   template: `
-    <div class="dashboard-shell">
-      <section class="hero">
-        <h1>Panel de Control</h1>
-        <p>Resumen operativo de la red de servicios AutoNex</p>
+    <div class="p-5 max-md:p-3.5 text-(--app-text) box-border">
+      <section class="mb-5">
+        <h1 class="m-0 text-[34px] max-md:text-[28px] leading-[1.1] font-extrabold tracking-[-0.03em]">
+          Panel de Control
+        </h1>
+        <p class="mt-1.5 text-(--app-text-muted) text-sm">
+          Resumen operativo de la red de servicios AutoNex
+        </p>
       </section>
 
       @if (loading()) {
-        <div class="kpi-grid">
+        <div class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-5">
           @for (_ of [1, 2, 3, 4]; track $index) {
-            <div class="kpi-card">
-              <ion-skeleton-text
-                animated
-                style="width: 45%; height: 12px;"
-              ></ion-skeleton-text>
-              <ion-skeleton-text
-                animated
-                style="width: 35%; height: 42px; margin-top: 18px;"
-              ></ion-skeleton-text>
-              <ion-skeleton-text
-                animated
-                style="width: 28%; height: 24px; margin-top: 12px;"
-              ></ion-skeleton-text>
+            <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
+              <ion-skeleton-text animated class="w-[45%]! h-3!"></ion-skeleton-text>
+              <ion-skeleton-text animated class="w-[35%]! h-10.5! mt-4.5"></ion-skeleton-text>
+              <ion-skeleton-text animated class="w-[28%]! h-6! mt-3"></ion-skeleton-text>
             </div>
           }
         </div>
       } @else {
-        <section class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-label">Total clientes</div>
-            <div class="kpi-value-row">
-              <div class="kpi-value">{{ clientCount() }}</div>
-              <div class="kpi-meta positive">+12%</div>
+        <section class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-5">
+          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
+            <div class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5">Total clientes</div>
+            <div class="flex items-end justify-between gap-2.5">
+              <div class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word">{{ clientCount() }}</div>
+              <div class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(34,197,94,0.12)] text-[#4ade80]">+12%</div>
             </div>
           </div>
 
-          <div class="kpi-card">
-            <div class="kpi-label">Vehículos en taller</div>
-            <div class="kpi-value-row">
-              <div class="kpi-value">{{ vehicleCount() }}</div>
-              <div class="kpi-meta warning">8 espera</div>
+          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
+            <div class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5">Vehículos en taller</div>
+            <div class="flex items-end justify-between gap-2.5">
+              <div class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word">{{ vehicleCount() }}</div>
+              <div class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(245,158,11,0.12)] text-[#fbbf24]">8 espera</div>
             </div>
           </div>
 
-          <div class="kpi-card">
-            <div class="kpi-label" style="color:#fff;">Stock crítico</div>
-            <div class="kpi-value-row">
-              <div class="kpi-value" style="color:#ff5a52;">15</div>
-              <div class="kpi-meta danger">3 alertas</div>
+          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
+            <div class="text-xs uppercase tracking-[0.08em] mb-3.5 text-white">Stock crítico</div>
+            <div class="flex items-end justify-between gap-2.5">
+              <div class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word text-[#ff5a52]">15</div>
+              <div class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(255,59,48,0.12)] text-[#ff5a52]">3 alertas</div>
             </div>
           </div>
 
-          <div class="kpi-card">
-            <div class="kpi-label">Ingresos mes</div>
-            <div class="kpi-value-row">
-              <div class="kpi-value">{{ balanceLabel() }}</div>
-              <div class="kpi-meta positive">+8.4%</div>
+          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
+            <div class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5">Ingresos mes</div>
+            <div class="flex items-end justify-between gap-2.5">
+              <div class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word">{{ balanceLabel() }}</div>
+              <div class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(34,197,94,0.12)] text-[#4ade80]">+8.4%</div>
             </div>
           </div>
         </section>
       }
 
-      <section class="dashboard-main">
-        <ion-card class="panel-card">
-          <ion-card-header>
-            <ion-card-title>Órdenes de Servicio Recientes</ion-card-title>
-            <ion-card-subtitle
-              >Últimos movimientos registrados</ion-card-subtitle
-            >
-          </ion-card-header>
+      <section class="grid grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] max-xl:grid-cols-1 gap-5 mb-5 min-w-0">
+        <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 box-border">
+          <div class="pb-1.5">
+            <h2 class="text-(--app-text) text-lg font-bold m-0">Órdenes de Servicio Recientes</h2>
+            <p class="text-(--app-text-muted) text-sm m-0 mt-0.5">Últimos movimientos registrados</p>
+          </div>
 
-          <ion-card-content>
+          <div>
             @if (ordersLoading()) {
-              <ion-list>
+              <div class="grid gap-2">
                 @for (_ of [1, 2, 3, 4]; track $index) {
-                  <ion-item lines="none">
-                    <ion-label>
-                      <ion-skeleton-text
-                        animated
-                        style="width: 70%"
-                      ></ion-skeleton-text>
-                      <ion-skeleton-text
-                        animated
-                        style="width: 45%"
-                      ></ion-skeleton-text>
-                    </ion-label>
-                  </ion-item>
+                  <div class="flex items-center gap-3 py-2">
+                    <div class="flex-1">
+                      <ion-skeleton-text animated class="w-[70%]!"></ion-skeleton-text>
+                      <ion-skeleton-text animated class="w-[45%]! mt-1"></ion-skeleton-text>
+                    </div>
+                  </div>
                 }
-              </ion-list>
+              </div>
             } @else if (recentOrders().length === 0) {
-              <div class="empty-state">
+              <div class="py-4 text-center text-(--app-text-muted)">
                 No hay órdenes de servicio registradas.
               </div>
             } @else {
-              <div class="orders-table">
+              <div class="grid gap-2 min-w-0">
                 @for (order of recentOrders(); track order.id) {
                   <a
-                    class="orders-row"
+                    class="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto] max-md:grid-cols-1 gap-3 items-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] transition duration-200 ease-in-out no-underline hover:bg-[rgba(255,255,255,0.04)] min-w-0 box-border"
                     [routerLink]="['/service-orders', order.id]"
                   >
                     <div>
-                      <h3>{{ order.vehicleInfo }}</h3>
-                      <p>{{ order.clientName }}</p>
+                      <h3 class="m-0 mb-1 text-sm font-bold text-(--app-text) overflow-wrap-anywhere">{{ order.vehicleInfo }}</h3>
+                      <p class="m-0 text-xs text-(--app-text-muted) overflow-wrap-anywhere">{{ order.clientName }}</p>
                     </div>
 
                     <div>
-                      <p>Orden #{{ order.id }}</p>
+                      <p class="m-0 text-xs text-(--app-text-muted) overflow-wrap-anywhere">Orden #{{ order.id }}</p>
                     </div>
 
                     <ion-badge
-                      class="status-badge"
+                      class="rounded-full text-[11px] font-bold justify-self-end max-md:justify-self-start"
+                      style="--padding-start: 10px; --padding-end: 10px; --padding-top: 6px; --padding-bottom: 6px"
                       [color]="statusColor(order.status)"
                     >
                       {{ order.status | enumLabel }}
@@ -493,75 +137,62 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
                 }
               </div>
             }
-          </ion-card-content>
-        </ion-card>
+          </div>
+        </div>
 
-        <div class="mini-panel">
-          <div class="alert-box">
-            <ion-card-title style="display:block; margin-bottom: 14px;">
+        <div class="grid gap-3.5 min-w-0">
+          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-4.5 box-border min-w-0">
+            <h2 class="text-(--app-text) text-lg font-bold m-0 mb-3.5">
               Alertas de KM
-            </ion-card-title>
+            </h2>
 
-            <div class="alert-item">
-              <div class="alert-ring">90%</div>
+            <div class="flex items-center gap-3 py-3 border-b border-[rgba(255,255,255,0.06)] last:border-b-0 last:pb-0 min-w-0">
+              <div class="w-11 h-11 rounded-full grid place-items-center border-2 border-[rgba(255,59,48,0.4)] text-[#ff5a52] text-xs font-bold shrink-0">90%</div>
               <div>
-                <div style="font-weight:700;">Toyota Hilux</div>
-                <div
-                  style="font-size:12px; color: var(--dashboard-text-muted);"
-                >
-                  Servicio de 50,000 KM
-                </div>
+                <div class="font-bold">Toyota Hilux</div>
+                <div class="text-xs text-(--app-text-muted)">Servicio de 50,000 KM</div>
               </div>
             </div>
 
-            <div class="alert-item">
-              <div
-                class="alert-ring"
-                style="border-color: rgba(148,163,184,.35); color:#a1a1aa;"
-              >
-                85%
-              </div>
+            <div class="flex items-center gap-3 py-3 border-b border-[rgba(255,255,255,0.06)] last:border-b-0 last:pb-0 min-w-0">
+              <div class="w-11 h-11 rounded-full grid place-items-center border-2 border-[rgba(148,163,184,0.35)] text-[#a1a1aa] text-xs font-bold shrink-0">85%</div>
               <div>
-                <div style="font-weight:700;">Ford Ranger</div>
-                <div
-                  style="font-size:12px; color: var(--dashboard-text-muted);"
-                >
-                  Cambio de aceite
-                </div>
+                <div class="font-bold">Ford Ranger</div>
+                <div class="text-xs text-(--app-text-muted)">Cambio de aceite</div>
               </div>
             </div>
           </div>
 
           @if (summary(); as fin) {
-            <div class="finance-box">
-              <ion-card-title style="display:block; margin-bottom: 14px;">
+            <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-4.5 box-border min-w-0">
+              <h2 class="text-(--app-text) text-lg font-bold m-0 mb-3.5">
                 Resumen Financiero
-              </ion-card-title>
+              </h2>
 
-              <div class="finance-grid">
-                <div class="finance-stat">
-                  <span class="finance-value text-success">
+              <div class="grid grid-cols-3 max-md:grid-cols-1 gap-4">
+                <div class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border">
+                  <span class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere text-[#4ade80]">
                     \${{ fin.totalIncome.toFixed(2) }}
                   </span>
-                  <span class="finance-label">Ingresos</span>
+                  <span class="text-(--app-text-muted) text-xs">Ingresos</span>
                 </div>
 
-                <div class="finance-stat">
-                  <span class="finance-value text-danger">
+                <div class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border">
+                  <span class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere text-[#ff6b63]">
                     \${{ fin.totalExpenses.toFixed(2) }}
                   </span>
-                  <span class="finance-label">Egresos</span>
+                  <span class="text-(--app-text-muted) text-xs">Egresos</span>
                 </div>
 
-                <div class="finance-stat">
+                <div class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border">
                   <span
-                    class="finance-value"
-                    [class.text-success]="fin.balance >= 0"
-                    [class.text-danger]="fin.balance < 0"
+                    class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere"
+                    [class.text-[#4ade80]]="fin.balance >= 0"
+                    [class.text-[#ff6b63]]="fin.balance < 0"
                   >
                     \${{ fin.balance.toFixed(2) }}
                   </span>
-                  <span class="finance-label">Balance</span>
+                  <span class="text-(--app-text-muted) text-xs">Balance</span>
                 </div>
               </div>
             </div>

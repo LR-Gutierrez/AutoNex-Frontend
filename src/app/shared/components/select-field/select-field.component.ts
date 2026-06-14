@@ -12,14 +12,29 @@ export interface SelectOption {
   selector: 'app-select-field',
   standalone: true,
   imports: [ReactiveFormsModule, IonSelect, IonSelectOption, IonIcon, RevealDirective],
+  styles: `
+    :host {
+      --select-bg: rgba(255, 255, 255, 0.05);
+      --select-border: rgba(255, 255, 255, 0.1);
+      --select-focus-bg: rgba(255, 255, 255, 0.08);
+      --select-focus-border: rgba(211, 29, 29, 0.5);
+      --select-focus-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+      --select-icon: rgba(255, 255, 255, 0.5);
+      --select-placeholder: rgba(255, 255, 255, 0.4);
+      --select-error: #ff6b6b;
+    }
+  `,
   template: `
-    <div class="select-field" [appReveal]="revealDelay">
+    <div class="mb-5 opacity-0 transition-opacity duration-[600ms] [&.revealed]:opacity-100" [appReveal]="revealDelay">
       @if (label) {
-        <label class="field-label">{{ label }}</label>
+        <label class="block text-(--app-text-muted) text-[13px] mb-1.5 ml-1">{{ label }}</label>
       }
-      <div class="input-wrapper" [class.has-icon]="!!icon">
+      <div
+        class="flex items-center bg-[var(--select-bg)] border border-[var(--select-border)] rounded-[12px] transition-all duration-300 focus-within:bg-[var(--select-focus-bg)] focus-within:border-[var(--select-focus-border)] focus-within:shadow-[var(--select-focus-shadow)]"
+        [class.pl-4]="!!icon"
+      >
         @if (icon) {
-          <ion-icon [name]="icon" class="input-icon"></ion-icon>
+          <ion-icon [name]="icon" class="text-[20px] text-[var(--select-icon)] mr-3 shrink-0"></ion-icon>
         }
         <ion-select
           [formControl]="control"
@@ -27,6 +42,8 @@ export interface SelectOption {
           [interface]="interface"
           [cancelText]="cancelText"
           [okText]="okText"
+          class="w-full"
+          style="--padding-start: 16px; --padding-end: 16px; --color: var(--app-text); --placeholder-color: var(--select-placeholder)"
         >
           @for (opt of options; track opt.value) {
             <ion-select-option [value]="opt.value">{{ opt.label }}</ion-select-option>
@@ -34,103 +51,15 @@ export interface SelectOption {
         </ion-select>
       </div>
       @if (control.invalid && (control.dirty || control.touched)) {
-        <div class="error-message">
-          @for (msg of activeErrors; track msg) {
+        <div class="text-xs text-[var(--select-error)] mt-1.5 ml-4">
+          @for (msg of activeErrors; track msg; let i = $index) {
+            @if (i > 0) { <span class="mx-1">•</span> }
             <span>{{ msg }}</span>
           }
         </div>
       }
     </div>
   `,
-  styles: [
-    `
-    .select-field {
-      margin-bottom: 20px;
-      opacity: 0;
-      transition: opacity 0.6s ease-out;
-
-      &.revealed {
-        opacity: 1;
-      }
-    }
-
-    .field-label {
-      display: block;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 13px;
-      margin-bottom: 6px;
-      margin-left: 4px;
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 0;
-      transition: all 0.3s ease;
-
-      &:focus-within {
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(211, 29, 29, 0.5);
-        box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
-      }
-
-      &.has-icon {
-        padding-left: 16px;
-      }
-
-      ion-icon.input-icon {
-        font-size: 20px;
-        color: rgba(255, 255, 255, 0.5);
-        margin-right: 12px;
-        flex-shrink: 0;
-      }
-
-      ion-select {
-        --padding-start: 16px;
-        --padding-end: 16px;
-        width: 100%;
-        --color: white;
-        --placeholder-color: rgba(255, 255, 255, 0.4);
-      }
-    }
-
-    .error-message {
-      font-size: 12px;
-      color: #ff6b6b;
-      margin-top: 6px;
-      margin-left: 16px;
-    }
-
-    @media (prefers-color-scheme: light) {
-      .field-label {
-        color: rgba(0, 0, 0, 0.6);
-      }
-
-      .input-wrapper {
-        background: white;
-        border-color: rgba(0, 0, 0, 0.18);
-
-        &:focus-within {
-          background: white;
-          border-color: rgba(0, 0, 0, 0.4);
-          box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
-        }
-
-        ion-icon.input-icon {
-          color: rgba(0, 0, 0, 0.7);
-        }
-
-        ion-select {
-          --color: #1a1a2e;
-          --placeholder-color: rgba(0, 0, 0, 0.5);
-        }
-      }
-    }
-    `,
-  ],
 })
 export class SelectFieldComponent {
   @Input({ required: true }) control!: any;
