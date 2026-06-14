@@ -1,13 +1,19 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import type { MaskitoOptions } from '@maskito/core';
 
 import { emailValidator } from '../../shared/validators/email.validators';
 import { passwordValidator } from '../../shared/validators/password.validator';
-import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
+import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { SelectFieldComponent } from '../../shared/components/select-field/select-field.component';
 import { TextareaFieldComponent } from '../../shared/components/textarea-field/textarea-field.component';
 import { DateFieldComponent } from '../../shared/components/date-field/date-field.component';
+import { DatetimeFieldComponent } from '../../shared/components/datetime-field/datetime-field.component';
+import { ToggleFieldComponent } from '../../shared/components/toggle-field/toggle-field.component';
+import { CheckboxFieldComponent } from '../../shared/components/checkbox-field/checkbox-field.component';
+import { RadioFieldComponent } from '../../shared/components/radio-field/radio-field.component';
+import { RangeFieldComponent } from '../../shared/components/range-field/range-field.component';
 import { AuthButtonComponent } from '../../shared/components/auth-button/auth-button.component';
 import { PageTitleService } from '../../core/services/page-title.service';
 
@@ -17,10 +23,15 @@ import { PageTitleService } from '../../core/services/page-title.service';
   imports: [
     ReactiveFormsModule,
     JsonPipe,
-    FormFieldComponent,
+    TextInputComponent,
     SelectFieldComponent,
     TextareaFieldComponent,
     DateFieldComponent,
+    DatetimeFieldComponent,
+    ToggleFieldComponent,
+    CheckboxFieldComponent,
+    RadioFieldComponent,
+    RangeFieldComponent,
     AuthButtonComponent,
   ],
   template: `
@@ -31,37 +42,38 @@ import { PageTitleService } from '../../core/services/page-title.service';
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="demo-form">
         <h2 class="section-title">Campos de texto</h2>
 
-        <app-form-field
+        <app-text-input
           [control]="form.get('name')!"
           label="Nombre"
           icon="person-outline"
           placeholder="Tu nombre"
-        ></app-form-field>
+        ></app-text-input>
 
-        <app-form-field
+        <app-text-input
           [control]="form.get('email')!"
           label="Correo electrónico"
           icon="mail-outline"
           type="email"
           placeholder="tu@email.com"
-        ></app-form-field>
+        ></app-text-input>
 
-        <app-form-field
+        <app-text-input
           [control]="form.get('password')!"
           label="Contraseña"
           icon="lock-closed-outline"
           type="password"
           placeholder="Mínimo 8 caracteres"
           [showPasswordToggle]="true"
-        ></app-form-field>
+        ></app-text-input>
 
-        <app-form-field
+        <app-text-input
           [control]="form.get('phone')!"
           label="Teléfono"
           icon="call-outline"
           type="tel"
-          placeholder="+58 412 123 4567"
-        ></app-form-field>
+          placeholder="(0412) 123-4567"
+          [mask]="phoneMask"
+        ></app-text-input>
 
         <h2 class="section-title">Select</h2>
 
@@ -88,9 +100,56 @@ import { PageTitleService } from '../../core/services/page-title.service';
           label="Notas"
           icon="document-text-outline"
           placeholder="Escribe una descripción..."
-          [rows]="5"
+          [counter]="true"
           [autoGrow]="true"
+          [maxlength]="100"
         ></app-textarea-field>
+
+        <h2 class="section-title">Datetime</h2>
+
+        <app-datetime-field
+          [control]="form.get('datetime')!"
+          label="Fecha y hora"
+          hourCycle="h12"
+        ></app-datetime-field>
+
+        <h2 class="section-title">Toggle</h2>
+
+        <app-toggle-field
+          [control]="form.get('notifications')!"
+          label="Notificaciones activas"
+          icon="notifications-outline"
+        ></app-toggle-field>
+
+        <h2 class="section-title">Checkbox</h2>
+
+        <app-checkbox-field
+          [control]="form.get('terms')!"
+          label="Acepto los términos"
+          icon="shield-checkmark-outline"
+        ></app-checkbox-field>
+
+        <h2 class="section-title">Radio</h2>
+
+        <app-radio-field
+          [control]="form.get('priority')!"
+          label="Prioridad"
+          icon="flag-outline"
+          [options]="priorityOptions"
+        ></app-radio-field>
+
+        <h2 class="section-title">Range</h2>
+
+        <app-range-field
+          [control]="form.get('rating')!"
+          label="Valoración"
+          icon="star-outline"
+          [min]="1"
+          [max]="5"
+          [step]="1"
+          [snaps]="true"
+          [ticks]="true"
+        ></app-range-field>
 
         <app-auth-button
           label="ENVIAR FORMULARIO"
@@ -174,6 +233,12 @@ import { PageTitleService } from '../../core/services/page-title.service';
         }
       }
 
+      @media (prefers-color-scheme: light) {
+        .result-box {
+          background: rgba(0, 0, 0, 0.03);
+        }
+      }
+
       @media (max-width: 767px) {
         .demo-shell {
           padding: 20px 16px;
@@ -195,8 +260,33 @@ export class FormDemoComponent implements OnInit {
     phone: [''],
     country: ['', Validators.required],
     date: ['', Validators.required],
+    datetime: ['', Validators.required],
+    notifications: [true],
+    terms: [false, Validators.requiredTrue],
+    priority: ['medium', Validators.required],
+    rating: [3],
     notes: ['', Validators.required],
   });
+
+  readonly phoneMask: MaskitoOptions = {
+    mask: [
+      '(',
+      /\d/,
+      /\d/,
+      /\d/,
+      /\d/,
+      ')',
+      ' ',
+      /\d/,
+      /\d/,
+      /\d/,
+      '-',
+      /\d/,
+      /\d/,
+      /\d/,
+      /\d/,
+    ],
+  };
 
   countryOptions = [
     { value: 'VE', label: 'Venezuela' },
@@ -205,6 +295,13 @@ export class FormDemoComponent implements OnInit {
     { value: 'MX', label: 'México' },
     { value: 'CO', label: 'Colombia' },
     { value: 'AR', label: 'Argentina' },
+  ];
+
+  priorityOptions = [
+    { value: 'low', label: 'Baja' },
+    { value: 'medium', label: 'Media' },
+    { value: 'high', label: 'Alta' },
+    { value: 'critical', label: 'Crítica' },
   ];
 
   ngOnInit() {

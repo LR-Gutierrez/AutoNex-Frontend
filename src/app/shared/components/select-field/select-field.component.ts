@@ -111,21 +111,21 @@ export interface SelectOption {
 
       .input-wrapper {
         background: white;
-        border-color: rgba(0, 0, 0, 0.1);
+        border-color: rgba(0, 0, 0, 0.18);
 
         &:focus-within {
           background: white;
-          border-color: rgba(0, 0, 0, 0.3);
+          border-color: rgba(0, 0, 0, 0.4);
           box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
         }
 
         ion-icon.input-icon {
-          color: rgba(0, 0, 0, 0.4);
+          color: rgba(0, 0, 0, 0.7);
         }
 
         ion-select {
           --color: #1a1a2e;
-          --placeholder-color: rgba(0, 0, 0, 0.4);
+          --placeholder-color: rgba(0, 0, 0, 0.5);
         }
       }
     }

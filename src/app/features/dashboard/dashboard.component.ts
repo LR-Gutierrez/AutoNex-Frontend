@@ -419,7 +419,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
           </div>
 
           <div class="kpi-card">
-            <div class="kpi-label" style="color:#ff6b63;">Stock crítico</div>
+            <div class="kpi-label" style="color:#fff;">Stock crítico</div>
             <div class="kpi-value-row">
               <div class="kpi-value" style="color:#ff5a52;">15</div>
               <div class="kpi-meta danger">3 alertas</div>
@@ -599,7 +599,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.pageTitle.title.set('Panel de Control');
-    this.pageTitle.subtitle.set('Resumen operativo de la red de servicios AutoNex');
+    this.pageTitle.subtitle.set(
+      'Resumen operativo de la red de servicios AutoNex',
+    );
     this.loadData();
     this.refreshService.refresh$.subscribe(() => this.loadData());
   }

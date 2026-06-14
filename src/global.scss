@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -25,7 +25,7 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap");
 
 /*
  * App CSS
@@ -34,7 +34,7 @@
  * the entire app.
  */
 
- @import "./app/app.scss";
+@import "./app/app.scss";
 
 /* === Design Tokens Compartidos (Todas las verticales) === */
 :root {
@@ -216,71 +216,6 @@
     max-width: 400px;
   }
 
-  .field-label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 6px;
-  }
-
-  .input-wrapper {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    margin-bottom: 14px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-
-    &:focus-within {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(211, 29, 29, 0.5);
-      box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
-    }
-
-    ion-icon.input-icon {
-      font-size: 20px;
-      color: var(--text-secondary);
-      margin-left: 12px;
-      flex-shrink: 0;
-    }
-
-    ion-input,
-    ion-textarea {
-      --color: var(--text-primary);
-      --placeholder-color: var(--text-secondary);
-      --padding-start: 12px;
-      --padding-end: 12px;
-      font-size: 14px;
-      min-height: 42px;
-      flex: 1;
-    }
-
-    ion-textarea {
-      min-height: 60px;
-    }
-  }
-
-  .select-wrapper {
-    ion-select {
-      color: var(--text-primary);
-      --placeholder-color: var(--text-secondary);
-      padding: 0 12px;
-      width: 100%;
-      min-height: 42px;
-      font-size: 14px;
-    }
-  }
-
-  .error-msg {
-    font-size: 11px;
-    color: #ff6b6b;
-    margin-top: -10px;
-    margin-bottom: 10px;
-  }
-
   .text-gray-500 {
     color: var(--text-secondary) !important;
   }
@@ -315,4 +250,429 @@ ion-content.app-page {
   --overflow: auto;
   --padding-start: 0;
   --padding-end: 0;
+}
+
+/* === Light Theme — Sistema (prefers-color-scheme) === */
+@media (prefers-color-scheme: light) {
+  :root {
+    --app-bg: #f0f1f3;
+    --app-bg-gradient: linear-gradient(180deg, #f0f1f3 0%, #e2e4e8 100%);
+    --app-surface: #ffffff;
+    --app-surface-2: #f8f9fa;
+    --app-border: rgba(0, 0, 0, 0.10);
+    --app-text: #111827;
+    --app-text-muted: #6b7280;
+    --app-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* === Light Theme Manual (data-theme="light" en <html>) === */
+[data-theme="light"] {
+  --app-bg: #f0f1f3;
+  --app-bg-gradient: linear-gradient(180deg, #f0f1f3 0%, #e2e4e8 100%);
+  --app-surface: #ffffff;
+  --app-surface-2: #f8f9fa;
+  --app-border: rgba(0, 0, 0, 0.10);
+  --app-text: #111827;
+  --app-text-muted: #6b7280;
+  --app-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .dashboard-theme {
+  --page-background: linear-gradient(135deg, #eef0f2 0%, #e2e4e8 100%);
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: rgba(0, 0, 0, 0.5);
+
+  ion-card {
+    background: #ffffff;
+    border-color: #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    color: #111827;
+
+    ion-card-title,
+    ion-card-subtitle {
+      color: #111827;
+    }
+
+    ion-card-content {
+      color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  ion-item {
+    --background: transparent;
+    --color: #111827;
+    --border-color: #e5e7eb;
+    --detail-icon-color: rgba(0, 0, 0, 0.5);
+  }
+
+  ion-label {
+    color: #111827;
+
+    h2 {
+      color: #111827;
+    }
+
+    p {
+      color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  ion-note {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  ion-searchbar {
+    --background: #ffffff;
+    --color: #111827;
+    --placeholder-color: rgba(0, 0, 0, 0.5);
+    --icon-color: rgba(0, 0, 0, 0.4);
+    --border-radius: 10px;
+  }
+
+  ion-skeleton-text {
+    --background: rgba(0, 0, 0, 0.08);
+  }
+
+  ion-button {
+    &[fill="clear"] {
+      --color: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  .submit-btn,
+  ion-button[expand="block"] {
+    &[disabled] {
+      --background: rgba(0, 0, 0, 0.08);
+      --color: rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .app-brand-title {
+    color: #111827;
+  }
+
+  .app-brand-subtitle {
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+[data-theme="light"] .dashboard-theme ion-menu {
+  ion-item {
+    --color: rgba(0, 0, 0, 0.7);
+
+    &:hover {
+      --background: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  ion-icon {
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+[data-theme="light"] app-sidebar {
+  --sidebar-bg: #ffffff !important;
+  --sidebar-surface: rgba(0, 0, 0, 0.03) !important;
+  --sidebar-border: #e5e7eb !important;
+  --sidebar-text: #6b7280 !important;
+  --sidebar-text-active: #111827 !important;
+  --sidebar-icon: #9ca3af !important;
+  --sidebar-icon-active: var(--ion-color-danger, #d31d1d) !important;
+  --sidebar-title: #111827 !important;
+  --sidebar-subtitle: #6b7280 !important;
+}
+
+[data-theme="light"] app-sidebar ion-item.active::part(native) {
+  background: rgba(0, 0, 0, 0.04);
+  box-shadow:
+    inset -3px 0 0 0 var(--sidebar-icon-active),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .app-brand-subtitle {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* === Dashboard cards light override === */
+[data-theme="light"] app-dashboard .kpi-card {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] app-dashboard ion-card.panel-card {
+  --background: transparent;
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] app-dashboard .alert-box,
+[data-theme="light"] app-dashboard .finance-box {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] app-dashboard .orders-row {
+  background: #f9fafb;
+  border-color: #f3f4f6;
+}
+
+[data-theme="light"] app-dashboard .orders-row:hover {
+  background: #f3f4f6;
+}
+
+[data-theme="light"] app-dashboard .finance-stat {
+  background: #f9fafb;
+  border-color: #f3f4f6;
+}
+
+[data-theme="light"] app-dashboard .alert-item {
+  border-bottom-color: #f3f4f6;
+}
+
+[data-theme="light"] app-form-demo .result-box {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] app-dashboard .kpi-label {
+  color: var(--dashboard-text-muted) !important;
+}
+
+[data-theme="light"] app-dashboard .kpi-meta.positive {
+  background: rgba(34, 197, 94, 0.10);
+  color: #16a34a;
+}
+
+[data-theme="light"] app-dashboard .kpi-meta.warning {
+  background: rgba(245, 158, 11, 0.10);
+  color: #d97706;
+}
+
+[data-theme="light"] app-dashboard .kpi-meta.danger {
+  background: rgba(255, 59, 48, 0.10);
+  color: #dc2626;
+}
+
+/* === Light override for topbar === */
+[data-theme="light"] app-topbar {
+  --topbar-text: #111827 !important;
+  --topbar-text-muted: #6b7280 !important;
+  --topbar-surface: rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] app-topbar .ghost-button {
+  --background: rgba(0, 0, 0, 0.04) !important;
+  --background-hover: rgba(0, 0, 0, 0.08) !important;
+  --border-color: #e5e7eb !important;
+}
+
+[data-theme="light"] app-topbar .profile-chip {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] app-topbar .profile-popover {
+  --background: #ffffff !important;
+  --border-color: #e5e7eb !important;
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] app-topbar .profile-popover::part(content) {
+  border-color: #e5e7eb !important;
+}
+
+[data-theme="light"] app-topbar .profile-popover ion-content {
+  --background: #ffffff !important;
+  --color: #111827 !important;
+}
+
+[data-theme="light"] app-topbar .profile-popover ion-item {
+  --color: #111827 !important;
+  --background-hover: rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] app-topbar .profile-popover ion-item ion-icon {
+  color: #6b7280 !important;
+}
+
+/* === Light override for shared form components === */
+[data-theme="light"] app-text-input .field-label,
+[data-theme="light"] app-textarea-field .field-label,
+[data-theme="light"] app-select-field .field-label,
+[data-theme="light"] app-date-field .field-label,
+[data-theme="light"] app-datetime-field .field-label,
+[data-theme="light"] app-radio-field .field-label,
+[data-theme="light"] app-range-field .field-label {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="light"] app-text-input .input-wrapper,
+[data-theme="light"] app-select-field .input-wrapper,
+[data-theme="light"] app-date-field .input-wrapper {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] app-text-input .input-wrapper:focus-within,
+[data-theme="light"] app-select-field .input-wrapper:focus-within,
+[data-theme="light"] app-date-field .input-wrapper:focus-within {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+}
+
+[data-theme="light"] app-text-input .input-wrapper ion-icon.input-icon,
+[data-theme="light"] app-select-field .input-wrapper ion-icon.input-icon,
+[data-theme="light"] app-date-field .input-wrapper ion-icon.input-icon {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="light"] app-text-input .input-wrapper ion-input,
+[data-theme="light"] app-date-field .input-wrapper ion-input {
+  --color: #1a1a2e !important;
+  --placeholder-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="light"] app-text-input .input-wrapper .toggle-password {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="light"] app-text-input .input-wrapper .toggle-password:hover {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="light"] app-select-field .input-wrapper ion-select {
+  --color: #1a1a2e !important;
+  --placeholder-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="light"] app-textarea-field .textarea-wrapper {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] app-textarea-field .textarea-wrapper:focus-within {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+}
+
+[data-theme="light"] app-textarea-field .textarea-wrapper ion-icon.input-icon {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="light"] app-textarea-field .textarea-wrapper ion-textarea {
+  --color: #1a1a2e !important;
+  --placeholder-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="light"] app-datetime-field ion-datetime {
+  --background: white;
+  --color: #1a1a2e !important;
+  --placeholder-color: rgba(0, 0, 0, 0.5) !important;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] app-checkbox-field .checkbox-row {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] app-checkbox-field .checkbox-row:focus-within {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+}
+
+[data-theme="light"] app-checkbox-field .checkbox-row ion-checkbox {
+  --background: rgba(0, 0, 0, 0.05);
+  --border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] app-checkbox-field .checkbox-row ion-icon.field-icon {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="light"] app-toggle-field .toggle-row {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] app-toggle-field .toggle-row:focus-within {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+}
+
+[data-theme="light"] app-toggle-field .toggle-row ion-icon.field-icon {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="light"] app-toggle-field .toggle-row ion-toggle {
+  --background: rgba(0, 0, 0, 0.1);
+  --background-checked: rgba(211, 29, 29, 0.4);
+}
+
+[data-theme="light"] app-radio-field .radio-wrapper {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] app-radio-field .radio-wrapper:focus-within {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+}
+
+[data-theme="light"] app-radio-field .radio-wrapper ion-icon.field-icon {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="light"] app-radio-field .radio-wrapper ion-radio {
+  --color: rgba(0, 0, 0, 0.3);
+  --color-checked: #d31d1d;
+}
+
+[data-theme="light"] app-range-field .range-wrapper {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="light"] app-range-field .range-wrapper:focus-within {
+  background: white;
+  border-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
+}
+
+[data-theme="light"] app-range-field .range-wrapper ion-icon.field-icon {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
+
+[data-theme="light"] app-range-field .range-wrapper ion-range {
+  --bar-background: rgba(0, 0, 0, 0.1);
+}
+
+/* === Light override for ion-menu-button inside topbar === */
+[data-theme="light"] app-topbar ion-menu-button {
+  --color: var(--topbar-text);
+}
+
+/* === Light override for user-avatar === */
+[data-theme="light"] app-user-avatar .user-avatar {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] app-user-avatar .avatar-fallback {
+  filter: brightness(0);
+  opacity: 0.5;
+}
+
+[data-theme="light"] app-topbar .dashboard-search::part(icon),
+[data-theme="light"] app-topbar .icon-button ion-icon {
+  color: var(--topbar-text-muted);
 }

@@ -8,7 +8,7 @@ import * as allIcons from 'ionicons/icons';
 import { emailValidator } from '../../../shared/validators/email.validators';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthBrandingComponent } from '../../../shared/components/auth-branding/auth-branding.component';
-import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
+import { TextInputComponent } from '../../../shared/components/text-input/text-input.component';
 import { AuthButtonComponent } from '../../../shared/components/auth-button/auth-button.component';
 
 @Component({
@@ -20,7 +20,7 @@ import { AuthButtonComponent } from '../../../shared/components/auth-button/auth
     IonContent,
     IonIcon,
     AuthBrandingComponent,
-    FormFieldComponent,
+    TextInputComponent,
     AuthButtonComponent,
   ],
   template: `
@@ -37,16 +37,16 @@ import { AuthButtonComponent } from '../../../shared/components/auth-button/auth
           (ngSubmit)="signIn()"
           class="login-form"
         >
-          <app-form-field
+          <app-text-input
             [control]="loginForm.get('email')!"
             label="Correo electrónico"
             icon="mail-outline"
             type="email"
             placeholder="tu@email.com"
             [revealDelay]="200"
-          ></app-form-field>
+          ></app-text-input>
 
-          <app-form-field
+          <app-text-input
             [control]="loginForm.get('password')!"
             label="Contraseña"
             icon="lock-closed-outline"
@@ -54,7 +54,7 @@ import { AuthButtonComponent } from '../../../shared/components/auth-button/auth
             placeholder="Ingresa tu contraseña"
             [showPasswordToggle]="true"
             [revealDelay]="200"
-          ></app-form-field>
+          ></app-text-input>
 
           <app-auth-button
             label="INICIAR SESIÓN"

@@ -1,4 +1,4 @@
-// topbar.component.ts - Versión definitiva
+// topbar.component.ts - Versión corregida
 
 import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
@@ -19,6 +19,7 @@ import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 import { PageTitleService } from '../../core/services/page-title.service';
 
@@ -50,11 +51,16 @@ import { PageTitleService } from '../../core/services/page-title.service';
       min-height: 84px;
       padding: 12px 16px;
       box-sizing: border-box;
-      --topbar-text: #f3f4fb;
-      --topbar-text-muted: #9a9cb3;
-      --topbar-accent: var(--ion-color-danger, #ff3b30);
+      background: var(--app-surface);
+      border-bottom: 1px solid var(--app-border);
+      /* Usar variables globales en lugar de fijas */
+      --topbar-text: var(--app-text);
+      --topbar-text-muted: var(--app-text-muted);
       --topbar-surface: rgba(255, 255, 255, 0.04);
+      --topbar-border: var(--app-border);
     }
+
+    /* Removemos el @media prefers-color-scheme porque ya no es necesario */
 
     .header-left {
       display: flex;
@@ -90,7 +96,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
       line-height: 1.2;
     }
 
-    /* Contenedor de acciones - ahora más compacto */
     .header-actions {
       display: flex;
       align-items: center;
@@ -99,7 +104,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
       flex-shrink: 0;
     }
 
-    /* Buscador - solo visible en desktop/tablet */
     .dashboard-search {
       width: 260px;
       min-width: 200px;
@@ -122,7 +126,7 @@ import { PageTitleService } from '../../core/services/page-title.service';
     }
 
     .ghost-button {
-      --background: rgba(255, 255, 255, 0.04);
+      --background: var(--topbar-surface);
       --background-hover: rgba(255, 255, 255, 0.07);
       --color: var(--topbar-text);
       --border-color: var(--topbar-border);
@@ -186,6 +190,12 @@ import { PageTitleService } from '../../core/services/page-title.service';
       border: none;
       background: transparent;
       outline: none;
+      border-radius: 12px;
+      transition: background 0.2s ease;
+    }
+
+    .profile-chip:hover {
+      background: var(--topbar-surface);
     }
 
     .profile-chip app-user-avatar {
@@ -220,22 +230,22 @@ import { PageTitleService } from '../../core/services/page-title.service';
     }
 
     .profile-popover {
-      --background: linear-gradient(180deg, #161625 0%, #10101b 100%);
-      --border-color: rgba(255, 255, 255, 0.08);
+      --background: var(--app-surface);
+      --border-color: var(--app-border);
       --border-radius: 14px;
-      --box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+      --box-shadow: var(--app-shadow);
       --width: 200px;
       --backdrop-background: rgba(0, 0, 0, 0.5);
       --backdrop-opacity: 0.3;
     }
 
     .profile-popover::part(content) {
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--app-border);
     }
 
     .profile-popover ion-content {
       --background: transparent;
-      --color: #f3f4fb;
+      --color: var(--app-text);
     }
 
     .profile-popover ion-list {
@@ -245,9 +255,9 @@ import { PageTitleService } from '../../core/services/page-title.service';
 
     .profile-popover ion-item {
       --background: transparent;
-      --background-hover: rgba(255, 255, 255, 0.04);
-      --background-activated: rgba(255, 255, 255, 0.04);
-      --color: #f3f4fb;
+      --background-hover: var(--app-surface-2);
+      --background-activated: var(--app-surface-2);
+      --color: var(--app-text);
       --border-radius: 10px;
       --padding-start: 12px;
       --padding-end: 12px;
@@ -260,7 +270,7 @@ import { PageTitleService } from '../../core/services/page-title.service';
     }
 
     .profile-popover ion-item ion-icon {
-      color: #9a9cb3;
+      color: var(--app-text-muted);
       font-size: 18px;
       margin-right: 12px;
     }
@@ -363,28 +373,26 @@ import { PageTitleService } from '../../core/services/page-title.service';
       </ion-button>
 
       <ion-button class="primary-button" routerLink="/services">
-        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-        <span class="primary-label">Orden</span>
+        <ion-icon
+          name="add-circle-outline"
+          slot="start"
+          style="color: #fff;"
+        ></ion-icon>
+        <span class="primary-label" style="color: #fff;">Orden</span>
+      </ion-button>
+
+      <ion-button class="icon-button" fill="clear" aria-label="Notificaciones">
+        <ion-icon name="notifications-outline" slot="icon-only"></ion-icon>
+        <ion-badge class="notification-badge" color="danger">3</ion-badge>
       </ion-button>
 
       <ion-button
         class="icon-button"
         fill="clear"
-        aria-label="Notificaciones"
+        aria-label="Cambiar tema"
+        (click)="themeService.toggle()"
       >
-        <ion-icon
-          name="notifications-outline"
-          slot="icon-only"
-        ></ion-icon>
-        <ion-badge class="notification-badge" color="danger">3</ion-badge>
-      </ion-button>
-
-      <ion-button
-        class="icon-button settings-wrap"
-        fill="clear"
-        aria-label="Configuración"
-      >
-        <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
+        <ion-icon [name]="themeIcon()" slot="icon-only"></ion-icon>
       </ion-button>
 
       <button id="profile-trigger" class="profile-chip">
@@ -404,10 +412,7 @@ import { PageTitleService } from '../../core/services/page-title.service';
         <ng-template>
           <ion-content>
             <ion-list lines="none">
-              <ion-item
-                button
-                (click)="logout(); profilePopover.dismiss()"
-              >
+              <ion-item button (click)="logout(); profilePopover.dismiss()">
                 <ion-icon name="log-out-outline" slot="start"></ion-icon>
                 <ion-label>Cerrar sesión</ion-label>
               </ion-item>
@@ -423,6 +428,14 @@ export class TopbarComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   readonly pageTitle = inject(PageTitleService);
+  readonly themeService = inject(ThemeService);
+
+  readonly themeIcon = computed(() => {
+    const mode = this.themeService.mode();
+    if (mode === 'light') return 'sunny-outline';
+    if (mode === 'dark') return 'moon-outline';
+    return 'desktop-outline';
+  });
 
   readonly userFullName = computed(
     () => this.authState.user()?.fullName ?? 'Usuario',

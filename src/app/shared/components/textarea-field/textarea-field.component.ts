@@ -12,7 +12,7 @@ import { RevealDirective } from '../../directives/reveal.directive';
       @if (label) {
         <label class="field-label">{{ label }}</label>
       }
-      <div class="textarea-wrapper">
+      <div class="textarea-wrapper" [style.min-height]="minHeight">
         @if (icon) {
           <ion-icon [name]="icon" class="input-icon"></ion-icon>
         }
@@ -21,6 +21,9 @@ import { RevealDirective } from '../../directives/reveal.directive';
           [placeholder]="placeholder"
           [rows]="rows"
           [autoGrow]="autoGrow"
+          [counter]="counter"
+          [maxlength]="maxlength"
+          [counterFormatter]="counterFormatterFn"
         ></ion-textarea>
       </div>
       @if (control.invalid && (control.dirty || control.touched)) {
@@ -100,21 +103,21 @@ import { RevealDirective } from '../../directives/reveal.directive';
 
       .textarea-wrapper {
         background: white;
-        border-color: rgba(0, 0, 0, 0.1);
+        border-color: rgba(0, 0, 0, 0.18);
 
         &:focus-within {
           background: white;
-          border-color: rgba(0, 0, 0, 0.3);
+          border-color: rgba(0, 0, 0, 0.4);
           box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
         }
 
         ion-icon.input-icon {
-          color: rgba(0, 0, 0, 0.4);
+          color: rgba(0, 0, 0, 0.7);
         }
 
         ion-textarea {
           --color: #1a1a2e;
-          --placeholder-color: rgba(0, 0, 0, 0.4);
+          --placeholder-color: rgba(0, 0, 0, 0.5);
         }
       }
     }
@@ -126,13 +129,23 @@ export class TextareaFieldComponent {
   @Input() label = '';
   @Input() icon = '';
   @Input() placeholder = '';
-  @Input() rows = 4;
+  @Input() rows = 2;
   @Input() autoGrow = false;
+  @Input() counter = false;
+  @Input() maxlength: string | number | null = null;
+  @Input() minHeight: string | undefined;
   @Input() revealDelay = 200;
 
   @Input() errorMessages: Record<string, string> = {
     required: 'Requerido',
     minlength: 'Mínimo {n} caracteres',
+  };
+
+  readonly counterFormatterFn = (inputLength: number, maxLength: number): string => {
+    if (maxLength > 0) {
+      return `${inputLength} / ${maxLength}`;
+    }
+    return `${inputLength}`;
   };
 
   get activeErrors(): string[] {

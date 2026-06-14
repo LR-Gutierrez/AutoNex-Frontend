@@ -1,14 +1,16 @@
 import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonInput, IonIcon } from '@ionic/angular/standalone';
+import { MaskitoDirective } from '@maskito/angular';
+import type { MaskitoOptions, MaskitoElementPredicate } from '@maskito/core';
 import { RevealDirective } from '../../directives/reveal.directive';
 
 @Component({
-  selector: 'app-form-field',
+  selector: 'app-text-input',
   standalone: true,
-  imports: [ReactiveFormsModule, IonInput, IonIcon, RevealDirective],
+  imports: [ReactiveFormsModule, IonInput, IonIcon, MaskitoDirective, RevealDirective],
   template: `
-    <div class="form-field" [appReveal]="revealDelay">
+    <div class="field-group" [appReveal]="revealDelay">
       @if (label) {
         <label class="field-label">{{ label }}</label>
       }
@@ -20,6 +22,8 @@ import { RevealDirective } from '../../directives/reveal.directive';
           [type]="effectiveType"
           [formControl]="control"
           [placeholder]="placeholder"
+          [maskito]="mask"
+          [maskitoElement]="maskitoPredicate"
         ></ion-input>
         @if (showPasswordToggle) {
           <ion-icon
@@ -40,7 +44,7 @@ import { RevealDirective } from '../../directives/reveal.directive';
   `,
   styles: [
     `
-    .form-field {
+    .field-group {
       margin-bottom: 20px;
       opacity: 0;
       transition: opacity 0.6s ease-out;
@@ -127,25 +131,25 @@ import { RevealDirective } from '../../directives/reveal.directive';
 
       .input-wrapper {
         background: white;
-        border-color: rgba(0, 0, 0, 0.1);
+        border-color: rgba(0, 0, 0, 0.18);
 
         &:focus-within {
           background: white;
-          border-color: rgba(0, 0, 0, 0.3);
+          border-color: rgba(0, 0, 0, 0.4);
           box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
         }
 
         ion-icon.input-icon {
-          color: rgba(0, 0, 0, 0.4);
+          color: rgba(0, 0, 0, 0.7);
         }
 
         ion-input {
           --color: #1a1a2e;
-          --placeholder-color: rgba(0, 0, 0, 0.4);
+          --placeholder-color: rgba(0, 0, 0, 0.5);
         }
 
         .toggle-password {
-          color: rgba(0, 0, 0, 0.4);
+          color: rgba(0, 0, 0, 0.7);
 
           &:hover {
             color: rgba(0, 0, 0, 0.7);
@@ -156,12 +160,13 @@ import { RevealDirective } from '../../directives/reveal.directive';
     `,
   ],
 })
-export class FormFieldComponent {
+export class TextInputComponent {
   @Input({ required: true }) control!: any;
   @Input() label = '';
   @Input() icon = '';
-  @Input() type: 'text' | 'email' | 'password' | 'tel' = 'text';
+  @Input() type: 'text' | 'email' | 'password' | 'tel' | 'url' | 'number' | 'search' | 'time' = 'text';
   @Input() placeholder = '';
+  @Input() mask: MaskitoOptions | null = null;
   @Input() showPasswordToggle = false;
   @Input() revealDelay = 200;
 
@@ -172,6 +177,9 @@ export class FormFieldComponent {
   };
 
   isPasswordVisible = false;
+
+  readonly maskitoPredicate: MaskitoElementPredicate = (el: HTMLElement) =>
+    (el as any).getInputElement();
 
   get effectiveType(): string {
     if (this.type === 'password' && this.isPasswordVisible) return 'text';

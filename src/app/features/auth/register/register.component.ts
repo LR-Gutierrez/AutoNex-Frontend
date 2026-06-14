@@ -13,7 +13,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../core/models/user.model';
 import { RevealDirective } from '../../../shared/directives/reveal.directive';
 import { AuthBrandingComponent } from '../../../shared/components/auth-branding/auth-branding.component';
-import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
+import { TextInputComponent } from '../../../shared/components/text-input/text-input.component';
 import { SelectFieldComponent } from '../../../shared/components/select-field/select-field.component';
 import { AuthButtonComponent } from '../../../shared/components/auth-button/auth-button.component';
 
@@ -26,7 +26,7 @@ import { AuthButtonComponent } from '../../../shared/components/auth-button/auth
     IonContent,
     RevealDirective,
     AuthBrandingComponent,
-    FormFieldComponent,
+    TextInputComponent,
     SelectFieldComponent,
     AuthButtonComponent,
   ],
@@ -38,38 +38,38 @@ import { AuthButtonComponent } from '../../../shared/components/auth-button/auth
         <h2 class="auth-title" [appReveal]="200">Registro de Nuevo Usuario</h2>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form" [appReveal]="200">
-          <app-form-field
+          <app-text-input
             [control]="form.get('fullName')!"
             label="Nombre Completo *"
             icon="person-outline"
             type="text"
             placeholder="Nombre completo"
-          ></app-form-field>
+          ></app-text-input>
 
-          <app-form-field
+          <app-text-input
             [control]="form.get('email')!"
             label="Correo electrónico *"
             icon="mail-outline"
             type="email"
             placeholder="tu@email.com"
-          ></app-form-field>
+          ></app-text-input>
 
-          <app-form-field
+          <app-text-input
             [control]="form.get('password')!"
             label="Contraseña *"
             icon="lock-closed-outline"
             type="password"
             placeholder="Mínimo 8 caracteres"
             [showPasswordToggle]="true"
-          ></app-form-field>
+          ></app-text-input>
 
-          <app-form-field
+          <app-text-input
             [control]="form.get('phone')!"
             label="Teléfono (opcional)"
             icon="call-outline"
             type="tel"
             placeholder="Número de teléfono"
-          ></app-form-field>
+          ></app-text-input>
 
           <app-select-field
             [control]="form.get('role')!"

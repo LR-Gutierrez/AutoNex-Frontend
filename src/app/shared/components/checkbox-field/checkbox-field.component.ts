@@ -1,26 +1,24 @@
 import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { IonInput, IonIcon } from '@ionic/angular/standalone';
+import { IonCheckbox, IonIcon } from '@ionic/angular/standalone';
 import { RevealDirective } from '../../directives/reveal.directive';
 
 @Component({
-  selector: 'app-date-field',
+  selector: 'app-checkbox-field',
   standalone: true,
-  imports: [ReactiveFormsModule, IonInput, IonIcon, RevealDirective],
+  imports: [ReactiveFormsModule, IonCheckbox, IonIcon, RevealDirective],
   template: `
-    <div class="date-field" [appReveal]="revealDelay">
-      @if (label) {
-        <label class="field-label">{{ label }}</label>
-      }
-      <div class="input-wrapper">
-        @if (icon) {
-          <ion-icon [name]="icon" class="input-icon"></ion-icon>
-        }
-        <ion-input
-          type="date"
+    <div class="field-group" [appReveal]="revealDelay">
+      <div class="checkbox-row">
+        <ion-checkbox
           [formControl]="control"
-          [placeholder]="placeholder"
-        ></ion-input>
+          [color]="color"
+        >
+          {{ label }}
+        </ion-checkbox>
+        @if (icon) {
+          <ion-icon [name]="icon" class="field-icon"></ion-icon>
+        }
       </div>
       @if (control.invalid && (control.dirty || control.touched)) {
         <div class="error-message">
@@ -33,7 +31,7 @@ import { RevealDirective } from '../../directives/reveal.directive';
   `,
   styles: [
     `
-    .date-field {
+    .field-group {
       margin-bottom: 20px;
       opacity: 0;
       transition: opacity 0.6s ease-out;
@@ -43,21 +41,14 @@ import { RevealDirective } from '../../directives/reveal.directive';
       }
     }
 
-    .field-label {
-      display: block;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 13px;
-      margin-bottom: 6px;
-      margin-left: 4px;
-    }
-
-    .input-wrapper {
+    .checkbox-row {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding: 4px 16px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
-      padding: 0 16px;
       transition: all 0.3s ease;
 
       &:focus-within {
@@ -66,21 +57,21 @@ import { RevealDirective } from '../../directives/reveal.directive';
         box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
       }
 
-      ion-icon.input-icon {
-        font-size: 20px;
-        color: rgba(255, 255, 255, 0.5);
-        margin-right: 12px;
-        flex-shrink: 0;
+      ion-checkbox {
+        --background: rgba(255, 255, 255, 0.1);
+        --background-checked: rgba(211, 29, 29, 0.8);
+        --border-color: rgba(255, 255, 255, 0.3);
+        --border-color-checked: rgba(211, 29, 29, 0.8);
+        --checkmark-color: white;
+        --size: 22px;
+        flex: 1;
       }
 
-      ion-input {
-        --background: transparent;
-        --color: white;
-        --placeholder-color: rgba(255, 255, 255, 0.4);
-        --padding-start: 0;
-        --padding-end: 0;
-        font-size: 15px;
-        flex: 1;
+      ion-icon.field-icon {
+        font-size: 20px;
+        color: rgba(255, 255, 255, 0.5);
+        flex-shrink: 0;
+        margin-left: 12px;
       }
     }
 
@@ -92,11 +83,7 @@ import { RevealDirective } from '../../directives/reveal.directive';
     }
 
     @media (prefers-color-scheme: light) {
-      .field-label {
-        color: rgba(0, 0, 0, 0.6);
-      }
-
-      .input-wrapper {
+      .checkbox-row {
         background: white;
         border-color: rgba(0, 0, 0, 0.18);
 
@@ -106,29 +93,27 @@ import { RevealDirective } from '../../directives/reveal.directive';
           box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
         }
 
-        ion-icon.input-icon {
-          color: rgba(0, 0, 0, 0.7);
+        ion-checkbox {
+          --background: rgba(0, 0, 0, 0.05);
+          --border-color: rgba(0, 0, 0, 0.2);
         }
 
-        ion-input {
-          --color: #1a1a2e;
-          --placeholder-color: rgba(0, 0, 0, 0.5);
+        ion-icon.field-icon {
+          color: rgba(0, 0, 0, 0.7);
         }
       }
     }
     `,
   ],
 })
-export class DateFieldComponent {
+export class CheckboxFieldComponent {
   @Input({ required: true }) control!: any;
   @Input() label = '';
-  @Input() icon = 'calendar-outline';
-  @Input() placeholder = '';
+  @Input() icon = '';
+  @Input() color = 'danger';
   @Input() revealDelay = 200;
 
-  @Input() errorMessages: Record<string, string> = {
-    required: 'Requerido',
-  };
+  @Input() errorMessages: Record<string, string> = {};
 
   get activeErrors(): string[] {
     if (!this.control?.errors) return [];

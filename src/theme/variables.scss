@@ -89,10 +89,7 @@
   outline: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  /** Dark Colors - Paleta Corporativa
-   * -------------------------------------------
-   */
+@mixin dark-theme-vars {
   body {
     --ion-color-primary: #d31d1d;
     --ion-color-primary-rgb: 211, 29, 29;
@@ -158,9 +155,6 @@
     --ion-color-light-tint: #474747;
   }
 
-  /** iOS Dark Theme - Paleta Corporativa
-   * -------------------------------------------
-   */
   .ios body {
     --ion-background-color: #121212;
     --ion-background-color-rgb: 18, 18, 18;
@@ -195,9 +189,6 @@
     --ion-toolbar-border-color: var(--ion-color-step-250);
   }
 
-  /** Material Design Dark Theme - Paleta Corporativa
-   * -------------------------------------------
-   */
   .md body {
     --ion-background-color: #121212;
     --ion-background-color-rgb: 18, 18, 18;
@@ -228,4 +219,12 @@
     --ion-tab-bar-background: #323232;
     --ion-card-background: #323232;
   }
+}
+
+@media (prefers-color-scheme: dark) {
+  @include dark-theme-vars;
+}
+
+[data-theme="dark"] {
+  @include dark-theme-vars;
 }
