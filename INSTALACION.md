@@ -49,6 +49,7 @@ Los archivos compilados se generan en `www/`.
 
 ```
 src/
+├── tailwind.css         → Tailwind CSS v4 entry + custom variants
 ├── app/
 │   ├── core/            → Servicios singleton, guards, interceptores, modelos
 │   ├── layouts/         → auth-layout, dashboard-layout

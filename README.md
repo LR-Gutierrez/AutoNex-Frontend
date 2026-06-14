@@ -10,6 +10,7 @@ Aplicación corporativa para la gestión de red de servicios automotrices, const
 src/
 ├── index.html
 ├── main.ts
+├── tailwind.css                    ← Tailwind CSS v4 entry (import + custom variants)
 ├── theme/
 │   └── variables.scss              ← Ionic CSS custom properties (corporativo)
 ├── global.scss                     ← Estilos globales + design tokens
@@ -96,7 +97,8 @@ Las rutas del dashboard están protegidas por `AuthGuard`. Las rutas no reconoci
 | Framework UI | Ionic 8 (standalone imports) |
 | Framework Web | Angular 20 |
 | Lenguaje | TypeScript ~5.9 |
-| Estilos | SCSS + Ionic CSS Custom Properties |
+| Estilos | Tailwind CSS v4 + SCSS + Ionic CSS Custom Properties |
+| PostCSS | @tailwindcss/postcss |
 | Iconos | Ionicons 7 |
 | Estado | Angular Signals |
 | Formularios | Reactive Forms |

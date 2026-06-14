@@ -17,7 +17,7 @@
 | Framework UI | Ionic (Angular) | 8.x |
 | Framework Web | Angular | 20.x |
 | Lenguaje | TypeScript | ~5.9 |
-| Estilos | SCSS + Ionic CSS Custom Properties | — |
+| Estilos | Tailwind CSS v4 + SCSS + Ionic CSS Custom Properties | — |
 | Fuente | Poppins | — |
 | Formularios | Angular Reactive Forms | — |
 | Peticiones HTTP | Angular HttpClient | — |
@@ -36,6 +36,7 @@
 src/
 ├── index.html
 ├── main.ts
+├── tailwind.css
 ├── theme/
 │   └── variables.scss
 ├── global.scss
@@ -256,7 +257,7 @@ export class ClientService {
 | Nomenclatura archivos | `kebab-case` |
 | Standalone components | Todos los componentes son standalone, sin NgModules |
 | Inyección de dependencias | `inject()` function |
-| Estilos | Ionic CSS Custom Properties + SCSS |
+| Estilos | Tailwind CSS v4 + Ionic CSS Custom Properties + SCSS |
 | Tipado | `strict: true` en tsconfig |
 | Modelos | Interfaces TypeScript: `ClientResponse`, `CreateClientRequest`, etc. |
 | Enums | TypeScript enums con mismos valores que el backend |
