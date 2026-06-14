@@ -3,7 +3,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
-  IonContent, // ← Ya no necesitas IonHeader, IonToolbar, etc.
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -13,8 +12,6 @@ import {
   IonList,
   IonItem,
   IonBadge,
-  IonRefresher,
-  IonRefresherContent,
   IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -24,6 +21,8 @@ import { VehicleService } from '../../core/services/vehicle.service';
 import { ServiceOrderService } from '../../core/services/service-order.service';
 import { FinancialRecordService } from '../../core/services/financial-record.service';
 import { AuthStateService } from '../../core/services/auth-state.service';
+import { RefreshService } from '../../core/services/refresh.service';
+import { PageTitleService } from '../../core/services/page-title.service';
 import { UserRole } from '../../core/models/user.model';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 
@@ -32,7 +31,6 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
   standalone: true,
   imports: [
     RouterLink,
-    IonContent,
     IonCard,
     IonCardContent,
     IonCardHeader,
@@ -42,16 +40,12 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     IonList,
     IonItem,
     IonBadge,
-    IonRefresher,
-    IonRefresherContent,
     IonSkeletonText,
     EnumLabelPipe,
   ],
   styles: `
     :host {
       display: block;
-      width: 100%;
-      height: 100%;
       --dashboard-bg: var(--app-bg);
       --dashboard-surface: var(--app-surface);
       --dashboard-surface-2: var(--app-surface-2);
@@ -69,7 +63,6 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       padding: 20px;
       color: var(--dashboard-text);
       box-sizing: border-box;
-      min-height: 100%;
     }
 
     .hero {
@@ -382,206 +375,200 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     }
   `,
   template: `
-    <ion-content class="app-page">
-      <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
-        <ion-refresher-content></ion-refresher-content>
-      </ion-refresher>
+    <div class="dashboard-shell">
+      <section class="hero">
+        <h1>Panel de Control</h1>
+        <p>Resumen operativo de la red de servicios AutoNex</p>
+      </section>
 
-      <div class="dashboard-shell">
-        <section class="hero">
-          <h1>Panel de Control</h1>
-          <p>Resumen operativo de la red de servicios AutoNex</p>
+      @if (loading()) {
+        <div class="kpi-grid">
+          @for (_ of [1, 2, 3, 4]; track $index) {
+            <div class="kpi-card">
+              <ion-skeleton-text
+                animated
+                style="width: 45%; height: 12px;"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 35%; height: 42px; margin-top: 18px;"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                style="width: 28%; height: 24px; margin-top: 12px;"
+              ></ion-skeleton-text>
+            </div>
+          }
+        </div>
+      } @else {
+        <section class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Total clientes</div>
+            <div class="kpi-value-row">
+              <div class="kpi-value">{{ clientCount() }}</div>
+              <div class="kpi-meta positive">+12%</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Vehículos en taller</div>
+            <div class="kpi-value-row">
+              <div class="kpi-value">{{ vehicleCount() }}</div>
+              <div class="kpi-meta warning">8 espera</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label" style="color:#ff6b63;">Stock crítico</div>
+            <div class="kpi-value-row">
+              <div class="kpi-value" style="color:#ff5a52;">15</div>
+              <div class="kpi-meta danger">3 alertas</div>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-label">Ingresos mes</div>
+            <div class="kpi-value-row">
+              <div class="kpi-value">{{ balanceLabel() }}</div>
+              <div class="kpi-meta positive">+8.4%</div>
+            </div>
+          </div>
         </section>
+      }
 
-        @if (loading()) {
-          <div class="kpi-grid">
-            @for (_ of [1, 2, 3, 4]; track $index) {
-              <div class="kpi-card">
-                <ion-skeleton-text
-                  animated
-                  style="width: 45%; height: 12px;"
-                ></ion-skeleton-text>
-                <ion-skeleton-text
-                  animated
-                  style="width: 35%; height: 42px; margin-top: 18px;"
-                ></ion-skeleton-text>
-                <ion-skeleton-text
-                  animated
-                  style="width: 28%; height: 24px; margin-top: 12px;"
-                ></ion-skeleton-text>
+      <section class="dashboard-main">
+        <ion-card class="panel-card">
+          <ion-card-header>
+            <ion-card-title>Órdenes de Servicio Recientes</ion-card-title>
+            <ion-card-subtitle
+              >Últimos movimientos registrados</ion-card-subtitle
+            >
+          </ion-card-header>
+
+          <ion-card-content>
+            @if (ordersLoading()) {
+              <ion-list>
+                @for (_ of [1, 2, 3, 4]; track $index) {
+                  <ion-item lines="none">
+                    <ion-label>
+                      <ion-skeleton-text
+                        animated
+                        style="width: 70%"
+                      ></ion-skeleton-text>
+                      <ion-skeleton-text
+                        animated
+                        style="width: 45%"
+                      ></ion-skeleton-text>
+                    </ion-label>
+                  </ion-item>
+                }
+              </ion-list>
+            } @else if (recentOrders().length === 0) {
+              <div class="empty-state">
+                No hay órdenes de servicio registradas.
+              </div>
+            } @else {
+              <div class="orders-table">
+                @for (order of recentOrders(); track order.id) {
+                  <a
+                    class="orders-row"
+                    [routerLink]="['/service-orders', order.id]"
+                  >
+                    <div>
+                      <h3>{{ order.vehicleInfo }}</h3>
+                      <p>{{ order.clientName }}</p>
+                    </div>
+
+                    <div>
+                      <p>Orden #{{ order.id }}</p>
+                    </div>
+
+                    <ion-badge
+                      class="status-badge"
+                      [color]="statusColor(order.status)"
+                    >
+                      {{ order.status | enumLabel }}
+                    </ion-badge>
+                  </a>
+                }
               </div>
             }
-          </div>
-        } @else {
-          <section class="kpi-grid">
-            <div class="kpi-card">
-              <div class="kpi-label">Total clientes</div>
-              <div class="kpi-value-row">
-                <div class="kpi-value">{{ clientCount() }}</div>
-                <div class="kpi-meta positive">+12%</div>
+          </ion-card-content>
+        </ion-card>
+
+        <div class="mini-panel">
+          <div class="alert-box">
+            <ion-card-title style="display:block; margin-bottom: 14px;">
+              Alertas de KM
+            </ion-card-title>
+
+            <div class="alert-item">
+              <div class="alert-ring">90%</div>
+              <div>
+                <div style="font-weight:700;">Toyota Hilux</div>
+                <div
+                  style="font-size:12px; color: var(--dashboard-text-muted);"
+                >
+                  Servicio de 50,000 KM
+                </div>
               </div>
             </div>
 
-            <div class="kpi-card">
-              <div class="kpi-label">Vehículos en taller</div>
-              <div class="kpi-value-row">
-                <div class="kpi-value">{{ vehicleCount() }}</div>
-                <div class="kpi-meta warning">8 espera</div>
-              </div>
-            </div>
-
-            <div class="kpi-card">
-              <div class="kpi-label" style="color:#ff6b63;">Stock crítico</div>
-              <div class="kpi-value-row">
-                <div class="kpi-value" style="color:#ff5a52;">15</div>
-                <div class="kpi-meta danger">3 alertas</div>
-              </div>
-            </div>
-
-            <div class="kpi-card">
-              <div class="kpi-label">Ingresos mes</div>
-              <div class="kpi-value-row">
-                <div class="kpi-value">{{ balanceLabel() }}</div>
-                <div class="kpi-meta positive">+8.4%</div>
-              </div>
-            </div>
-          </section>
-        }
-
-        <section class="dashboard-main">
-          <ion-card class="panel-card">
-            <ion-card-header>
-              <ion-card-title>Órdenes de Servicio Recientes</ion-card-title>
-              <ion-card-subtitle
-                >Últimos movimientos registrados</ion-card-subtitle
+            <div class="alert-item">
+              <div
+                class="alert-ring"
+                style="border-color: rgba(148,163,184,.35); color:#a1a1aa;"
               >
-            </ion-card-header>
-
-            <ion-card-content>
-              @if (ordersLoading()) {
-                <ion-list>
-                  @for (_ of [1, 2, 3, 4]; track $index) {
-                    <ion-item lines="none">
-                      <ion-label>
-                        <ion-skeleton-text
-                          animated
-                          style="width: 70%"
-                        ></ion-skeleton-text>
-                        <ion-skeleton-text
-                          animated
-                          style="width: 45%"
-                        ></ion-skeleton-text>
-                      </ion-label>
-                    </ion-item>
-                  }
-                </ion-list>
-              } @else if (recentOrders().length === 0) {
-                <div class="empty-state">
-                  No hay órdenes de servicio registradas.
+                85%
+              </div>
+              <div>
+                <div style="font-weight:700;">Ford Ranger</div>
+                <div
+                  style="font-size:12px; color: var(--dashboard-text-muted);"
+                >
+                  Cambio de aceite
                 </div>
-              } @else {
-                <div class="orders-table">
-                  @for (order of recentOrders(); track order.id) {
-                    <a
-                      class="orders-row"
-                      [routerLink]="['/service-orders', order.id]"
-                    >
-                      <div>
-                        <h3>{{ order.vehicleInfo }}</h3>
-                        <p>{{ order.clientName }}</p>
-                      </div>
+              </div>
+            </div>
+          </div>
 
-                      <div>
-                        <p>Orden #{{ order.id }}</p>
-                      </div>
-
-                      <ion-badge
-                        class="status-badge"
-                        [color]="statusColor(order.status)"
-                      >
-                        {{ order.status | enumLabel }}
-                      </ion-badge>
-                    </a>
-                  }
-                </div>
-              }
-            </ion-card-content>
-          </ion-card>
-
-          <div class="mini-panel">
-            <div class="alert-box">
+          @if (summary(); as fin) {
+            <div class="finance-box">
               <ion-card-title style="display:block; margin-bottom: 14px;">
-                Alertas de KM
+                Resumen Financiero
               </ion-card-title>
 
-              <div class="alert-item">
-                <div class="alert-ring">90%</div>
-                <div>
-                  <div style="font-weight:700;">Toyota Hilux</div>
-                  <div
-                    style="font-size:12px; color: var(--dashboard-text-muted);"
-                  >
-                    Servicio de 50,000 KM
-                  </div>
+              <div class="finance-grid">
+                <div class="finance-stat">
+                  <span class="finance-value text-success">
+                    \${{ fin.totalIncome.toFixed(2) }}
+                  </span>
+                  <span class="finance-label">Ingresos</span>
                 </div>
-              </div>
 
-              <div class="alert-item">
-                <div
-                  class="alert-ring"
-                  style="border-color: rgba(148,163,184,.35); color:#a1a1aa;"
-                >
-                  85%
+                <div class="finance-stat">
+                  <span class="finance-value text-danger">
+                    \${{ fin.totalExpenses.toFixed(2) }}
+                  </span>
+                  <span class="finance-label">Egresos</span>
                 </div>
-                <div>
-                  <div style="font-weight:700;">Ford Ranger</div>
-                  <div
-                    style="font-size:12px; color: var(--dashboard-text-muted);"
+
+                <div class="finance-stat">
+                  <span
+                    class="finance-value"
+                    [class.text-success]="fin.balance >= 0"
+                    [class.text-danger]="fin.balance < 0"
                   >
-                    Cambio de aceite
-                  </div>
+                    \${{ fin.balance.toFixed(2) }}
+                  </span>
+                  <span class="finance-label">Balance</span>
                 </div>
               </div>
             </div>
-
-            @if (summary(); as fin) {
-              <div class="finance-box">
-                <ion-card-title style="display:block; margin-bottom: 14px;">
-                  Resumen Financiero
-                </ion-card-title>
-
-                <div class="finance-grid">
-                  <div class="finance-stat">
-                    <span class="finance-value text-success">
-                      \${{ fin.totalIncome.toFixed(2) }}
-                    </span>
-                    <span class="finance-label">Ingresos</span>
-                  </div>
-
-                  <div class="finance-stat">
-                    <span class="finance-value text-danger">
-                      \${{ fin.totalExpenses.toFixed(2) }}
-                    </span>
-                    <span class="finance-label">Egresos</span>
-                  </div>
-
-                  <div class="finance-stat">
-                    <span
-                      class="finance-value"
-                      [class.text-success]="fin.balance >= 0"
-                      [class.text-danger]="fin.balance < 0"
-                    >
-                      \${{ fin.balance.toFixed(2) }}
-                    </span>
-                    <span class="finance-label">Balance</span>
-                  </div>
-                </div>
-              </div>
-            }
-          </div>
-        </section>
-      </div>
-    </ion-content>
+          }
+        </div>
+      </section>
+    </div>
   `,
 })
 export class DashboardComponent implements OnInit {
@@ -590,6 +577,8 @@ export class DashboardComponent implements OnInit {
   private readonly orderService = inject(ServiceOrderService);
   private readonly financialService = inject(FinancialRecordService);
   readonly authState = inject(AuthStateService);
+  private readonly refreshService = inject(RefreshService);
+  private readonly pageTitle = inject(PageTitleService);
 
   readonly loading = signal(true);
   readonly ordersLoading = signal(true);
@@ -609,7 +598,10 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.pageTitle.title.set('Panel de Control');
+    this.pageTitle.subtitle.set('Resumen operativo de la red de servicios AutoNex');
     this.loadData();
+    this.refreshService.refresh$.subscribe(() => this.loadData());
   }
 
   private loadData() {
@@ -647,11 +639,6 @@ export class DashboardComponent implements OnInit {
         }
       },
     });
-  }
-
-  onRefresh(event: CustomEvent) {
-    this.loadData();
-    (event.target as HTMLIonRefresherElement).complete();
   }
 
   statusColor(status: string): string {

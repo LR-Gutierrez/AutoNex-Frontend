@@ -1,53 +1,58 @@
 # AutoNex Frontend
 
-Aplicación corporativa para la gestión de red de servicios automotrices, construida con **Angular 17+** e **Ionic 7** bajo una arquitectura **Standalone Components** y **Feature-Based Design (Domain-Driven Design)**.
+Aplicación corporativa para la gestión de red de servicios automotrices, construida con **Angular 20** e **Ionic 8** bajo una arquitectura **Standalone Components** y **Feature-Based Design**.
 
 ---
 
 ## Arquitectura del Proyecto
 
 ```
-src/app/
-├── core/                      # Capa transversal (singletons, infraestructura)
-│   ├── guards/                # AuthGuard, RoleGuard
-│   ├── interceptors/          # AuthInterceptor, ErrorInterceptor
-│   ├── models/                # Interfaces de dominio (14 modelos)
-│   └── services/              # Servicios singleton (API, Auth, entidades)
-│
-├── layouts/                   # Layout wrappers (estructura de página)
-│   ├── auth-layout.component.ts
-│   └── dashboard-layout.component.ts
-│
-├── components/                # Componentes UI reutilizables
-│   ├── topbar/                # Barra superior del dashboard
-│   ├── user-avatar/           # Avatar de usuario (cuadrado/circular configurable)
-│   ├── comment-item/
-│   ├── contact-card/
-│   ├── event-card/
-│   ├── feed-card/
-│   ├── follow-card/
-│   ├── group-card/
-│   ├── message-list-item/
-│   ├── notification-item/
-│   ├── story-avatar/
-│   └── story-card/
-│
-├── features/                  # Módulos de negocio (Domain-Driven Design)
-│   ├── auth/                  # Autenticación (login, register)
-│   │   ├── login/
-│   │   └── register/
-│   └── dashboard/             # Panel de control principal
-│
-├── shared/                    # Recursos compartidos entre features
-│   ├── components/            # empty-state, loading-spinner, status-badge
-│   ├── pipes/                 # currency-formatter, date-format, enum-label, humanize
-│   └── validators/            # email.validators, password.validator
-│
-├── pages/                     # (Referencia histórica - pendiente de migración)
-│
-├── app.component.ts           # Bootstrapping de la aplicación
-├── app.config.ts              # Configuración de providers
-└── app.routes.ts              # Definición de rutas lazy-loaded
+src/
+├── index.html
+├── main.ts
+├── theme/
+│   └── variables.scss              ← Ionic CSS custom properties (corporativo)
+├── global.scss                     ← Estilos globales + design tokens
+├── environments/
+│   ├── environment.ts
+│   └── environment.prod.ts
+└── app/
+    ├── app.component.ts            ← Standalone root (ion-app)
+    ├── app.config.ts               ← Providers (Ionic, Router, HTTP)
+    ├── app.routes.ts               ← Rutas lazy-loaded
+    │
+    ├── core/                       ← Capa transversal (singletons)
+    │   ├── guards/                 ← auth.guard, role.guard
+    │   ├── interceptors/           ← auth.interceptor, error.interceptor
+    │   ├── models/                 ← Interfaces de dominio
+    │   └── services/               ← API, Auth, AuthState, Refresh, PageTitle, entidades
+    │
+    ├── layouts/                    ← Layout wrappers
+    │   ├── auth-layout.component.ts
+    │   └── dashboard-layout.component.ts
+    │
+    ├── components/                 ← UI reutilizables del dashboard
+    │   ├── sidebar/                ← Menú lateral de navegación
+    │   ├── topbar/                 ← Barra superior (título, buscador, perfil)
+    │   └── user-avatar/            ← Avatar de usuario
+    │
+    ├── features/                   ← Módulos de negocio (lazy-loaded)
+    │   ├── auth/                   ← login, register
+    │   ├── dashboard/              ← Panel de control
+    │   └── form-demo/              ← Demo de componentes de formulario
+    │
+    └── shared/                     ← Recursos compartidos
+        ├── components/
+        │   ├── auth-branding/      ← Logo + título corporativo (vertical/horizontal)
+        │   ├── auth-button/        ← Botón de submit con estado loading
+        │   ├── date-field/         ← Campo de fecha reutilizable
+        │   ├── form-field/         ← Input con label, icono, toggle password
+        │   ├── select-field/       ← Select con icono y opciones
+        │   └── textarea-field/     ← Textarea reutilizable
+        ├── directives/
+        │   └── reveal.directive.ts ← Animación de entrada al hacer scroll
+        ├── pipes/                  ← enum-label, currency-formatter, date-format
+        └── validators/             ← email.validators, password.validator
 ```
 
 ---
@@ -55,25 +60,19 @@ src/app/
 ## Principios Arquitectónicos
 
 ### Standalone Components
-La aplicación utiliza exclusivamente el paradigma **Standalone Components** de Angular 17+, eliminando el uso de `NgModule` en la capa activa. Los componentes se declaran con `standalone: true` y se importan directamente donde se requieren.
+Todos los componentes usan `standalone: true`. No existen NgModules funcionales. Las dependencias se importan directamente en cada componente.
 
-### Feature-Based Design (Domain-Driven Design)
-Cada funcionalidad de negocio reside en `features/` como un módulo autónomo que encapsula sus propios componentes, servicios (cuando son de ámbito local) y lógica de dominio. Esto permite:
-
-- **Alto cohesion**: Cada feature agrupa todo lo necesario para su funcionamiento.
-- **Bajo acoplamiento**: Los features se comunican exclusivamente a través de la capa `core/` (servicios singleton) y el enrutador.
-- **Lazy Loading**: Cada feature se carga bajo demanda mediante `loadComponent`.
+### Feature-Based Design
+Cada funcionalidad de negocio reside en `features/` como un módulo autónomo. Se cargan bajo demanda mediante `loadComponent` desde `app.routes.ts`.
 
 ### Capa Core (Infraestructura)
-`core/` alberga servicios singleton, guards, interceptores HTTP y modelos de dominio. Es la única capa transversal y no debe contener lógica de UI ni de features específicos.
+`core/services/` alberga servicios singleton, guards e interceptores. Es la única capa transversal y no contiene lógica de UI.
 
-### Layouts vs Components
-- **`layouts/`**: Define la estructura outer de la página (sidebar + router outlet). Solo dos: `AuthLayout` y `DashboardLayout`.
-- **`components/`**: Componentes de UI puramente visuales y reutilizables, sin dependencia directa de features de negocio.
-- **`features/`**: Componentes de página que representan una funcionalidad completa del dominio.
-
-### Shared
-`shared/` agrupa recursos reutilizables que no pertenecen a un feature específico: pipes de transformación, validators y componentes genéricos de UI (empty-state, loading-spinner, status-badge).
+### Componentes Ionic
+Se importan exclusivamente desde `@ionic/angular/standalone`. La estructura sigue los patrones documentados por Ionic Framework:
+- `ion-header` y `ion-content` como hermanos directos
+- `ion-split-pane` + `ion-menu` para el layout responsive
+- `router-outlet` de Angular para el enrutamiento de páginas hijas
 
 ---
 
@@ -83,46 +82,26 @@ Cada funcionalidad de negocio reside en `features/` como un módulo autónomo qu
 /auth/login       → AuthLayout > LoginComponent
 /auth/register    → AuthLayout > RegisterComponent
 /dashboard        → DashboardLayout > DashboardComponent
+/form-demo        → DashboardLayout > FormDemoComponent
 ```
 
-Las rutas están protegidas por `AuthGuard`. Cualquier ruta no reconocida redirige a `/dashboard`.
-
----
-
-## Estructura de un Feature
-
-Cada feature en `features/` sigue el patrón:
-
-```
-features/<feature>/
-├── <feature>.component.ts      # Componente standalone (template + styles inline o separados)
-├── <feature>.component.html    # (opcional) Template externo
-└── <feature>.component.scss    # (opcional) Estilos externos
-```
-
-No se utilizan módulos NgModule. El lazy-loading se realiza directamente desde `app.routes.ts` mediante `loadComponent`.
-
----
-
-## Convenciones de Nomenclatura
-
-| Elemento | Convención | Ejemplo |
-|----------|-----------|---------|
-| Layout wrappers | `*-layout.component.ts` | `dashboard-layout.component.ts` |
-| Feature components | `<feature>.component.ts` | `dashboard.component.ts` |
-| UI Components | `*-card`, `*-item`, `*-avatar` | `user-avatar.component.ts` |
-| Servicios core | `*.service.ts` | `auth.service.ts` |
-| Guards | `*.guard.ts` | `auth.guard.ts` |
-| Interceptors | `*.interceptor.ts` | `auth.interceptor.ts` |
-| Pipes | `*.pipe.ts` | `enum-label.pipe.ts` |
-| Validators | `*.validators.ts` | `email.validators.ts` |
-| Modelos | `*.model.ts` | `user.model.ts` |
+Las rutas del dashboard están protegidas por `AuthGuard`. Las rutas no reconocidas redirigen a `/dashboard`.
 
 ---
 
 ## Tecnologías
 
-- **Angular 17+** — Standalone Components, Signals, Control Flow (`@if`, `@for`)
-- **Ionic 7** — UI Framework (standalone imports)
-- **IonIcons** — Sistema de iconografía
-- **RxJS** — Programación reactiva para servicios HTTP
+| Componente | Tecnología |
+|---|---|
+| Framework UI | Ionic 8 (standalone imports) |
+| Framework Web | Angular 20 |
+| Lenguaje | TypeScript ~5.9 |
+| Estilos | SCSS + Ionic CSS Custom Properties |
+| Iconos | Ionicons 7 |
+| Estado | Angular Signals |
+| Formularios | Reactive Forms |
+| HTTP | Angular HttpClient + interceptors |
+| Router | Angular Router (lazy load vía `loadComponent`) |
+| Fuente | Poppins |
+| Plataforma | Capacitor 8 |
+| Linting | ESLint ~9.16 |

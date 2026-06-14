@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent } from '@ionic/angular/standalone';
+
 import { emailValidator } from '../../shared/validators/email.validators';
 import { passwordValidator } from '../../shared/validators/password.validator';
 import { FormFieldComponent } from '../../shared/components/form-field/form-field.component';
@@ -9,6 +9,7 @@ import { SelectFieldComponent } from '../../shared/components/select-field/selec
 import { TextareaFieldComponent } from '../../shared/components/textarea-field/textarea-field.component';
 import { DateFieldComponent } from '../../shared/components/date-field/date-field.component';
 import { AuthButtonComponent } from '../../shared/components/auth-button/auth-button.component';
+import { PageTitleService } from '../../core/services/page-title.service';
 
 @Component({
   selector: 'app-form-demo',
@@ -16,7 +17,6 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
   imports: [
     ReactiveFormsModule,
     JsonPipe,
-    IonContent,
     FormFieldComponent,
     SelectFieldComponent,
     TextareaFieldComponent,
@@ -24,104 +24,99 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
     AuthButtonComponent,
   ],
   template: `
-    <ion-content class="app-page">
-      <div class="demo-shell">
-        <h1>Demo de Componentes de Formulario</h1>
-        <p class="demo-sub">Todos los inputs reutilizables disponibles</p>
+    <div class="demo-shell">
+      <h1>Demo de Componentes de Formulario</h1>
+      <p class="demo-sub">Todos los inputs reutilizables disponibles</p>
 
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="demo-form">
-          <h2 class="section-title">Campos de texto</h2>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="demo-form">
+        <h2 class="section-title">Campos de texto</h2>
 
-          <app-form-field
-            [control]="form.get('name')!"
-            label="Nombre"
-            icon="person-outline"
-            placeholder="Tu nombre"
-          ></app-form-field>
+        <app-form-field
+          [control]="form.get('name')!"
+          label="Nombre"
+          icon="person-outline"
+          placeholder="Tu nombre"
+        ></app-form-field>
 
-          <app-form-field
-            [control]="form.get('email')!"
-            label="Correo electrónico"
-            icon="mail-outline"
-            type="email"
-            placeholder="tu@email.com"
-          ></app-form-field>
+        <app-form-field
+          [control]="form.get('email')!"
+          label="Correo electrónico"
+          icon="mail-outline"
+          type="email"
+          placeholder="tu@email.com"
+        ></app-form-field>
 
-          <app-form-field
-            [control]="form.get('password')!"
-            label="Contraseña"
-            icon="lock-closed-outline"
-            type="password"
-            placeholder="Mínimo 8 caracteres"
-            [showPasswordToggle]="true"
-          ></app-form-field>
+        <app-form-field
+          [control]="form.get('password')!"
+          label="Contraseña"
+          icon="lock-closed-outline"
+          type="password"
+          placeholder="Mínimo 8 caracteres"
+          [showPasswordToggle]="true"
+        ></app-form-field>
 
-          <app-form-field
-            [control]="form.get('phone')!"
-            label="Teléfono"
-            icon="call-outline"
-            type="tel"
-            placeholder="+58 412 123 4567"
-          ></app-form-field>
+        <app-form-field
+          [control]="form.get('phone')!"
+          label="Teléfono"
+          icon="call-outline"
+          type="tel"
+          placeholder="+58 412 123 4567"
+        ></app-form-field>
 
-          <h2 class="section-title">Select</h2>
+        <h2 class="section-title">Select</h2>
 
-          <app-select-field
-            [control]="form.get('country')!"
-            label="País"
-            icon="globe-outline"
-            placeholder="Selecciona un país"
-            [options]="countryOptions"
-          ></app-select-field>
+        <app-select-field
+          [control]="form.get('country')!"
+          label="País"
+          icon="globe-outline"
+          placeholder="Selecciona un país"
+          [options]="countryOptions"
+        ></app-select-field>
 
-          <h2 class="section-title">Fecha</h2>
+        <h2 class="section-title">Fecha</h2>
 
-          <app-date-field
-            [control]="form.get('date')!"
-            label="Fecha de ingreso"
-            icon="calendar-outline"
-          ></app-date-field>
+        <app-date-field
+          [control]="form.get('date')!"
+          label="Fecha de ingreso"
+          icon="calendar-outline"
+        ></app-date-field>
 
-          <h2 class="section-title">Texto largo</h2>
+        <h2 class="section-title">Texto largo</h2>
 
-          <app-textarea-field
-            [control]="form.get('notes')!"
-            label="Notas"
-            icon="document-text-outline"
-            placeholder="Escribe una descripción..."
-            [rows]="5"
-            [autoGrow]="true"
-          ></app-textarea-field>
+        <app-textarea-field
+          [control]="form.get('notes')!"
+          label="Notas"
+          icon="document-text-outline"
+          placeholder="Escribe una descripción..."
+          [rows]="5"
+          [autoGrow]="true"
+        ></app-textarea-field>
 
-          <app-auth-button
-            label="ENVIAR FORMULARIO"
-            icon="paper-plane"
-            [disabled]="form.invalid"
-          ></app-auth-button>
-        </form>
+        <app-auth-button
+          label="ENVIAR FORMULARIO"
+          icon="paper-plane"
+          [disabled]="form.invalid"
+        ></app-auth-button>
+      </form>
 
-        @if (submitted()) {
-          <div class="result-box">
-            <h3>Valores enviados:</h3>
-            <pre>{{ form.value | json }}</pre>
-          </div>
-        }
-      </div>
-    </ion-content>
+      @if (submitted()) {
+        <div class="result-box">
+          <h3>Valores enviados:</h3>
+          <pre>{{ form.value | json }}</pre>
+        </div>
+      }
+    </div>
   `,
   styles: [
     `
       :host {
         display: block;
-        height: 100%;
-        width: 100%;
       }
 
       .demo-shell {
         padding: 20px;
         color: var(--app-text);
         box-sizing: border-box;
-        min-height: 100%;
       }
 
       h1 {
@@ -187,8 +182,9 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
     `,
   ],
 })
-export class FormDemoComponent {
+export class FormDemoComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly pageTitle = inject(PageTitleService);
 
   readonly submitted = signal(false);
 
@@ -210,6 +206,11 @@ export class FormDemoComponent {
     { value: 'CO', label: 'Colombia' },
     { value: 'AR', label: 'Argentina' },
   ];
+
+  ngOnInit() {
+    this.pageTitle.title.set('Formulario Demo');
+    this.pageTitle.subtitle.set('Componentes de formulario reutilizables');
+  }
 
   onSubmit() {
     if (this.form.valid) {

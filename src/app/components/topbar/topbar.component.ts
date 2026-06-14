@@ -3,8 +3,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import {
-  IonHeader,
-  IonToolbar,
   IonButtons,
   IonMenuButton,
   IonSearchbar,
@@ -29,8 +27,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
   standalone: true,
   imports: [
     RouterLink,
-    IonHeader,
-    IonToolbar,
     IonButtons,
     IonMenuButton,
     IonSearchbar,
@@ -46,33 +42,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
   ],
   styles: `
     :host {
-      display: block;
-      --topbar-bg: linear-gradient(180deg, #161625 0%, #10101b 100%);
-      --topbar-text: #f3f4fb;
-      --topbar-text-muted: #9a9cb3;
-      --topbar-border: rgba(255, 255, 255, 0.08);
-      --topbar-accent: var(--ion-color-danger, #ff3b30);
-      --topbar-surface: rgba(255, 255, 255, 0.04);
-    }
-
-    .dashboard-header {
-      box-shadow: none;
-    }
-
-    .dashboard-header ion-toolbar {
-      --background: var(--topbar-bg);
-      --color: var(--topbar-text);
-      --border-color: transparent;
-      --min-height: 84px;
-      --padding-start: 0;
-      --padding-end: 0;
-      --padding-top: 0;
-      --padding-bottom: 0;
-      border-bottom: 1px solid var(--topbar-border);
-    }
-
-    /* Contenedor principal flexible */
-    .header-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -81,6 +50,10 @@ import { PageTitleService } from '../../core/services/page-title.service';
       min-height: 84px;
       padding: 12px 16px;
       box-sizing: border-box;
+      --topbar-text: #f3f4fb;
+      --topbar-text-muted: #9a9cb3;
+      --topbar-accent: var(--ion-color-danger, #ff3b30);
+      --topbar-surface: rgba(255, 255, 255, 0.04);
     }
 
     .header-left {
@@ -296,7 +269,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
        MEDIA QUERIES RESPONSIVAS
     ============================================ */
 
-    /* Tablet (hasta 991px) - ocultamos buscador y algunos textos */
     @media (max-width: 991px) {
       .dashboard-subtitle {
         display: none;
@@ -311,13 +283,8 @@ import { PageTitleService } from '../../core/services/page-title.service';
       }
     }
 
-    /* Móvil (hasta 767px) - diseño compacto */
     @media (max-width: 767px) {
-      .dashboard-header ion-toolbar {
-        --min-height: 60px;
-      }
-
-      .header-bar {
+      :host {
         min-height: 60px;
         padding: 8px 12px;
         gap: 8px;
@@ -328,7 +295,7 @@ import { PageTitleService } from '../../core/services/page-title.service';
       }
 
       .ghost-button {
-        display: none; /* Ocultamos el filtro de fechas en móvil */
+        display: none;
       }
 
       .primary-button {
@@ -350,15 +317,13 @@ import { PageTitleService } from '../../core/services/page-title.service';
         font-size: 12px;
       }
 
-      /* En móvil muy pequeño, ocultamos el settings */
       .settings-wrap {
         display: none;
       }
     }
 
-    /* Móvil muy pequeño (hasta 420px) */
     @media (max-width: 420px) {
-      .header-bar {
+      :host {
         padding: 6px 10px;
       }
 
@@ -367,102 +332,90 @@ import { PageTitleService } from '../../core/services/page-title.service';
       }
 
       .profile-name {
-        display: none; /* Solo avatar en móvil muy pequeño */
+        display: none;
       }
     }
   `,
   template: `
-    <ion-header class="dashboard-header ion-no-border">
-      <ion-toolbar>
-        <div class="header-bar">
-          <div class="header-left">
-            <ion-buttons>
-              <ion-menu-button></ion-menu-button>
-            </ion-buttons>
+    <div class="header-left">
+      <ion-buttons>
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
 
-            <div class="header-titles">
-              <div class="dashboard-title">{{ pageTitle.title() }}</div>
-              @if (pageTitle.subtitle()) {
-                <div class="dashboard-subtitle">{{ pageTitle.subtitle() }}</div>
-              }
-            </div>
-          </div>
+      <div class="header-titles">
+        <div class="dashboard-title">{{ pageTitle.title() }}</div>
+        @if (pageTitle.subtitle()) {
+          <div class="dashboard-subtitle">{{ pageTitle.subtitle() }}</div>
+        }
+      </div>
+    </div>
 
-          <div class="header-actions">
-            <!-- Buscador desktop -->
-            <ion-searchbar
-              class="dashboard-search"
-              placeholder="Buscar..."
-              show-clear-button="focus"
-            ></ion-searchbar>
+    <div class="header-actions">
+      <ion-searchbar
+        class="dashboard-search"
+        placeholder="Buscar..."
+        show-clear-button="focus"
+      ></ion-searchbar>
 
-            <!-- Filtro fechas - se oculta en móvil -->
-            <ion-button fill="outline" class="ghost-button">
-              <ion-icon name="calendar-outline" slot="start"></ion-icon>
-              <span>30 días</span>
-            </ion-button>
+      <ion-button fill="outline" class="ghost-button">
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <span>30 días</span>
+      </ion-button>
 
-            <!-- Botón generar orden -->
-            <ion-button class="primary-button" routerLink="/services">
-              <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-              <span class="primary-label">Orden</span>
-            </ion-button>
+      <ion-button class="primary-button" routerLink="/services">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        <span class="primary-label">Orden</span>
+      </ion-button>
 
-            <!-- Notificaciones -->
-            <ion-button
-              class="icon-button"
-              fill="clear"
-              aria-label="Notificaciones"
-            >
-              <ion-icon
-                name="notifications-outline"
-                slot="icon-only"
-              ></ion-icon>
-              <ion-badge class="notification-badge" color="danger">3</ion-badge>
-            </ion-button>
+      <ion-button
+        class="icon-button"
+        fill="clear"
+        aria-label="Notificaciones"
+      >
+        <ion-icon
+          name="notifications-outline"
+          slot="icon-only"
+        ></ion-icon>
+        <ion-badge class="notification-badge" color="danger">3</ion-badge>
+      </ion-button>
 
-            <!-- Configuración -->
-            <ion-button
-              class="icon-button settings-wrap"
-              fill="clear"
-              aria-label="Configuración"
-            >
-              <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
-            </ion-button>
+      <ion-button
+        class="icon-button settings-wrap"
+        fill="clear"
+        aria-label="Configuración"
+      >
+        <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
+      </ion-button>
 
-            <!-- Perfil de usuario -->
-            <button id="profile-trigger" class="profile-chip">
-              <app-user-avatar [name]="userFullName()" [size]="36" />
-              <div class="profile-meta">
-                <span class="profile-name">{{ userFullName() }}</span>
-                <span class="profile-role">{{ userRoleLabel() }}</span>
-              </div>
-            </button>
-
-            <ion-popover
-              #profilePopover
-              trigger="profile-trigger"
-              trigger-action="click"
-              class="profile-popover"
-            >
-              <ng-template>
-                <ion-content>
-                  <ion-list lines="none">
-                    <ion-item
-                      button
-                      (click)="logout(); profilePopover.dismiss()"
-                    >
-                      <ion-icon name="log-out-outline" slot="start"></ion-icon>
-                      <ion-label>Cerrar sesión</ion-label>
-                    </ion-item>
-                  </ion-list>
-                </ion-content>
-              </ng-template>
-            </ion-popover>
-          </div>
+      <button id="profile-trigger" class="profile-chip">
+        <app-user-avatar [name]="userFullName()" [size]="36" />
+        <div class="profile-meta">
+          <span class="profile-name">{{ userFullName() }}</span>
+          <span class="profile-role">{{ userRoleLabel() }}</span>
         </div>
-      </ion-toolbar>
-    </ion-header>
+      </button>
+
+      <ion-popover
+        #profilePopover
+        trigger="profile-trigger"
+        trigger-action="click"
+        class="profile-popover"
+      >
+        <ng-template>
+          <ion-content>
+            <ion-list lines="none">
+              <ion-item
+                button
+                (click)="logout(); profilePopover.dismiss()"
+              >
+                <ion-icon name="log-out-outline" slot="start"></ion-icon>
+                <ion-label>Cerrar sesión</ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+    </div>
   `,
 })
 export class TopbarComponent {
