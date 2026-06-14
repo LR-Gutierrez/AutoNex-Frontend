@@ -16,6 +16,7 @@ import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
 import { AuthService } from '../core/services/auth.service';
 import { TopbarComponent } from '../components/topbar/topbar.component';
+import { AuthBrandingComponent } from '../shared/components/auth-branding/auth-branding.component';
 
 interface MenuItem {
   path: string;
@@ -38,10 +39,13 @@ interface MenuItem {
     IonRouterOutlet,
     IonButton,
     RouterLink,
-    TopbarComponent, // ← IMPORTANTE: agregar el TopbarComponent
+    TopbarComponent,
+    AuthBrandingComponent,
   ],
   styles: `
     :host {
+      display: block;
+      height: 100%;
       --app-sidebar-bg: linear-gradient(180deg, #161625 0%, #10101b 100%);
       --app-sidebar-surface: rgba(255, 255, 255, 0.04);
       --app-sidebar-border: rgba(255, 255, 255, 0.08);
@@ -62,6 +66,7 @@ interface MenuItem {
     }
 
     ion-split-pane {
+      z-index: auto;
       flex: 1;
       --side-width: 280px;
       --side-max-width: 280px;
@@ -69,6 +74,7 @@ interface MenuItem {
     }
 
     ion-menu {
+      z-index: 1000;
       --width: 280px;
       --max-width: 280px;
       --min-width: 280px;
@@ -90,61 +96,15 @@ interface MenuItem {
       box-sizing: border-box;
     }
 
-    .brand-card {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    app-auth-branding {
+      display: block;
       padding: 14px 10px 22px;
       margin-bottom: 12px;
       flex-shrink: 0;
-    }
-
-    .brand-logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 59, 48, 0.22),
-        rgba(255, 59, 48, 0.06)
-      );
-      color: var(--app-sidebar-accent);
-      box-shadow: inset 0 0 0 1px rgba(255, 59, 48, 0.12);
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-
-    .brand-logo-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 10px;
-    }
-
-    .brand-text {
-      min-width: 0;
-    }
-
-    .app-brand-title {
-      font-size: 20px;
-      margin: 0;
-      color: var(--app-sidebar-title);
-      letter-spacing: 0.02em;
-      line-height: 1.1;
-    }
-
-    .app-brand-highlight {
-      color: var(--app-sidebar-accent);
-    }
-
-    .app-brand-subtitle {
-      display: block;
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      margin-top: 4px;
-      color: var(--app-sidebar-subtitle);
+      --brand-title-color: var(--app-sidebar-title);
+      --brand-accent-color: var(--app-sidebar-accent);
+      --brand-subtitle2-color: var(--app-sidebar-subtitle);
+      --brand-gap: 14px;
     }
 
     .menu-list {
@@ -254,6 +214,7 @@ interface MenuItem {
       flex-direction: column;
       width: 100%;
       height: 100%;
+      overflow: hidden;
     }
 
     ion-router-outlet {
@@ -283,22 +244,7 @@ interface MenuItem {
         <ion-menu contentId="main-content" menuId="main-menu" type="overlay">
           <ion-content class="menu-content" [scrollY]="true">
             <div class="menu-shell">
-              <div class="brand-card">
-                <div class="brand-logo">
-                  <img
-                    src="assets/images/logo.png"
-                    alt="AutoNex"
-                    class="brand-logo-img"
-                  />
-                </div>
-
-                <div class="brand-text">
-                  <h2 class="app-brand-title">
-                    <span class="app-brand-highlight">Auto</span>Nex
-                    <span class="app-brand-subtitle">GUI&amp;CAR, C.A.</span>
-                  </h2>
-                </div>
-              </div>
+              <app-auth-branding layout="horizontal"></app-auth-branding>
 
               <ion-list class="menu-list">
                 @for (item of menuItems; track item.path) {
@@ -373,6 +319,11 @@ export class DashboardLayoutComponent {
       path: '/notifications',
       label: 'Notificaciones',
       icon: 'notifications-outline',
+    },
+    {
+      path: '/form-demo',
+      label: 'Formulario Demo',
+      icon: 'code-slash-outline',
     },
   ];
 

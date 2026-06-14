@@ -4,11 +4,6 @@ import { Router, RouterLink } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import {
   IonContent,
-  IonInput,
-  IonButton,
-  IonSelect,
-  IonSelectOption,
-  IonIcon,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
@@ -16,6 +11,11 @@ import { emailValidator } from '../../../shared/validators/email.validators';
 import { passwordValidator } from '../../../shared/validators/password.validator';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../core/models/user.model';
+import { RevealDirective } from '../../../shared/directives/reveal.directive';
+import { AuthBrandingComponent } from '../../../shared/components/auth-branding/auth-branding.component';
+import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
+import { SelectFieldComponent } from '../../../shared/components/select-field/select-field.component';
+import { AuthButtonComponent } from '../../../shared/components/auth-button/auth-button.component';
 
 @Component({
   selector: 'app-register',
@@ -24,78 +24,60 @@ import { UserRole } from '../../../core/models/user.model';
     ReactiveFormsModule,
     RouterLink,
     IonContent,
-    IonInput,
-    IonButton,
-    IonSelect,
-    IonSelectOption,
-    IonIcon,
+    RevealDirective,
+    AuthBrandingComponent,
+    FormFieldComponent,
+    SelectFieldComponent,
+    AuthButtonComponent,
   ],
   template: `
     <ion-content [fullscreen]="true" class="auth-content">
       <div class="auth-container">
-        <div class="logo-section" [class.reveal]="reveal()">
-          <div class="logo-wrapper">
-            <img src="assets/images/logo.png" alt="Logo" class="logo" />
-          </div>
-          <h1 class="company-name">
-            <span class="first-four">Auto</span>Nex
-            <span class="company-sub">GUI&amp;CAR, C.A.</span>
-          </h1>
-        </div>
+        <app-auth-branding [revealDelay]="0"></app-auth-branding>
 
-        <h2 class="auth-title" [class.reveal]="reveal()">Registro de Nuevo Usuario</h2>
+        <h2 class="auth-title" [appReveal]="200">Registro de Nuevo Usuario</h2>
 
-        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form" [class.reveal]="reveal()">
-          <label class="field-label">Nombre Completo *</label>
-          <div class="input-wrapper">
-            <ion-icon name="person-outline" class="input-icon"></ion-icon>
-            <ion-input type="text" formControlName="fullName" placeholder="Nombre completo"></ion-input>
-          </div>
-          @if (form.get('fullName')?.invalid && form.get('fullName')?.touched) {
-            <div class="error-msg">Requerido</div>
-          }
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form" [appReveal]="200">
+          <app-form-field
+            [control]="form.get('fullName')!"
+            label="Nombre Completo *"
+            icon="person-outline"
+            type="text"
+            placeholder="Nombre completo"
+          ></app-form-field>
 
-          <label class="field-label">Correo electrónico *</label>
-          <div class="input-wrapper">
-            <ion-icon name="mail-outline" class="input-icon"></ion-icon>
-            <ion-input type="email" formControlName="email" placeholder="tu@email.com"></ion-input>
-          </div>
-          @if (form.get('email')?.invalid && form.get('email')?.touched) {
-            <div class="error-msg">
-              @if (form.get('email')?.errors?.['required']) { Requerido }
-              @if (form.get('email')?.errors?.['invalidEmail']) { Correo inválido }
-            </div>
-          }
+          <app-form-field
+            [control]="form.get('email')!"
+            label="Correo electrónico *"
+            icon="mail-outline"
+            type="email"
+            placeholder="tu@email.com"
+          ></app-form-field>
 
-          <label class="field-label">Contraseña *</label>
-          <div class="input-wrapper password-field">
-            <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
-            <ion-input [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="Mínimo 8 caracteres"></ion-input>
-            <ion-icon [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'" class="toggle-password" (click)="showPassword.set(!showPassword())"></ion-icon>
-          </div>
-          @if (form.get('password')?.invalid && form.get('password')?.touched) {
-            <div class="error-msg">
-              @if (form.get('password')?.errors?.['required']) { Requerida }
-              @if (form.get('password')?.errors?.['invalidPassword']) {
-                {{ form.get('password')?.errors?.['message'] }}
-              }
-            </div>
-          }
+          <app-form-field
+            [control]="form.get('password')!"
+            label="Contraseña *"
+            icon="lock-closed-outline"
+            type="password"
+            placeholder="Mínimo 8 caracteres"
+            [showPasswordToggle]="true"
+          ></app-form-field>
 
-          <label class="field-label">Teléfono (opcional)</label>
-          <div class="input-wrapper">
-            <ion-icon name="call-outline" class="input-icon"></ion-icon>
-            <ion-input type="tel" formControlName="phone" placeholder="Número de teléfono"></ion-input>
-          </div>
+          <app-form-field
+            [control]="form.get('phone')!"
+            label="Teléfono (opcional)"
+            icon="call-outline"
+            type="tel"
+            placeholder="Número de teléfono"
+          ></app-form-field>
 
-          <label class="field-label">Rol *</label>
-          <div class="input-wrapper select-wrapper">
-            <ion-select formControlName="role" placeholder="Selecciona un rol" interface="alert" cancelText="Cancelar" okText="Aceptar">
-              <ion-select-option value="Admin">Admin</ion-select-option>
-              <ion-select-option value="Mechanic">Mecánico</ion-select-option>
-              <ion-select-option value="Receptionist">Recepcionista</ion-select-option>
-            </ion-select>
-          </div>
+          <app-select-field
+            [control]="form.get('role')!"
+            label="Rol *"
+            icon="shield-outline"
+            placeholder="Selecciona un rol"
+            [options]="roleOptions"
+          ></app-select-field>
 
           @if (errorMessage()) {
             <p class="error-msg" style="margin-top: 0; margin-bottom: 16px;">{{ errorMessage() }}</p>
@@ -106,9 +88,11 @@ import { UserRole } from '../../../core/models/user.model';
             y <a href="#">Política de privacidad</a>.
           </p>
 
-          <ion-button expand="block" type="submit" class="submit-btn" [disabled]="form.invalid || saving()">
-            {{ saving() ? 'CREANDO CUENTA...' : 'CREAR CUENTA' }}
-          </ion-button>
+          <app-auth-button
+            [label]="saving() ? 'CREANDO CUENTA...' : 'CREAR CUENTA'"
+            [disabled]="form.invalid"
+            [loading]="saving()"
+          ></app-auth-button>
 
           <p class="auth-link">
             ¿Ya tienes cuenta? <a routerLink="/auth/login">Inicia sesión</a>
@@ -138,48 +122,6 @@ import { UserRole } from '../../../core/models/user.model';
       padding: 40px 24px;
     }
 
-    .logo-section {
-      text-align: center;
-      margin-bottom: 32px;
-      opacity: 0;
-
-      &.reveal {
-        opacity: 1;
-        transition: opacity 0.6s ease-out;
-      }
-
-      .logo-wrapper {
-        margin-bottom: 8px;
-
-        .logo {
-          width: 120px;
-          height: 120px;
-          object-fit: contain;
-        }
-      }
-
-      .company-name {
-        font-size: 28px;
-        font-weight: 600;
-        color: white;
-        margin: 0;
-        letter-spacing: 2px;
-      }
-
-      .first-four {
-        color: #d31d1d;
-      }
-
-      .company-sub {
-        display: block;
-        font-size: 13px;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.6);
-        letter-spacing: 1px;
-        margin-top: 2px;
-      }
-    }
-
     .auth-title {
       font-size: 18px;
       font-weight: 400;
@@ -187,10 +129,10 @@ import { UserRole } from '../../../core/models/user.model';
       margin: 0 0 24px 0;
       letter-spacing: 1px;
       opacity: 0;
+      transition: opacity 0.6s ease-out;
 
-      &.reveal {
+      &.revealed {
         opacity: 1;
-        transition: opacity 0.6s ease-out 0.2s;
       }
     }
 
@@ -198,138 +140,47 @@ import { UserRole } from '../../../core/models/user.model';
       width: 100%;
       max-width: 400px;
       opacity: 0;
+      transition: opacity 0.6s ease-out;
 
-      &.reveal {
+      &.revealed {
         opacity: 1;
-        transition: opacity 0.6s ease-out 0.2s;
       }
+    }
 
-      .field-label {
-        display: block;
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 13px;
-        margin-bottom: 6px;
-        margin-left: 4px;
+    .error-msg {
+      font-size: 12px;
+      color: #ff6b6b;
+      margin-top: -14px;
+      margin-bottom: 14px;
+      margin-left: 4px;
+    }
+
+    .terms-text {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      margin: 0 0 20px;
+      line-height: 1.5;
+
+      a {
+        color: #d31d1d;
+        text-decoration: none;
       }
+    }
 
-      .input-wrapper {
-        display: flex;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-        padding: 0 14px;
-        margin-bottom: 20px;
-        transition: all 0.3s ease;
+    .auth-link {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      margin: 0;
 
-        &:focus-within {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(211, 29, 29, 0.5);
-          box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
-        }
+      a {
+        color: rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        transition: color 0.3s ease;
 
-        ion-icon.input-icon {
-          font-size: 20px;
-          color: rgba(255, 255, 255, 0.5);
-          margin-right: 12px;
-          flex-shrink: 0;
-        }
-
-        ion-input {
-          --background: transparent;
-          --color: white;
-          --placeholder-color: rgba(255, 255, 255, 0.4);
-          --padding-start: 0;
-          --padding-end: 0;
-          font-size: 15px;
-          flex: 1;
-        }
-
-        .toggle-password {
-          font-size: 20px;
-          color: rgba(255, 255, 255, 0.5);
-          cursor: pointer;
-          flex-shrink: 0;
-          transition: color 0.3s ease;
-
-          &:hover {
-            color: rgba(255, 255, 255, 0.8);
-          }
-        }
-      }
-
-      .select-wrapper {
-        padding: 0;
-
-        ion-select {
-          --padding-start: 14px;
-          --padding-end: 14px;
-          width: 100%;
-          --color: white;
-          --placeholder-color: rgba(255, 255, 255, 0.4);
-        }
-      }
-
-      .error-msg {
-        font-size: 12px;
-        color: #ff6b6b;
-        margin-top: -14px;
-        margin-bottom: 14px;
-        margin-left: 4px;
-      }
-
-      .terms-text {
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.5);
-        text-align: center;
-        margin: 0 0 20px;
-        line-height: 1.5;
-
-        a {
-          color: #d31d1d;
-          text-decoration: none;
-        }
-      }
-
-      .submit-btn {
-        --background: linear-gradient(135deg, #d31d1d 0%, #a01515 100%);
-        --background-hover: linear-gradient(135deg, #e02020 0%, #b01818 100%);
-        --border-radius: 12px;
-        --box-shadow: 0 4px 16px rgba(211, 29, 29, 0.4);
-        height: 52px;
-        font-size: 16px;
-        font-weight: 600;
-        letter-spacing: 1px;
-        margin-bottom: 16px;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-
-        &:hover:not([disabled]) {
-          --box-shadow: 0 6px 20px rgba(211, 29, 29, 0.6);
-          transform: translateY(-2px);
-        }
-
-        &:disabled {
-          --background: rgba(255, 255, 255, 0.1);
-          --color: rgba(255, 255, 255, 0.3);
-          --box-shadow: none;
-        }
-      }
-
-      .auth-link {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.6);
-        font-size: 14px;
-        margin: 0;
-
-        a {
-          color: rgba(255, 255, 255, 0.9);
-          cursor: pointer;
-          transition: color 0.3s ease;
-
-          &:hover {
-            color: white;
-          }
+        &:hover {
+          color: white;
         }
       }
     }
@@ -339,67 +190,22 @@ import { UserRole } from '../../../core/models/user.model';
         --background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
       }
 
-      .auth-container {
-        .company-name {
-          color: #1a1a2e;
-        }
-
-        .auth-title {
-          color: rgba(0, 0, 0, 0.8);
-        }
+      .auth-title {
+        color: rgba(0, 0, 0, 0.8);
       }
 
-      .auth-form {
-        .field-label {
-          color: rgba(0, 0, 0, 0.6);
-        }
+      .terms-text {
+        color: rgba(0, 0, 0, 0.5);
+      }
 
-        .input-wrapper {
-          background: white;
-          border-color: rgba(0, 0, 0, 0.1);
+      .auth-link {
+        color: rgba(0, 0, 0, 0.6);
 
-          &:focus-within {
-            background: white;
-            border-color: #000000;
-            box-shadow: 0 0 0 3px rgba(211, 29, 29, 0.1);
-          }
+        a {
+          color: rgba(0, 0, 0, 0.8);
 
-          ion-icon.input-icon {
-            color: rgba(0, 0, 0, 0.4);
-          }
-
-          ion-input {
-            --color: #1a1a2e;
-            --placeholder-color: rgba(0, 0, 0, 0.4);
-          }
-
-          .toggle-password {
-            color: rgba(0, 0, 0, 0.4);
-
-            &:hover {
-              color: rgba(0, 0, 0, 0.7);
-            }
-          }
-        }
-
-        .select-wrapper ion-select {
-          --color: #1a1a2e;
-          --placeholder-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .terms-text {
-          color: rgba(0, 0, 0, 0.5);
-        }
-
-        .auth-link {
-          color: rgba(0, 0, 0, 0.6);
-
-          a {
-            color: rgba(0, 0, 0, 0.8);
-
-            &:hover {
-              color: #1a1a2e;
-            }
+          &:hover {
+            color: #1a1a2e;
           }
         }
       }
@@ -419,8 +225,6 @@ export class RegisterComponent implements OnInit {
   private readonly alertController = inject(AlertController);
   private readonly authService = inject(AuthService);
 
-  readonly reveal = signal(false);
-  readonly showPassword = signal(false);
   readonly saving = signal(false);
   readonly errorMessage = signal('');
 
@@ -432,15 +236,17 @@ export class RegisterComponent implements OnInit {
     role: [UserRole.Mechanic, [Validators.required]],
   });
 
+  roleOptions = [
+    { value: UserRole.Admin, label: 'Admin' },
+    { value: UserRole.Mechanic, label: 'Mecánico' },
+    { value: UserRole.Receptionist, label: 'Recepcionista' },
+  ];
+
   constructor() {
     addIcons(allIcons);
   }
 
   ngOnInit() {}
-
-  ngAfterViewInit(): void {
-    setTimeout(() => this.reveal.set(true));
-  }
 
   async onSubmit() {
     if (this.form.invalid) return;

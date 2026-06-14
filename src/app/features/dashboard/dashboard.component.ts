@@ -51,24 +51,18 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     :host {
       display: block;
       width: 100%;
-      --dashboard-bg: #11111b;
-      --dashboard-surface: #1a1b2e;
-      --dashboard-surface-2: #20223a;
-      --dashboard-border: rgba(255, 255, 255, 0.08);
-      --dashboard-text: #f3f4fb;
-      --dashboard-text-muted: #9a9cb3;
-      --dashboard-accent: var(--ion-color-danger, #ff3b30);
-      --dashboard-accent-soft: rgba(255, 59, 48, 0.12);
-      --dashboard-success: #22c55e;
-      --dashboard-warning: #f59e0b;
-      --dashboard-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
-    }
-
-    .dashboard-content {
-      --background: linear-gradient(180deg, #121322 0%, #0e0f1a 100%);
-      --overflow: auto;
-      --padding-start: 0;
-      --padding-end: 0;
+      height: 100%;
+      --dashboard-bg: var(--app-bg);
+      --dashboard-surface: var(--app-surface);
+      --dashboard-surface-2: var(--app-surface-2);
+      --dashboard-border: var(--app-border);
+      --dashboard-text: var(--app-text);
+      --dashboard-text-muted: var(--app-text-muted);
+      --dashboard-accent: var(--app-accent);
+      --dashboard-accent-soft: var(--app-accent-soft);
+      --dashboard-success: var(--app-success);
+      --dashboard-warning: var(--app-warning);
+      --dashboard-shadow: var(--app-shadow);
     }
 
     .dashboard-shell {
@@ -388,7 +382,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     }
   `,
   template: `
-    <ion-content class="dashboard-content">
+    <ion-content class="app-page">
       <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>

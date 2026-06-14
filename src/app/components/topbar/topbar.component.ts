@@ -57,9 +57,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
 
     .dashboard-header {
       box-shadow: none;
-      position: sticky;
-      top: 0;
-      z-index: 10;
     }
 
     .dashboard-header ion-toolbar {

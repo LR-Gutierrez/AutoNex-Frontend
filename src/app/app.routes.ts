@@ -36,6 +36,11 @@ export const appRoutes: Routes = [
           import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
       },
       {
+        path: 'form-demo',
+        loadComponent: () =>
+          import('./features/form-demo/form-demo.component').then(m => m.FormDemoComponent),
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
