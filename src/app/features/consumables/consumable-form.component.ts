@@ -25,7 +25,6 @@ import type { MaskitoOptions } from '@maskito/core';
     TextInputComponent,
     SelectFieldComponent,
     AuthButtonComponent,
-    EnumLabelPipe,
   ],
   styles: `
     :host {
