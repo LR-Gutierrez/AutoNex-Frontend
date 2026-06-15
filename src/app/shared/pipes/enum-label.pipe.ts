@@ -26,6 +26,11 @@ const LABEL_MAP: Record<string, string> = {
   Ratchet: 'Matraca',
   Screwdriver: 'Destornillador',
   Hammer: 'Martillo',
+  Services: 'Servicios',
+  Suppliers: 'Proveedores',
+  Rent: 'Alquiler',
+  Payroll: 'Nómina',
+  Utilities: 'Servicios Públicos',
 };
 
 @Pipe({

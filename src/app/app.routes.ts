@@ -116,6 +116,46 @@ export const appRoutes: Routes = [
           import('./features/services/service-form.component').then(m => m.ServiceFormComponent),
       },
       {
+        path: 'consumables',
+        loadComponent: () =>
+          import('./features/consumables/consumable-list.component').then(m => m.ConsumableListComponent),
+      },
+      {
+        path: 'consumables/new',
+        loadComponent: () =>
+          import('./features/consumables/consumable-form.component').then(m => m.ConsumableFormComponent),
+      },
+      {
+        path: 'consumables/:id/edit',
+        loadComponent: () =>
+          import('./features/consumables/consumable-form.component').then(m => m.ConsumableFormComponent),
+      },
+      {
+        path: 'service-orders',
+        loadComponent: () =>
+          import('./features/service-orders/service-order-list.component').then(m => m.ServiceOrderListComponent),
+      },
+      {
+        path: 'service-orders/new',
+        loadComponent: () =>
+          import('./features/service-orders/service-order-form.component').then(m => m.ServiceOrderFormComponent),
+      },
+      {
+        path: 'financial-records',
+        loadComponent: () =>
+          import('./features/financial-records/financial-record-list.component').then(m => m.FinancialRecordListComponent),
+      },
+      {
+        path: 'financial-records/new',
+        loadComponent: () =>
+          import('./features/financial-records/financial-record-form.component').then(m => m.FinancialRecordFormComponent),
+      },
+      {
+        path: 'financial-records/:id/edit',
+        loadComponent: () =>
+          import('./features/financial-records/financial-record-form.component').then(m => m.FinancialRecordFormComponent),
+      },
+      {
         path: 'tool-categories',
         loadComponent: () =>
           import('./features/tool-categories/tool-category-list.component').then(m => m.ToolCategoryListComponent),

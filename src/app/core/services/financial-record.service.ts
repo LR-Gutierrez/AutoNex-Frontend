@@ -1,4 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
 import { Observable, tap, catchError, throwError, of } from 'rxjs';
 import { ApiService } from './api.service';
 import {
@@ -28,11 +29,11 @@ export class FinancialRecordService {
   readonly summary = this.summarySignal.asReadonly();
   readonly categorySummary = this.categorySummarySignal.asReadonly();
 
-  loadAll(): Observable<PagedResponse<FinancialRecordResponse>> {
+  loadAll(params?: HttpParams): Observable<PagedResponse<FinancialRecordResponse>> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    return this.api.getPaged<FinancialRecordResponse>('/financial-records').pipe(
+    return this.api.getPaged<FinancialRecordResponse>('/financial-records', params).pipe(
       tap(response => {
         this.recordsSignal.set(response.items);
         this.paginationSignal.set({
