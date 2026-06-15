@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
+import { DatePipe, CurrencyPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { FinancialRecordService } from '../../core/services/financial-record.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -11,7 +12,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 @Component({
   selector: 'app-financial-record-list',
   standalone: true,
-  imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe],
+  imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe, DatePipe, CurrencyPipe],
   template: `
     <app-list-shell
       title="Finanzas"

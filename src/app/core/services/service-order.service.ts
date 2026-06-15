@@ -71,4 +71,12 @@ export class ServiceOrderService {
   cancel(id: number): Observable<ServiceOrderResponse> {
     return this.updateStatus(id, { status: ServiceOrderStatus.Cancelled });
   }
+
+  startOrder(id: number): Observable<ServiceOrderResponse> {
+    return this.updateStatus(id, { status: ServiceOrderStatus.InProgress });
+  }
+
+  completeOrder(id: number): Observable<ServiceOrderResponse> {
+    return this.updateStatus(id, { status: ServiceOrderStatus.Completed });
+  }
 }

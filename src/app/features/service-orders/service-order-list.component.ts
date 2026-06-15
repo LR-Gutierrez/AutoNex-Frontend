@@ -13,6 +13,39 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
   selector: 'app-service-order-list',
   standalone: true,
   imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe, DatePipe, DecimalPipe, CurrencyPipe],
+  styles: [
+    `
+    .status-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .status-btn-start {
+      color: #60a5fa;
+      border: 1px solid rgba(96, 165, 250, 0.35);
+    }
+    .status-btn-start:hover {
+      background: rgba(96, 165, 250, 0.15);
+      border-color: rgba(96, 165, 250, 0.6);
+    }
+    .status-btn-complete {
+      color: #4ade80;
+      border: 1px solid rgba(74, 222, 128, 0.35);
+    }
+    .status-btn-complete:hover {
+      background: rgba(74, 222, 128, 0.15);
+      border-color: rgba(74, 222, 128, 0.6);
+    }
+  `,
+  ],
   template: `
     <app-list-shell
       title="Órdenes de Servicio"
@@ -35,10 +68,24 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
         <app-list-item
           [editLink]="['/service-orders', order.id, 'edit']"
           [deleteMessage]="getCancelMessage(order.id)"
-          [hideEdit]="order.status === 'Cancelled' || order.status === 'Completed'"
-          [hideDelete]="order.status === 'Cancelled' || order.status === 'Completed'"
+          [hideEdit]="order.status !== 'Open'"
+          [hideDelete]="order.status === 'Completed' || order.status === 'Cancelled'"
           (deleteConfirm)="cancelOrder(order.id)"
         >
+          <div actions>
+            @if (order.status === 'Open') {
+              <button class="status-btn status-btn-start" (click)="startOrder(order.id)">
+                <ion-icon name="play-outline" class="text-[16px]"></ion-icon>
+                Iniciar
+              </button>
+            }
+            @if (order.status === 'InProgress') {
+              <button class="status-btn status-btn-complete" (click)="completeOrder(order.id)">
+                <ion-icon name="checkmark-outline" class="text-[16px]"></ion-icon>
+                Completar
+              </button>
+            }
+          </div>
           <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
             {{ order.vehicleInfo }}
           </h3>
@@ -120,6 +167,20 @@ export class ServiceOrderListComponent implements OnInit {
     this.orderService.cancel(id).subscribe({
       next: () => this.loadOrders(),
       error: (err) => console.error('Error al cancelar orden:', err),
+    });
+  }
+
+  startOrder(id: number) {
+    this.orderService.startOrder(id).subscribe({
+      next: () => this.loadOrders(),
+      error: (err) => console.error('Error al iniciar orden:', err),
+    });
+  }
+
+  completeOrder(id: number) {
+    this.orderService.completeOrder(id).subscribe({
+      next: () => this.loadOrders(),
+      error: (err) => console.error('Error al completar orden:', err),
     });
   }
 }

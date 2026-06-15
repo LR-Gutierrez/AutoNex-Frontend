@@ -20,8 +20,8 @@ export const priceMask: MaskitoOptions = {
         intPart = digits.slice(0, -2).replace(/^0+/, '') || '0';
         decPart = digits.slice(-2);
       }
-      const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      const newValue = formattedInt + '.' + decPart;
+      const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      const newValue = formattedInt + ',' + decPart;
       const diff = newValue.length - value.length;
       return { value: newValue, selection: [selection[0] + diff, selection[1] + diff] };
     },

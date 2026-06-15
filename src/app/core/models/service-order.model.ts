@@ -14,6 +14,8 @@ export interface ServiceOrderResponse {
   userId: number;
   userName: string;
   currentKm: number;
+  estimatedDailyKm?: number;
+  daysPerWeek?: number;
   date: string;
   status: ServiceOrderStatus;
   totalAmount: number;
@@ -37,6 +39,8 @@ export interface CreateServiceOrderRequest {
   vehicleId: number;
   clientId: number;
   currentKm: number;
+  estimatedDailyKm?: number;
+  daysPerWeek?: number;
   notes?: string;
   items: CreateServiceOrderItemRequest[];
 }

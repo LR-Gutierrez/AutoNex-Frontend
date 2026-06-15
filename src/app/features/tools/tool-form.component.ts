@@ -13,6 +13,7 @@ import { SelectFieldComponent, SelectOption } from '../../shared/components/sele
 import { DateFieldComponent } from '../../shared/components/date-field/date-field.component';
 import { AuthButtonComponent } from '../../shared/components/auth-button/auth-button.component';
 import { ToolStatus } from '../../core/models/tool.model';
+import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 
 @Component({
   selector: 'app-tool-form',

@@ -1,5 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators, FormArray } from '@angular/forms';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+  FormArray,
+} from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -10,11 +15,15 @@ import { ServiceService } from '../../core/services/service.service';
 import { ConsumableService } from '../../core/services/consumable.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
-import { SelectFieldComponent, SelectOption } from '../../shared/components/select-field/select-field.component';
+import {
+  SelectFieldComponent,
+  SelectOption,
+} from '../../shared/components/select-field/select-field.component';
 import { DateFieldComponent } from '../../shared/components/date-field/date-field.component';
 import { AuthButtonComponent } from '../../shared/components/auth-button/auth-button.component';
 import { priceMask } from '../../shared/masks/price.mask';
 import { kmMask } from '../../shared/masks/km.mask';
+import type { MaskitoOptions } from '@maskito/core';
 
 @Component({
   selector: 'app-service-order-form',
@@ -107,7 +116,11 @@ import { kmMask } from '../../shared/masks/km.mask';
               {{ isEdit() ? 'Editar Orden' : 'Nueva Orden de Servicio' }}
             </h1>
             <p class="mt-1.5 text-(--app-text-muted) text-sm">
-              {{ isEdit() ? 'Modifica la orden de servicio' : 'Registra una nueva orden de servicio' }}
+              {{
+                isEdit()
+                  ? 'Modifica la orden de servicio'
+                  : 'Registra una nueva orden de servicio'
+              }}
             </p>
           </div>
         </div>
@@ -131,9 +144,14 @@ import { kmMask } from '../../shared/masks/km.mask';
             ></app-select-field>
 
             @if (selectedClientName()) {
-              <div class="flex items-center gap-2 mb-5 px-1 text-xs text-(--app-text-muted)">
+              <div
+                class="flex items-center gap-2 mb-5 px-1 text-xs text-(--app-text-muted)"
+              >
                 <ion-icon name="people-outline" class="text-[14px]"></ion-icon>
-                Cliente: <span class="font-semibold text-(--app-text)">{{ selectedClientName() }}</span>
+                Cliente:
+                <span class="font-semibold text-(--app-text)">{{
+                  selectedClientName()
+                }}</span>
               </div>
             }
 
@@ -143,7 +161,40 @@ import { kmMask } from '../../shared/masks/km.mask';
               icon="speedometer-outline"
               placeholder="0"
               [mask]="kmMask"
+              [maxlength]="9"
             ></app-text-input>
+
+            <div class="mt-6 mb-2">
+              <label class="text-(--app-text-muted) text-[13px] font-semibold"
+                >Uso estimado del vehículo (opcional)</label
+              >
+            </div>
+            <div class="flex gap-3">
+              <app-text-input
+                [control]="form.get('estimatedDailyKm')!"
+                label="Km por día"
+                icon="speedometer-outline"
+                placeholder="35"
+                [mask]="kmMask"
+                [maxlength]="7"
+              ></app-text-input>
+              <app-text-input
+                [control]="form.get('daysPerWeek')!"
+                label="Días a la semana"
+                icon="calendar-outline"
+                placeholder="5"
+                [mask]="daysPerWeekMask"
+              ></app-text-input>
+            </div>
+            @if (weeklyKmText()) {
+              <div
+                class="text-xs px-1 mt-1 mb-5 italic"
+                [class.text-green-400]="weeklyKmValid()"
+                [class.text-yellow-400]="!weeklyKmValid()"
+              >
+                {{ weeklyKmText() }}
+              </div>
+            }
 
             <app-date-field
               [control]="form.get('date')!"
@@ -159,7 +210,9 @@ import { kmMask } from '../../shared/masks/km.mask';
             ></app-text-input>
 
             <div class="mt-6 mb-2">
-              <label class="text-(--app-text-muted) text-[13px] font-semibold">Ítems de la orden</label>
+              <label class="text-(--app-text-muted) text-[13px] font-semibold"
+                >Ítems de la orden</label
+              >
             </div>
 
             <div formArrayName="items">
@@ -211,8 +264,15 @@ import { kmMask } from '../../shared/masks/km.mask';
                     ></app-text-input>
                   </div>
                   <div class="flex justify-end mt-2">
-                    <button type="button" class="remove-btn" (click)="removeItem(i)">
-                      <ion-icon name="trash-outline" class="text-[16px]"></ion-icon>
+                    <button
+                      type="button"
+                      class="remove-btn"
+                      (click)="removeItem(i)"
+                    >
+                      <ion-icon
+                        name="trash-outline"
+                        class="text-[16px]"
+                      ></ion-icon>
                     </button>
                   </div>
                 </div>
@@ -274,6 +334,16 @@ export class ServiceOrderFormComponent implements OnInit {
   readonly priceMask = priceMask;
   readonly kmMask = kmMask;
 
+  readonly daysPerWeekMask: MaskitoOptions = {
+    mask: [/[1-7]/],
+    preprocessors: [
+      ({ elementState, data }) => ({
+        elementState,
+        data: data.replace(/\D/g, '').replace(/0/g, '').replace(/[8-9]/g, ''),
+      }),
+    ],
+  };
+
   readonly itemTypeOptions: SelectOption[] = [
     { value: 'Service', label: 'Servicio' },
     { value: 'Consumable', label: 'Consumible' },
@@ -282,9 +352,33 @@ export class ServiceOrderFormComponent implements OnInit {
   form = this.fb.group({
     vehicleId: [0, Validators.required],
     currentKm: ['', Validators.required],
+    estimatedDailyKm: [''],
+    daysPerWeek: [''],
     date: [this.todayString(), Validators.required],
     notes: [''],
     items: this.fb.array([]),
+  });
+
+  readonly weeklyKmText = computed(() => {
+    const rawDaily = this.form.get('estimatedDailyKm')?.value;
+    const rawDays = this.form.get('daysPerWeek')?.value;
+    const daily = parseInt(String(rawDaily ?? '').replace(/\./g, ''), 10);
+    const days = parseInt(String(rawDays ?? ''), 10);
+    if (daily > 0 && days > 0) {
+      return `Uso semanal estimado: ~${(daily * days).toLocaleString()} km`;
+    }
+    if ((rawDaily && rawDaily !== '') || (rawDays && rawDays !== '')) {
+      return 'Completa ambos campos para calcular el uso semanal';
+    }
+    return '';
+  });
+
+  readonly weeklyKmValid = computed(() => {
+    const rawDaily = this.form.get('estimatedDailyKm')?.value;
+    const rawDays = this.form.get('daysPerWeek')?.value;
+    const daily = parseInt(String(rawDaily ?? '').replace(/\./g, ''), 10);
+    const days = parseInt(String(rawDays ?? ''), 10);
+    return daily > 0 && days > 0;
   });
 
   get items(): FormArray {
@@ -305,8 +399,8 @@ export class ServiceOrderFormComponent implements OnInit {
     this.loadServices();
     this.loadConsumables();
 
-    this.form.get('vehicleId')?.valueChanges.subscribe(id => {
-      const v = this.vehicleService.vehicles().find(v => v.id === id);
+    this.form.get('vehicleId')?.valueChanges.subscribe((id) => {
+      const v = this.vehicleService.vehicles().find((v) => v.id === id);
       this.selectedClientName.set(v?.clientName ?? '');
     });
 
@@ -328,7 +422,7 @@ export class ServiceOrderFormComponent implements OnInit {
     this.vehicleService.loadAll().subscribe({
       next: () => {
         this.vehicleOptions.set(
-          this.vehicleService.vehicles().map(v => ({
+          this.vehicleService.vehicles().map((v) => ({
             value: v.id,
             label: `${v.brand} ${v.model} (${v.licensePlate})`,
           })),
@@ -341,7 +435,7 @@ export class ServiceOrderFormComponent implements OnInit {
     this.serviceService.loadAll().subscribe({
       next: () => {
         this.serviceOptions.set(
-          this.serviceService.services().map(s => ({
+          this.serviceService.services().map((s) => ({
             value: s.id,
             label: s.name,
           })),
@@ -354,7 +448,7 @@ export class ServiceOrderFormComponent implements OnInit {
     this.consumableService.loadAll().subscribe({
       next: () => {
         this.consumableOptions.set(
-          this.consumableService.consumables().map(c => ({
+          this.consumableService.consumables().map((c) => ({
             value: c.id,
             label: c.name,
           })),
@@ -371,18 +465,22 @@ export class ServiceOrderFormComponent implements OnInit {
         this.skipAutoFill = true;
         this.items.clear();
         for (const item of order.items) {
-          this.items.push(this.createItemGroup(
-            item.type,
-            item.serviceId ?? null,
-            item.consumableId ?? null,
-            item.quantity,
-            item.unitPrice,
-          ));
+          this.items.push(
+            this.createItemGroup(
+              item.type,
+              item.serviceId ?? null,
+              item.consumableId ?? null,
+              item.quantity,
+              item.unitPrice,
+            ),
+          );
         }
         this.skipAutoFill = false;
         this.form.patchValue({
           vehicleId: order.vehicleId,
           currentKm: order.currentKm.toString(),
+          estimatedDailyKm: order.estimatedDailyKm?.toString() ?? '',
+          daysPerWeek: order.daysPerWeek?.toString() ?? '',
           date: order.date.substring(0, 10),
           notes: order.notes ?? '',
         });
@@ -417,23 +515,25 @@ export class ServiceOrderFormComponent implements OnInit {
       group.get('consumableId')!.setValidators(Validators.required);
     }
 
-    group.get('serviceId')!.valueChanges.subscribe(id => {
+    group.get('serviceId')!.valueChanges.subscribe((id) => {
       if (!id || this.skipAutoFill) return;
-      const service = this.serviceService.services().find(s => s.id === id);
+      const service = this.serviceService.services().find((s) => s.id === id);
       if (service && !group.get('unitPrice')!.dirty) {
         group.get('unitPrice')!.setValue(service.defaultPrice.toFixed(2));
       }
     });
 
-    group.get('consumableId')!.valueChanges.subscribe(id => {
+    group.get('consumableId')!.valueChanges.subscribe((id) => {
       if (!id || this.skipAutoFill) return;
-      const consumable = this.consumableService.consumables().find(c => c.id === id);
+      const consumable = this.consumableService
+        .consumables()
+        .find((c) => c.id === id);
       if (consumable && !group.get('unitPrice')!.dirty) {
         group.get('unitPrice')!.setValue(consumable.unitPrice.toFixed(2));
       }
     });
 
-    group.get('type')!.valueChanges.subscribe(t => {
+    group.get('type')!.valueChanges.subscribe((t) => {
       group.get('unitPrice')!.markAsPristine();
       queueMicrotask(() => {
         if (t === 'Service') {
@@ -471,18 +571,32 @@ export class ServiceOrderFormComponent implements OnInit {
       return {
         type: item.type,
         ...(item.type === 'Service'
-          ? { serviceId: item.serviceId, consumableId: item.consumableId ?? undefined }
+          ? {
+              serviceId: item.serviceId,
+              consumableId: item.consumableId ?? undefined,
+            }
           : { consumableId: item.consumableId }),
         quantity: item.quantity,
-        unitPrice: parseFloat(String(rawPrice).replace?.(/,/g, '') ?? rawPrice),
+        unitPrice: parseFloat(
+          String(rawPrice).replace?.(/\./g, '').replace(',', '.') ?? rawPrice,
+        ),
       };
     });
 
-    const vehicle = this.vehicleService.vehicles().find(v => v.id === this.form.value.vehicleId);
+    const vehicle = this.vehicleService
+      .vehicles()
+      .find((v) => v.id === this.form.value.vehicleId);
     const request = {
       vehicleId: this.form.value.vehicleId!,
       clientId: vehicle?.clientId ?? 0,
-      currentKm: parseInt((this.form.value.currentKm ?? '').replace(/,/g, ''), 10) || 0,
+      currentKm:
+        parseInt((this.form.value.currentKm ?? '').replace(/\./g, ''), 10) || 0,
+      estimatedDailyKm: this.form.value.estimatedDailyKm
+        ? parseInt(this.form.value.estimatedDailyKm.replace(/\./g, ''), 10)
+        : undefined,
+      daysPerWeek: this.form.value.daysPerWeek
+        ? parseInt(this.form.value.daysPerWeek, 10)
+        : undefined,
       notes: this.form.value.notes || undefined,
       items,
     };

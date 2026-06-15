@@ -231,7 +231,7 @@ export class ServiceFormComponent implements OnInit {
     this.submitting.set(true);
     this.error.set(null);
 
-    const parseNum = (s: string) => parseFloat(s.replace(/,/g, ''));
+    const parseNum = (s: string) => parseFloat(s.replace(/\./g, '').replace(',', '.'));
     const request = {
       name: this.form.value.name!,
       description: this.form.value.description || undefined,

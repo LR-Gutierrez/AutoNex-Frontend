@@ -44,6 +44,7 @@ import { AlertController } from '@ionic/angular';
           <ng-content></ng-content>
         </div>
         <div class="flex items-center gap-2 shrink-0">
+          <ng-content select="[actions]"></ng-content>
           @if (!hideEdit) {
             <a
               [routerLink]="editLink"

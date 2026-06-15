@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
+import { CurrencyPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { ConsumableService } from '../../core/services/consumable.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -11,7 +12,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 @Component({
   selector: 'app-consumable-list',
   standalone: true,
-  imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe],
+  imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe, CurrencyPipe],
   template: `
     <app-list-shell
       title="Consumibles"
