@@ -4,8 +4,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
-import type { MaskitoOptions } from '@maskito/core';
 import { priceMask } from '../../shared/masks/price.mask';
+import { kmMask } from '../../shared/masks/km.mask';
 import { ServiceService } from '../../core/services/service.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
@@ -163,24 +163,7 @@ export class ServiceFormComponent implements OnInit {
   readonly loadingService = signal(false);
   private serviceId: number | null = null;
 
-  readonly kmMask: MaskitoOptions = {
-    mask: ({ value }) => {
-      const digits = value.replace(/,/g, '');
-      const result: Array<RegExp | string> = [];
-      for (let i = 0; i < digits.length; i++) {
-        const fromRight = digits.length - i;
-        if (i > 0 && fromRight % 3 === 0) result.push(',');
-        result.push(/\d/);
-      }
-      return result;
-    },
-    preprocessors: [
-      ({ elementState, data }) => ({
-        elementState,
-        data: data.replace(/\D/g, ''),
-      }),
-    ],
-  };
+  readonly kmMask = kmMask;
 
   readonly priceMask = priceMask;
 

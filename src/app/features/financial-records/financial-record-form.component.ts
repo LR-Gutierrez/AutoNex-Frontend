@@ -175,7 +175,7 @@ export class FinancialRecordFormComponent implements OnInit {
     }),
   );
 
-  readonly priceMask: MaskitoOptions = priceMask;
+  readonly priceMask = priceMask;
 
   form = this.fb.group({
     type: ['', Validators.required],

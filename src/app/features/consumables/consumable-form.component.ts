@@ -176,7 +176,7 @@ export class ConsumableFormComponent implements OnInit {
     }),
   );
 
-  readonly priceMask: MaskitoOptions = priceMask;
+  readonly priceMask = priceMask;
 
   readonly numberMask: MaskitoOptions = {
     mask: ({ value }) => value.split('').map(() => /\d/),

@@ -14,7 +14,7 @@ import { SelectFieldComponent, SelectOption } from '../../shared/components/sele
 import { DateFieldComponent } from '../../shared/components/date-field/date-field.component';
 import { AuthButtonComponent } from '../../shared/components/auth-button/auth-button.component';
 import { priceMask } from '../../shared/masks/price.mask';
-import type { MaskitoOptions } from '@maskito/core';
+import { kmMask } from '../../shared/masks/km.mask';
 
 @Component({
   selector: 'app-service-order-form',
@@ -259,11 +259,8 @@ export class ServiceOrderFormComponent implements OnInit {
   readonly selectedClientName = signal('');
   private orderId: number | null = null;
 
-  readonly priceMask: MaskitoOptions = priceMask;
-
-  readonly kmMask: MaskitoOptions = {
-    mask: ({ value }) => value.split('').map(() => /\d/),
-  };
+  readonly priceMask = priceMask;
+  readonly kmMask = kmMask;
 
   form = this.fb.group({
     vehicleId: [0, Validators.required],
