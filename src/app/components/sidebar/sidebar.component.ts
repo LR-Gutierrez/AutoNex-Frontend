@@ -239,6 +239,11 @@ export class SidebarComponent {
       icon: 'warning-outline',
     },
     { path: '/tools', label: 'Herramientas', icon: 'build-outline' },
+    {
+      path: '/tool-categories',
+      label: 'Categorías',
+      icon: 'folder-outline',
+    },
     { path: '/services', label: 'Servicios', icon: 'construct-outline' },
     {
       path: '/service-orders',

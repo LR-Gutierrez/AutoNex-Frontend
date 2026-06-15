@@ -70,12 +70,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
       flex-shrink: 0;
     }
 
-    .header-titles {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
     .dashboard-title {
       margin: 0;
       padding: 0;
@@ -84,16 +78,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
       letter-spacing: -0.02em;
       color: var(--topbar-text);
       line-height: 1.15;
-    }
-
-    .dashboard-subtitle {
-      margin-top: 2px;
-      font-size: 12px;
-      color: var(--topbar-text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.2;
     }
 
     .header-actions {
@@ -351,13 +335,6 @@ import { PageTitleService } from '../../core/services/page-title.service';
       <ion-buttons>
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-
-      <div class="header-titles">
-        <div class="dashboard-title">{{ pageTitle.title() }}</div>
-        @if (pageTitle.subtitle()) {
-          <div class="dashboard-subtitle">{{ pageTitle.subtitle() }}</div>
-        }
-      </div>
     </div>
 
     <div class="header-actions">

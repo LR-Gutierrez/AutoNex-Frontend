@@ -47,7 +47,7 @@ export class ApiService {
 
   delete<T = void>(path: string, id: number): Observable<T> {
     return this.http
-      .delete<ApiResponse<T>>(`${this.baseUrl}${path}/${id}`)
-      .pipe(map(res => res.data));
+      .delete<ApiResponse<T> | null>(`${this.baseUrl}${path}/${id}`, { responseType: 'json' as const })
+      .pipe(map(res => (res ? res.data : undefined as T)));
   }
 }

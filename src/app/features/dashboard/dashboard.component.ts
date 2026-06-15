@@ -1,9 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-  IonBadge,
-  IonSkeletonText,
-} from '@ionic/angular/standalone';
+import { IonSkeletonText } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
 import { ClientService } from '../../core/services/client.service';
@@ -18,22 +15,23 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [
-    RouterLink,
-    IonBadge,
-    IonSkeletonText,
-    EnumLabelPipe,
-  ],
+  imports: [RouterLink, IonSkeletonText, EnumLabelPipe],
   styles: `
     :host {
       display: block;
-      --card-bg: linear-gradient(180deg, rgba(30,32,52,0.96), rgba(24,25,42,0.96));
+      --card-bg: linear-gradient(
+        180deg,
+        rgba(30, 32, 52, 0.96),
+        rgba(24, 25, 42, 0.96)
+      );
     }
   `,
   template: `
     <div class="p-5 max-md:p-3.5 text-(--app-text) box-border">
       <section class="mb-5">
-        <h1 class="m-0 text-[34px] max-md:text-[28px] leading-[1.1] font-extrabold tracking-[-0.03em]">
+        <h1
+          class="m-0 text-[34px] max-md:text-[28px] leading-[1.1] font-extrabold tracking-[-0.03em]"
+        >
           Panel de Control
         </h1>
         <p class="mt-1.5 text-(--app-text-muted) text-sm">
@@ -42,56 +40,133 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       </section>
 
       @if (loading()) {
-        <div class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-5">
+        <div
+          class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-5"
+        >
           @for (_ of [1, 2, 3, 4]; track $index) {
-            <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
-              <ion-skeleton-text animated class="w-[45%]! h-3!"></ion-skeleton-text>
-              <ion-skeleton-text animated class="w-[35%]! h-10.5! mt-4.5"></ion-skeleton-text>
-              <ion-skeleton-text animated class="w-[28%]! h-6! mt-3"></ion-skeleton-text>
+            <div
+              class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
+            >
+              <ion-skeleton-text
+                animated
+                class="w-[45%]! h-3!"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                class="w-[35%]! h-10.5! mt-4.5"
+              ></ion-skeleton-text>
+              <ion-skeleton-text
+                animated
+                class="w-[28%]! h-6! mt-3"
+              ></ion-skeleton-text>
             </div>
           }
         </div>
       } @else {
-        <section class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-5">
-          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
-            <div class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5">Total clientes</div>
+        <section
+          class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-5"
+        >
+          <div
+            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
+          >
+            <div
+              class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5"
+            >
+              Total clientes
+            </div>
             <div class="flex items-end justify-between gap-2.5">
-              <div class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word">{{ clientCount() }}</div>
-              <div class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(34,197,94,0.12)] text-[#4ade80]">+12%</div>
+              <div
+                class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word"
+              >
+                {{ clientCount() }}
+              </div>
+              <div
+                class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(34,197,94,0.12)] text-[#4ade80]"
+              >
+                +12%
+              </div>
             </div>
           </div>
 
-          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
-            <div class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5">Vehículos en taller</div>
+          <div
+            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
+          >
+            <div
+              class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5"
+            >
+              Vehículos en taller
+            </div>
             <div class="flex items-end justify-between gap-2.5">
-              <div class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word">{{ vehicleCount() }}</div>
-              <div class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(245,158,11,0.12)] text-[#fbbf24]">8 espera</div>
+              <div
+                class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word"
+              >
+                {{ vehicleCount() }}
+              </div>
+              <div
+                class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(245,158,11,0.12)] text-[#fbbf24]"
+              >
+                8 espera
+              </div>
             </div>
           </div>
 
-          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
-            <div class="text-xs uppercase tracking-[0.08em] mb-3.5 text-white">Stock crítico</div>
+          <div
+            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
+          >
+            <div class="text-xs uppercase tracking-[0.08em] mb-3.5 text-white">
+              Stock crítico
+            </div>
             <div class="flex items-end justify-between gap-2.5">
-              <div class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word text-[#ff5a52]">15</div>
-              <div class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(255,59,48,0.12)] text-[#ff5a52]">3 alertas</div>
+              <div
+                class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word text-[#ff5a52]"
+              >
+                15
+              </div>
+              <div
+                class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(255,59,48,0.12)] text-[#ff5a52]"
+              >
+                3 alertas
+              </div>
             </div>
           </div>
 
-          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border">
-            <div class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5">Ingresos mes</div>
+          <div
+            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
+          >
+            <div
+              class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5"
+            >
+              Ingresos mes
+            </div>
             <div class="flex items-end justify-between gap-2.5">
-              <div class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word">{{ balanceLabel() }}</div>
-              <div class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(34,197,94,0.12)] text-[#4ade80]">+8.4%</div>
+              <div
+                class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word"
+              >
+                {{ balanceLabel() }}
+              </div>
+              <div
+                class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(34,197,94,0.12)] text-[#4ade80]"
+              >
+                +8.4%
+              </div>
             </div>
           </div>
         </section>
       }
 
-      <section class="grid grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] max-xl:grid-cols-1 gap-5 mb-5 min-w-0">
-        <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 box-border">
+      <section
+        class="grid grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] max-xl:grid-cols-1 gap-5 mb-5 min-w-0"
+      >
+        <div
+          class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 box-border"
+        >
           <div class="pb-1.5">
-            <h2 class="text-(--app-text) text-lg font-bold m-0">Órdenes de Servicio Recientes</h2>
-            <p class="text-(--app-text-muted) text-sm m-0 mt-0.5">Últimos movimientos registrados</p>
+            <h2 class="text-(--app-text) text-lg font-bold m-0">
+              Órdenes de Servicio Recientes
+            </h2>
+            <p class="text-(--app-text-muted) text-sm m-0 mt-0.5">
+              Últimos movimientos registrados
+            </p>
           </div>
 
           <div>
@@ -100,8 +175,14 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
                 @for (_ of [1, 2, 3, 4]; track $index) {
                   <div class="flex items-center gap-3 py-2">
                     <div class="flex-1">
-                      <ion-skeleton-text animated class="w-[70%]!"></ion-skeleton-text>
-                      <ion-skeleton-text animated class="w-[45%]! mt-1"></ion-skeleton-text>
+                      <ion-skeleton-text
+                        animated
+                        class="w-[70%]!"
+                      ></ion-skeleton-text>
+                      <ion-skeleton-text
+                        animated
+                        class="w-[45%]! mt-1"
+                      ></ion-skeleton-text>
                     </div>
                   </div>
                 }
@@ -118,21 +199,29 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
                     [routerLink]="['/service-orders', order.id]"
                   >
                     <div>
-                      <h3 class="m-0 mb-1 text-sm font-bold text-(--app-text) overflow-wrap-anywhere">{{ order.vehicleInfo }}</h3>
-                      <p class="m-0 text-xs text-(--app-text-muted) overflow-wrap-anywhere">{{ order.clientName }}</p>
+                      <h3
+                        class="m-0 mb-1 text-sm font-bold text-(--app-text) overflow-wrap-anywhere"
+                      >
+                        {{ order.vehicleInfo }}
+                      </h3>
+                      <p
+                        class="m-0 text-xs text-(--app-text-muted) overflow-wrap-anywhere"
+                      >
+                        {{ order.clientName }}
+                      </p>
                     </div>
 
                     <div>
-                      <p class="m-0 text-xs text-(--app-text-muted) overflow-wrap-anywhere">Orden #{{ order.id }}</p>
+                      <p
+                        class="m-0 text-xs text-(--app-text-muted) overflow-wrap-anywhere"
+                      >
+                        Orden #{{ order.id }}
+                      </p>
                     </div>
 
-                    <ion-badge
-                      class="rounded-full text-[11px] font-bold justify-self-end max-md:justify-self-start"
-                      style="--padding-start: 10px; --padding-end: 10px; --padding-top: 6px; --padding-bottom: 6px"
-                      [color]="statusColor(order.status)"
-                    >
+                    <span [class]="badgeClasses(order.status)">
                       {{ order.status | enumLabel }}
-                    </ion-badge>
+                    </span>
                   </a>
                 }
               </div>
@@ -141,50 +230,80 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
         </div>
 
         <div class="grid gap-3.5 min-w-0">
-          <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-4.5 box-border min-w-0">
+          <div
+            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-4.5 box-border min-w-0"
+          >
             <h2 class="text-(--app-text) text-lg font-bold m-0 mb-3.5">
               Alertas de KM
             </h2>
 
-            <div class="flex items-center gap-3 py-3 border-b border-[rgba(255,255,255,0.06)] last:border-b-0 last:pb-0 min-w-0">
-              <div class="w-11 h-11 rounded-full grid place-items-center border-2 border-[rgba(255,59,48,0.4)] text-[#ff5a52] text-xs font-bold shrink-0">90%</div>
+            <div
+              class="flex items-center gap-3 py-3 border-b border-[rgba(255,255,255,0.06)] last:border-b-0 last:pb-0 min-w-0"
+            >
+              <div
+                class="w-11 h-11 rounded-full grid place-items-center border-2 border-[rgba(255,59,48,0.4)] text-[#ff5a52] text-xs font-bold shrink-0"
+              >
+                90%
+              </div>
               <div>
                 <div class="font-bold">Toyota Hilux</div>
-                <div class="text-xs text-(--app-text-muted)">Servicio de 50,000 KM</div>
+                <div class="text-xs text-(--app-text-muted)">
+                  Servicio de 50,000 KM
+                </div>
               </div>
             </div>
 
-            <div class="flex items-center gap-3 py-3 border-b border-[rgba(255,255,255,0.06)] last:border-b-0 last:pb-0 min-w-0">
-              <div class="w-11 h-11 rounded-full grid place-items-center border-2 border-[rgba(148,163,184,0.35)] text-[#a1a1aa] text-xs font-bold shrink-0">85%</div>
+            <div
+              class="flex items-center gap-3 py-3 border-b border-[rgba(255,255,255,0.06)] last:border-b-0 last:pb-0 min-w-0"
+            >
+              <div
+                class="w-11 h-11 rounded-full grid place-items-center border-2 border-[rgba(148,163,184,0.35)] text-[#a1a1aa] text-xs font-bold shrink-0"
+              >
+                85%
+              </div>
               <div>
                 <div class="font-bold">Ford Ranger</div>
-                <div class="text-xs text-(--app-text-muted)">Cambio de aceite</div>
+                <div class="text-xs text-(--app-text-muted)">
+                  Cambio de aceite
+                </div>
               </div>
             </div>
           </div>
 
           @if (summary(); as fin) {
-            <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-4.5 box-border min-w-0">
+            <div
+              class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-4.5 box-border min-w-0"
+            >
               <h2 class="text-(--app-text) text-lg font-bold m-0 mb-3.5">
                 Resumen Financiero
               </h2>
 
               <div class="grid grid-cols-3 max-md:grid-cols-1 gap-4">
-                <div class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border">
-                  <span class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere text-[#4ade80]">
+                <div
+                  class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border"
+                >
+                  <span
+                    class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere text-[#4ade80]"
+                  >
                     \${{ fin.totalIncome.toFixed(2) }}
                   </span>
                   <span class="text-(--app-text-muted) text-xs">Ingresos</span>
                 </div>
 
-                <div class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border">
-                  <span class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere text-[#ff6b63]">
+                <div
+                  class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border"
+                >
+                  <span
+                    class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere text-[#ff6b63]"
+                  >
                     \${{ fin.totalExpenses.toFixed(2) }}
                   </span>
                   <span class="text-(--app-text-muted) text-xs">Egresos</span>
                 </div>
 
-                <div class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border">
+                <div
+                  class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border"
+                >
                   <span
                     class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere"
                     [class.text-[#4ade80]]="fin.balance >= 0"
@@ -282,5 +401,16 @@ export class DashboardComponent implements OnInit {
       Cancelled: 'medium',
     };
     return map[status] ?? 'medium';
+  }
+
+  badgeClasses(status: string): string {
+    const base = 'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset';
+    const colorMap: Record<string, string> = {
+      warning: 'bg-amber-400/10 text-amber-400 ring-amber-400/20',
+      primary: 'bg-blue-400/10 text-blue-400 ring-blue-400/20',
+      success: 'bg-green-400/10 text-green-400 ring-green-400/20',
+      medium: 'bg-gray-400/10 text-gray-400 ring-gray-400/20',
+    };
+    return `${base} ${colorMap[this.statusColor(status)]}`;
   }
 }

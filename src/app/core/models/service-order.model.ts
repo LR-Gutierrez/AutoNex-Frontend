@@ -26,8 +26,6 @@ export interface ServiceOrderItemResponse {
   id: number;
   serviceId: number;
   serviceName: string;
-  serviceVariantId?: number;
-  serviceVariantName?: string;
   consumableId?: number;
   consumableName?: string;
   quantity: number;
@@ -44,7 +42,6 @@ export interface CreateServiceOrderRequest {
 
 export interface CreateServiceOrderItemRequest {
   serviceId: number;
-  serviceVariantId?: number;
   consumableId?: number;
   quantity: number;
   unitPrice: number;

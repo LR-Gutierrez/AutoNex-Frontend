@@ -8,7 +8,13 @@ import { RevealDirective } from '../../directives/reveal.directive';
 @Component({
   selector: 'app-text-input',
   standalone: true,
-  imports: [ReactiveFormsModule, IonInput, IonIcon, MaskitoDirective, RevealDirective],
+  imports: [
+    ReactiveFormsModule,
+    IonInput,
+    IonIcon,
+    MaskitoDirective,
+    RevealDirective,
+  ],
   styles: `
     :host {
       --input-bg: rgba(255, 255, 255, 0.05);
@@ -23,16 +29,24 @@ import { RevealDirective } from '../../directives/reveal.directive';
     }
   `,
   template: `
-    <div class="mb-5 opacity-0 transition-opacity duration-[600ms] [&.revealed]:opacity-100" [appReveal]="revealDelay">
+    <div
+      class="mb-5 opacity-0 transition-opacity duration-[600ms] [&.revealed]:opacity-100"
+      [appReveal]="revealDelay"
+    >
       @if (label) {
-        <label class="block text-(--app-text-muted) text-[13px] mb-1.5 ml-1">{{ label }}</label>
+        <label class="block text-(--app-text-muted) text-[13px] mb-1.5 ml-1">{{
+          label
+        }}</label>
       }
       <div
         class="flex items-center bg-[var(--input-bg)] border border-[var(--input-border)] rounded-[12px] px-4 transition-all duration-300 focus-within:bg-[var(--input-focus-bg)] focus-within:border-[var(--input-focus-border)] focus-within:shadow-[var(--input-focus-shadow)]"
         [class.pr-2]="showPasswordToggle"
       >
         @if (icon) {
-          <ion-icon [name]="icon" class="text-[20px] text-[var(--input-icon)] mr-3 shrink-0"></ion-icon>
+          <ion-icon
+            [name]="icon"
+            class="text-[20px] text-[var(--input-icon)] mr-3 shrink-0"
+          ></ion-icon>
         }
         <ion-input
           [type]="effectiveType"
@@ -40,6 +54,7 @@ import { RevealDirective } from '../../directives/reveal.directive';
           [placeholder]="placeholder"
           [maskito]="mask"
           [maskitoElement]="maskitoPredicate"
+          [maxlength]="maxlength"
           class="flex-1 text-[15px]"
           style="--background: transparent; --color: var(--app-text); --placeholder-color: var(--input-placeholder); --padding-start: 0; --padding-end: 0"
         ></ion-input>
@@ -54,7 +69,9 @@ import { RevealDirective } from '../../directives/reveal.directive';
       @if (control.invalid && (control.dirty || control.touched)) {
         <div class="text-xs text-[var(--input-error)] mt-1.5 ml-4">
           @for (msg of activeErrors; track msg; let i = $index) {
-            @if (i > 0) { <span class="mx-1">•</span> }
+            @if (i > 0) {
+              <span class="mx-1">•</span>
+            }
             <span>{{ msg }}</span>
           }
         </div>
@@ -66,7 +83,16 @@ export class TextInputComponent {
   @Input({ required: true }) control!: any;
   @Input() label = '';
   @Input() icon = '';
-  @Input() type: 'text' | 'email' | 'password' | 'tel' | 'url' | 'number' | 'search' | 'time' = 'text';
+  @Input() maxlength: string | number | null = null;
+  @Input() type:
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'tel'
+    | 'url'
+    | 'number'
+    | 'search'
+    | 'time' = 'text';
   @Input() placeholder = '';
   @Input() mask: MaskitoOptions | null = null;
   @Input() showPasswordToggle = false;
@@ -94,7 +120,9 @@ export class TextInputComponent {
     for (const [key, msg] of Object.entries(this.errorMessages)) {
       if (this.control.errors[key]) {
         if (key === 'minlength') {
-          msgs.push(msg.replace('{n}', this.control.errors[key].requiredLength));
+          msgs.push(
+            msg.replace('{n}', this.control.errors[key].requiredLength),
+          );
         } else if (key === 'invalidPassword') {
           msgs.push(this.control.errors[key].message || msg);
         } else {

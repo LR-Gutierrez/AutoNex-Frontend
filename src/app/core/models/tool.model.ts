@@ -1,12 +1,3 @@
-export enum ToolCategory {
-  Jack = 'Jack',
-  Wrench = 'Wrench',
-  Ratchet = 'Ratchet',
-  Screwdriver = 'Screwdriver',
-  Hammer = 'Hammer',
-  Other = 'Other',
-}
-
 export enum ToolStatus {
   Available = 'Available',
   Damaged = 'Damaged',
@@ -16,7 +7,8 @@ export enum ToolStatus {
 export interface ToolResponse {
   id: number;
   name: string;
-  category: ToolCategory;
+  toolCategoryId: number;
+  toolCategoryName?: string;
   quantity: number;
   status: ToolStatus;
   purchaseDate?: string;
@@ -25,7 +17,7 @@ export interface ToolResponse {
 
 export interface CreateToolRequest {
   name: string;
-  category: ToolCategory;
+  toolCategoryId: number;
   quantity: number;
   status: ToolStatus;
   purchaseDate?: string;

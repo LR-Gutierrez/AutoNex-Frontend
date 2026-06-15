@@ -21,6 +21,11 @@ const LABEL_MAP: Record<string, string> = {
   Failed: 'Falló',
   In: 'Entrada',
   Out: 'Salida',
+  Jack: 'Gato',
+  Wrench: 'Llave',
+  Ratchet: 'Matraca',
+  Screwdriver: 'Destornillador',
+  Hammer: 'Martillo',
 };
 
 @Pipe({
