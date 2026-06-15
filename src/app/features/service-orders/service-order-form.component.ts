@@ -476,10 +476,11 @@ export class ServiceOrderFormComponent implements OnInit {
       };
     });
 
+    const vehicle = this.vehicleService.vehicles().find(v => v.id === this.form.value.vehicleId);
     const request = {
       vehicleId: this.form.value.vehicleId!,
-      clientId: 0,
-      currentKm: parseInt(this.form.value.currentKm!, 10) || 0,
+      clientId: vehicle?.clientId ?? 0,
+      currentKm: parseInt((this.form.value.currentKm ?? '').replace(/,/g, ''), 10) || 0,
       notes: this.form.value.notes || undefined,
       items,
     };
