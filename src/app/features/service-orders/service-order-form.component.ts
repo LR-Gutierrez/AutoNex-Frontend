@@ -435,17 +435,19 @@ export class ServiceOrderFormComponent implements OnInit {
 
     group.get('type')!.valueChanges.subscribe(t => {
       group.get('unitPrice')!.markAsPristine();
-      if (t === 'Service') {
-        group.get('serviceId')!.setValidators(Validators.required);
-        group.get('consumableId')!.clearValidators();
-        group.get('consumableId')!.setValue(null);
-      } else {
-        group.get('consumableId')!.setValidators(Validators.required);
-        group.get('serviceId')!.clearValidators();
-        group.get('serviceId')!.setValue(null);
-      }
-      group.get('serviceId')!.updateValueAndValidity();
-      group.get('consumableId')!.updateValueAndValidity();
+      queueMicrotask(() => {
+        if (t === 'Service') {
+          group.get('serviceId')!.setValidators(Validators.required);
+          group.get('consumableId')!.clearValidators();
+          group.get('consumableId')!.setValue(null);
+        } else {
+          group.get('consumableId')!.setValidators(Validators.required);
+          group.get('serviceId')!.clearValidators();
+          group.get('serviceId')!.setValue(null);
+        }
+        group.get('serviceId')!.updateValueAndValidity();
+        group.get('consumableId')!.updateValueAndValidity();
+      });
     });
 
     return group;
