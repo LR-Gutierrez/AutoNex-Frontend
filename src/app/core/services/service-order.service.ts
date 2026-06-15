@@ -1,17 +1,21 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, tap, catchError, throwError } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, tap, catchError, throwError, map } from 'rxjs';
 import { ApiService } from './api.service';
 import {
   ServiceOrderResponse,
   CreateServiceOrderRequest,
   UpdateServiceOrderStatusRequest,
+  ServiceOrderStatus,
 } from '../models/service-order.model';
-import { PaginationMeta, PagedResponse } from '../models/api-response.model';
+import { ApiResponse, PaginationMeta, PagedResponse } from '../models/api-response.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ServiceOrderService {
   private readonly api = inject(ApiService);
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = environment.apiUrl;
 
   private readonly ordersSignal = signal<ServiceOrderResponse[]>([]);
   private readonly loadingSignal = signal(false);
@@ -54,11 +58,17 @@ export class ServiceOrderService {
     return this.api.post<ServiceOrderResponse>('/service-orders', request);
   }
 
-  updateStatus(id: number, request: UpdateServiceOrderStatusRequest): Observable<ServiceOrderResponse> {
-    return this.api.patch<ServiceOrderResponse>('/service-orders', id, request);
+  update(id: number, request: CreateServiceOrderRequest): Observable<ServiceOrderResponse> {
+    return this.api.put<ServiceOrderResponse>('/service-orders', id, request);
   }
 
-  delete(id: number): Observable<void> {
-    return this.api.delete<void>('/service-orders', id);
+  updateStatus(id: number, request: UpdateServiceOrderStatusRequest): Observable<ServiceOrderResponse> {
+    return this.http
+      .patch<ApiResponse<ServiceOrderResponse>>(`${this.baseUrl}/service-orders/${id}/status`, request)
+      .pipe(map(res => res.data));
+  }
+
+  cancel(id: number): Observable<ServiceOrderResponse> {
+    return this.updateStatus(id, { status: ServiceOrderStatus.Cancelled });
   }
 }

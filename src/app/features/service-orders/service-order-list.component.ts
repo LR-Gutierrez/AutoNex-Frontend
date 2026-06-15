@@ -34,8 +34,8 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       @for (order of orderService.orders(); track order.id) {
         <app-list-item
           [editLink]="['/service-orders', order.id, 'edit']"
-          [deleteMessage]="getDeleteMessage(order.id)"
-          (deleteConfirm)="deleteOrder(order.id)"
+          [deleteMessage]="getCancelMessage(order.id)"
+          (deleteConfirm)="cancelOrder(order.id)"
         >
           <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
             {{ order.vehicleInfo }}
@@ -86,8 +86,8 @@ export class ServiceOrderListComponent implements OnInit {
   readonly page = signal(1);
   private readonly searchTerm = signal('');
 
-  getDeleteMessage(id: number): string {
-    return `¿Eliminar la orden de servicio #${id}? Esta acción no se puede deshacer.`;
+  getCancelMessage(id: number): string {
+    return `¿Cancelar la orden de servicio #${id}? La orden se marcará como cancelada.`;
   }
 
   ngOnInit() {
@@ -114,10 +114,10 @@ export class ServiceOrderListComponent implements OnInit {
     this.loadOrders();
   }
 
-  deleteOrder(id: number) {
-    this.orderService.delete(id).subscribe({
+  cancelOrder(id: number) {
+    this.orderService.cancel(id).subscribe({
       next: () => this.loadOrders(),
-      error: (err) => console.error('Error al eliminar orden:', err),
+      error: (err) => console.error('Error al cancelar orden:', err),
     });
   }
 }

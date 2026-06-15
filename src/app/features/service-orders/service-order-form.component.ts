@@ -489,7 +489,7 @@ export class ServiceOrderFormComponent implements OnInit {
 
     const action =
       this.isEdit() && this.orderId
-        ? this.orderService.updateStatus(this.orderId, { status: 'Open' as any })
+        ? this.orderService.update(this.orderId, request)
         : this.orderService.create(request);
 
     action.subscribe({
