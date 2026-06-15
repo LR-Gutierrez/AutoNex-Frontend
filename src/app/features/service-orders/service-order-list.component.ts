@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
+import { DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { ServiceOrderService } from '../../core/services/service-order.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -11,7 +12,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 @Component({
   selector: 'app-service-order-list',
   standalone: true,
-  imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe],
+  imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe, DatePipe, DecimalPipe, CurrencyPipe],
   template: `
     <app-list-shell
       title="Órdenes de Servicio"
@@ -114,6 +115,9 @@ export class ServiceOrderListComponent implements OnInit {
   }
 
   deleteOrder(id: number) {
-    this.orderService.delete(id).subscribe({ next: () => this.loadOrders() });
+    this.orderService.delete(id).subscribe({
+      next: () => this.loadOrders(),
+      error: (err) => console.error('Error al eliminar orden:', err),
+    });
   }
 }
