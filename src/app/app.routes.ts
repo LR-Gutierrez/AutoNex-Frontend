@@ -141,6 +141,11 @@ export const appRoutes: Routes = [
           import('./features/service-orders/service-order-form.component').then(m => m.ServiceOrderFormComponent),
       },
       {
+        path: 'service-orders/:id/edit',
+        loadComponent: () =>
+          import('./features/service-orders/service-order-form.component').then(m => m.ServiceOrderFormComponent),
+      },
+      {
         path: 'financial-records',
         loadComponent: () =>
           import('./features/financial-records/financial-record-list.component').then(m => m.FinancialRecordListComponent),
