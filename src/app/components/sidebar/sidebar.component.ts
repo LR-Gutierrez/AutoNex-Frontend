@@ -38,6 +38,7 @@ interface MenuItem {
     :host {
       display: block;
       height: 100%;
+      border-right: 1px solid var(--app-border);
       --sidebar-bg: linear-gradient(180deg, #161625 0%, #10101b 100%);
       --sidebar-surface: rgba(255, 255, 255, 0.04);
       --sidebar-border: rgba(255, 255, 255, 0.08);

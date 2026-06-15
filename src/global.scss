@@ -236,10 +236,11 @@ ion-content.app-page {
     --app-bg-gradient: linear-gradient(180deg, #f0f1f3 0%, #e2e4e8 100%);
     --app-surface: #ffffff;
     --app-surface-2: #f8f9fa;
-    --app-border: rgba(0, 0, 0, 0.10);
+    --app-border: rgba(0, 0, 0, 0.1);
     --app-text: #111827;
     --app-text-muted: #6b7280;
     --app-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --topbar-bg: var(--app-surface);
   }
 }
 
@@ -249,7 +250,7 @@ ion-content.app-page {
   --app-bg-gradient: linear-gradient(180deg, #f0f1f3 0%, #e2e4e8 100%);
   --app-surface: #ffffff;
   --app-surface-2: #f8f9fa;
-  --app-border: rgba(0, 0, 0, 0.10);
+  --app-border: rgba(0, 0, 0, 0.1);
   --app-text: #111827;
   --app-text-muted: #6b7280;
   --app-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -265,7 +266,9 @@ ion-content.app-page {
   ion-card {
     background: #ffffff;
     border-color: #e5e7eb;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.04);
     color: #111827;
 
     ion-card-title,
@@ -378,21 +381,27 @@ ion-content.app-page {
 [data-theme="light"] app-dashboard .kpi-card {
   background: #ffffff;
   border-color: #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 [data-theme="light"] app-dashboard ion-card.panel-card {
   --background: transparent;
   background: #ffffff;
   border-color: #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 [data-theme="light"] app-dashboard .alert-box,
 [data-theme="light"] app-dashboard .finance-box {
   background: #ffffff;
   border-color: #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 [data-theme="light"] app-dashboard .orders-row {
@@ -422,22 +431,28 @@ ion-content.app-page {
 }
 
 [data-theme="light"] app-dashboard .kpi-meta.positive {
-  background: rgba(34, 197, 94, 0.10);
+  background: rgba(34, 197, 94, 0.1);
   color: #16a34a;
 }
 
 [data-theme="light"] app-dashboard .kpi-meta.warning {
-  background: rgba(245, 158, 11, 0.10);
+  background: rgba(245, 158, 11, 0.1);
   color: #d97706;
 }
 
 [data-theme="light"] app-dashboard .kpi-meta.danger {
-  background: rgba(255, 59, 48, 0.10);
+  background: rgba(255, 59, 48, 0.1);
   color: #dc2626;
+}
+
+/* === Topbar background (default = dark gradient matching sidebar) === */
+:root {
+  --topbar-bg: linear-gradient(180deg, #161625 0%, #10101b 100%);
 }
 
 /* === Light override for topbar === */
 [data-theme="light"] app-topbar {
+  --topbar-bg: var(--app-surface) !important;
   --topbar-text: #111827 !important;
   --topbar-text-muted: #6b7280 !important;
   --topbar-surface: rgba(0, 0, 0, 0.04) !important;
@@ -654,6 +669,10 @@ ion-content.app-page {
   color: var(--topbar-text-muted);
 }
 
+[data-theme="light"] app-topbar .dashboard-search::part(container) {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
 @mixin input-light {
   --input-bg: white;
   --input-border: rgba(0, 0, 0, 0.18);
@@ -680,12 +699,24 @@ ion-content.app-page {
 
 /* System light mode */
 @media (prefers-color-scheme: light) {
-  app-text-input { @include input-light; }
-  app-select-field { @include select-light; }
-  app-auth-button { @include btn-light; }
+  app-text-input {
+    @include input-light;
+  }
+  app-select-field {
+    @include select-light;
+  }
+  app-auth-button {
+    @include btn-light;
+  }
 }
 
 /* Manual light mode */
-[data-theme="light"] app-text-input { @include input-light; }
-[data-theme="light"] app-select-field { @include select-light; }
-[data-theme="light"] app-auth-button { @include btn-light; }
+[data-theme="light"] app-text-input {
+  @include input-light;
+}
+[data-theme="light"] app-select-field {
+  @include select-light;
+}
+[data-theme="light"] app-auth-button {
+  @include btn-light;
+}

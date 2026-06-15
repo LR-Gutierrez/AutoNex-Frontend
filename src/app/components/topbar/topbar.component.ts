@@ -51,7 +51,7 @@ import { PageTitleService } from '../../core/services/page-title.service';
       min-height: 84px;
       padding: 12px 16px;
       box-sizing: border-box;
-      background: var(--app-surface);
+      background: var(--topbar-bg);
       border-bottom: 1px solid var(--app-border);
       /* Usar variables globales en lugar de fijas */
       --topbar-text: var(--app-text);
