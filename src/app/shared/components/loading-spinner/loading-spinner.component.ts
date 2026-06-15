@@ -4,7 +4,8 @@ import { Component, Input } from '@angular/core';
   selector: 'app-loading-spinner',
   standalone: true,
   template: `
-    <div class="loader-container" *ngIf="loading">
+    @if (loading) {
+    <div class="loader-container">
       <div class="loader">
         <div class="loader-inner"></div>
       </div>
@@ -12,6 +13,7 @@ import { Component, Input } from '@angular/core';
         <p class="loader-text">{{ message }}</p>
       }
     </div>
+    }
   `,
 })
 export class LoadingSpinnerComponent {
