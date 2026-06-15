@@ -159,7 +159,7 @@ import { kmMask } from '../../shared/masks/km.mask';
             ></app-text-input>
 
             <div class="mt-6 mb-2">
-              <label class="text-(--app-text-muted) text-[13px] font-semibold">Servicios / Consumibles</label>
+              <label class="text-(--app-text-muted) text-[13px] font-semibold">Ítems de la orden</label>
             </div>
 
             <div formArrayName="items">
@@ -167,21 +167,32 @@ import { kmMask } from '../../shared/masks/km.mask';
                 <div class="item-row" [formGroupName]="i">
                   <div class="grid grid-cols-2 gap-3">
                     <app-select-field
-                      [control]="item.get('serviceId')!"
-                      label="Servicio"
-                      icon="construct-outline"
-                      placeholder="Seleccionar"
-                      [options]="serviceOptions()"
+                      [control]="item.get('type')!"
+                      label="Tipo"
+                      icon="swap-horizontal-outline"
+                      placeholder="Tipo de ítem"
+                      [options]="itemTypeOptions"
                       [revealDelay]="0"
                     ></app-select-field>
-                    <app-select-field
-                      [control]="item.get('consumableId')!"
-                      label="Consumible (opc)"
-                      icon="water-outline"
-                      placeholder="Opcional"
-                      [options]="consumableOptions()"
-                      [revealDelay]="0"
-                    ></app-select-field>
+                    @if (item.get('type')?.value === 'Service') {
+                      <app-select-field
+                        [control]="item.get('serviceId')!"
+                        label="Servicio"
+                        icon="construct-outline"
+                        placeholder="Seleccionar"
+                        [options]="serviceOptions()"
+                        [revealDelay]="0"
+                      ></app-select-field>
+                    } @else {
+                      <app-select-field
+                        [control]="item.get('consumableId')!"
+                        label="Consumible"
+                        icon="water-outline"
+                        placeholder="Seleccionar"
+                        [options]="consumableOptions()"
+                        [revealDelay]="0"
+                      ></app-select-field>
+                    }
                   </div>
                   <div class="grid grid-cols-2 gap-3 mt-2">
                     <app-text-input
@@ -210,7 +221,7 @@ import { kmMask } from '../../shared/masks/km.mask';
 
             <button type="button" class="add-item-btn" (click)="addItem()">
               <ion-icon name="add-outline" class="text-[16px]"></ion-icon>
-              Agregar servicio
+              Agregar ítem
             </button>
 
             @if (error()) {
@@ -261,6 +272,11 @@ export class ServiceOrderFormComponent implements OnInit {
 
   readonly priceMask = priceMask;
   readonly kmMask = kmMask;
+
+  readonly itemTypeOptions: SelectOption[] = [
+    { value: 'Service', label: 'Servicio' },
+    { value: 'Consumable', label: 'Consumible' },
+  ];
 
   form = this.fb.group({
     vehicleId: [0, Validators.required],
@@ -354,7 +370,8 @@ export class ServiceOrderFormComponent implements OnInit {
         this.items.clear();
         for (const item of order.items) {
           this.items.push(this.createItemGroup(
-            item.serviceId,
+            item.type,
+            item.serviceId ?? null,
             item.consumableId ?? null,
             item.quantity,
             item.unitPrice,
@@ -377,17 +394,41 @@ export class ServiceOrderFormComponent implements OnInit {
   }
 
   private createItemGroup(
+    type: 'Service' | 'Consumable' = 'Service',
     serviceId: number | null = null,
     consumableId: number | null = null,
     quantity: number = 1,
     unitPrice: number = 0,
   ) {
-    return this.fb.group({
-      serviceId: [serviceId, Validators.required],
-      consumableId: [consumableId],
+    const group = this.fb.group({
+      type: [type, Validators.required],
+      serviceId: [null as number | null],
+      consumableId: [null as number | null],
       quantity: [quantity, [Validators.required, Validators.min(1)]],
       unitPrice: [unitPrice.toFixed(2), Validators.required],
     });
+
+    if (type === 'Service') {
+      group.get('serviceId')!.setValidators(Validators.required);
+    } else {
+      group.get('consumableId')!.setValidators(Validators.required);
+    }
+
+    group.get('type')!.valueChanges.subscribe(t => {
+      if (t === 'Service') {
+        group.get('serviceId')!.setValidators(Validators.required);
+        group.get('consumableId')!.clearValidators();
+        group.get('consumableId')!.setValue(null);
+      } else {
+        group.get('consumableId')!.setValidators(Validators.required);
+        group.get('serviceId')!.clearValidators();
+        group.get('serviceId')!.setValue(null);
+      }
+      group.get('serviceId')!.updateValueAndValidity();
+      group.get('consumableId')!.updateValueAndValidity();
+    });
+
+    return group;
   }
 
   addItem() {
@@ -406,8 +447,10 @@ export class ServiceOrderFormComponent implements OnInit {
     const items = this.items.value.map((item: any) => {
       const rawPrice = item.unitPrice;
       return {
-        serviceId: item.serviceId,
-        consumableId: item.consumableId ?? undefined,
+        type: item.type,
+        ...(item.type === 'Service'
+          ? { serviceId: item.serviceId, consumableId: item.consumableId ?? undefined }
+          : { consumableId: item.consumableId }),
         quantity: item.quantity,
         unitPrice: parseFloat(String(rawPrice).replace?.(/,/g, '') ?? rawPrice),
       };
