@@ -269,6 +269,7 @@ export class ServiceOrderFormComponent implements OnInit {
   readonly consumableOptions = signal<SelectOption[]>([]);
   readonly selectedClientName = signal('');
   private orderId: number | null = null;
+  private skipAutoFill = false;
 
   readonly priceMask = priceMask;
   readonly kmMask = kmMask;
@@ -367,6 +368,7 @@ export class ServiceOrderFormComponent implements OnInit {
     this.loadingOrder.set(true);
     this.orderService.getById(this.orderId).subscribe({
       next: (order) => {
+        this.skipAutoFill = true;
         this.items.clear();
         for (const item of order.items) {
           this.items.push(this.createItemGroup(
@@ -377,6 +379,7 @@ export class ServiceOrderFormComponent implements OnInit {
             item.unitPrice,
           ));
         }
+        this.skipAutoFill = false;
         this.form.patchValue({
           vehicleId: order.vehicleId,
           currentKm: order.currentKm.toString(),
@@ -414,7 +417,24 @@ export class ServiceOrderFormComponent implements OnInit {
       group.get('consumableId')!.setValidators(Validators.required);
     }
 
+    group.get('serviceId')!.valueChanges.subscribe(id => {
+      if (!id || this.skipAutoFill) return;
+      const service = this.serviceService.services().find(s => s.id === id);
+      if (service && !group.get('unitPrice')!.dirty) {
+        group.get('unitPrice')!.setValue(service.defaultPrice.toFixed(2));
+      }
+    });
+
+    group.get('consumableId')!.valueChanges.subscribe(id => {
+      if (!id || this.skipAutoFill) return;
+      const consumable = this.consumableService.consumables().find(c => c.id === id);
+      if (consumable && !group.get('unitPrice')!.dirty) {
+        group.get('unitPrice')!.setValue(consumable.unitPrice.toFixed(2));
+      }
+    });
+
     group.get('type')!.valueChanges.subscribe(t => {
+      group.get('unitPrice')!.markAsPristine();
       if (t === 'Service') {
         group.get('serviceId')!.setValidators(Validators.required);
         group.get('consumableId')!.clearValidators();
