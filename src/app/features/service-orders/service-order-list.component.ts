@@ -35,6 +35,8 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
         <app-list-item
           [editLink]="['/service-orders', order.id, 'edit']"
           [deleteMessage]="getCancelMessage(order.id)"
+          [hideEdit]="order.status === 'Cancelled' || order.status === 'Completed'"
+          [hideDelete]="order.status === 'Cancelled' || order.status === 'Completed'"
           (deleteConfirm)="cancelOrder(order.id)"
         >
           <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">

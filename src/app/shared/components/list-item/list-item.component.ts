@@ -44,18 +44,22 @@ import { AlertController } from '@ionic/angular';
           <ng-content></ng-content>
         </div>
         <div class="flex items-center gap-2 shrink-0">
-          <a
-            [routerLink]="editLink"
-            class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 action-btn"
-          >
-            <ion-icon name="create-outline" class="text-[18px]"></ion-icon>
-          </a>
-          <button
-            (click)="confirmDelete()"
-            class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 cursor-pointer border-none action-btn"
-          >
-            <ion-icon name="trash-outline" class="text-[18px]"></ion-icon>
-          </button>
+          @if (!hideEdit) {
+            <a
+              [routerLink]="editLink"
+              class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 action-btn"
+            >
+              <ion-icon name="create-outline" class="text-[18px]"></ion-icon>
+            </a>
+          }
+          @if (!hideDelete) {
+            <button
+              (click)="confirmDelete()"
+              class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 cursor-pointer border-none action-btn"
+            >
+              <ion-icon name="trash-outline" class="text-[18px]"></ion-icon>
+            </button>
+          }
         </div>
       </div>
     </div>
@@ -66,6 +70,8 @@ export class ListItemComponent {
 
   @Input({ required: true }) editLink!: any[];
   @Input() deleteMessage = '';
+  @Input() hideEdit = false;
+  @Input() hideDelete = false;
 
   @Output() deleteConfirm = new EventEmitter<void>();
 
