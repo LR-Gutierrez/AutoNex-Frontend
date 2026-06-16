@@ -3,6 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { ServiceOrderService } from '../../core/services/service-order.service';
+import { MileageAlertService } from '../../core/services/mileage-alert.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
@@ -44,6 +45,14 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       background: rgba(74, 222, 128, 0.15);
       border-color: rgba(74, 222, 128, 0.6);
     }
+    .status-btn-alert {
+      color: #facc15;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+    }
+    .status-btn-alert:hover {
+      background: rgba(250, 204, 21, 0.15);
+      border-color: rgba(250, 204, 21, 0.6);
+    }
   `,
   ],
   template: `
@@ -83,6 +92,12 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
               <button class="status-btn status-btn-complete" (click)="completeOrder(order.id)">
                 <ion-icon name="checkmark-outline" class="text-[16px]"></ion-icon>
                 Completar
+              </button>
+            }
+            @if (order.status === 'Completed' && order.estimatedDailyKm) {
+              <button class="status-btn status-btn-alert" (click)="createAlert(order.id)">
+                <ion-icon name="notifications-outline" class="text-[16px]"></ion-icon>
+                Alerta
               </button>
             }
           </div>
@@ -131,6 +146,7 @@ export class ServiceOrderListComponent implements OnInit {
   readonly orderService = inject(ServiceOrderService);
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
+  private readonly mileageAlertService = inject(MileageAlertService);
 
   readonly page = signal(1);
   private readonly searchTerm = signal('');
@@ -181,6 +197,13 @@ export class ServiceOrderListComponent implements OnInit {
     this.orderService.completeOrder(id).subscribe({
       next: () => this.loadOrders(),
       error: (err) => console.error('Error al completar orden:', err),
+    });
+  }
+
+  createAlert(orderId: number) {
+    this.mileageAlertService.createFromOrder(orderId).subscribe({
+      next: () => this.loadOrders(),
+      error: (err) => console.error('Error al crear alerta:', err),
     });
   }
 }

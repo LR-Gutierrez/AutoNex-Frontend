@@ -27,7 +27,9 @@ import { AddButtonComponent } from '../add-button/add-button.component';
             <p class="mt-1.5 text-(--app-text-muted) text-sm">{{ subtitle }}</p>
           }
         </div>
-        <app-add-button [route]="addRoute" [label]="addLabel"></app-add-button>
+        @if (addRoute) {
+          <app-add-button [route]="addRoute" [label]="addLabel"></app-add-button>
+        }
       </section>
 
       <div class="flex items-center gap-4 mb-5 max-md:flex-col">
@@ -59,10 +61,12 @@ import { AddButtonComponent } from '../add-button/add-button.component';
         <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] p-10 text-center">
           <ion-icon [name]="emptyIcon" class="text-[48px] text-(--app-text-muted) mb-4"></ion-icon>
           <p class="text-(--app-text-muted) text-sm m-0">{{ emptyMessage }}</p>
-          <app-add-button
-            [route]="emptyAddRoute || addRoute"
-            [label]="emptyAddLabel || addLabel"
-          ></app-add-button>
+          @if (emptyAddRoute || addRoute) {
+            <app-add-button
+              [route]="emptyAddRoute || addRoute"
+              [label]="emptyAddLabel || addLabel"
+            ></app-add-button>
+          }
         </div>
       } @else {
         <div class="grid gap-3">
@@ -101,8 +105,8 @@ import { AddButtonComponent } from '../add-button/add-button.component';
 export class ListShellComponent {
   @Input({ required: true }) title!: string;
   @Input() subtitle = '';
-  @Input({ required: true }) addRoute!: string;
-  @Input({ required: true }) addLabel!: string;
+  @Input() addRoute = '';
+  @Input() addLabel = '';
   @Input() searchPlaceholder = 'Buscar...';
   @Input() loading = false;
   @Input() items: unknown[] = [];

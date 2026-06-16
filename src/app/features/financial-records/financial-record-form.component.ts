@@ -235,7 +235,7 @@ export class FinancialRecordFormComponent implements OnInit {
     this.error.set(null);
 
     const rawAmount = this.form.value.amount!;
-    const amount = parseFloat(rawAmount.replace?.(/,/g, '') ?? rawAmount);
+    const amount = parseFloat(String(rawAmount).replace?.(/\./g, '').replace(',', '.') ?? rawAmount);
 
     const request = {
       type: this.form.value.type as FinancialRecordType,

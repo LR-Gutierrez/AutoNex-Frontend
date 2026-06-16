@@ -233,11 +233,6 @@ export class SidebarComponent {
     { path: '/vehicles', label: 'Vehículos', icon: 'car-outline' },
     { path: '/suppliers', label: 'Proveedores', icon: 'business-outline' },
     { path: '/consumables', label: 'Consumibles', icon: 'water-outline' },
-    {
-      path: '/consumables/low-stock',
-      label: 'Stock Bajo',
-      icon: 'warning-outline',
-    },
     { path: '/tools', label: 'Herramientas', icon: 'build-outline' },
     {
       path: '/tool-categories',
@@ -256,11 +251,6 @@ export class SidebarComponent {
       icon: 'speedometer-outline',
     },
     { path: '/financial-records', label: 'Finanzas', icon: 'cash-outline' },
-    {
-      path: '/notifications',
-      label: 'Notificaciones',
-      icon: 'notifications-outline',
-    },
     {
       path: '/form-demo',
       label: 'Formulario Demo',

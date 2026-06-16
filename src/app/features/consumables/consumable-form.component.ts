@@ -251,7 +251,7 @@ export class ConsumableFormComponent implements OnInit {
     this.error.set(null);
 
     const rawPrice = this.form.value.unitPrice!;
-    const unitPrice = parseFloat(rawPrice.replace?.(/,/g, '') ?? rawPrice);
+    const unitPrice = parseFloat(String(rawPrice).replace?.(/\./g, '').replace(',', '.') ?? rawPrice);
 
     const request = {
       name: this.form.value.name!,

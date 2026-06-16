@@ -102,6 +102,7 @@ export class TextInputComponent {
     required: 'Requerido',
     invalidEmail: 'Correo inválido',
     minlength: 'Mínimo {n} caracteres',
+    max: 'Máximo {n}',
   };
 
   isPasswordVisible = false;
@@ -122,6 +123,10 @@ export class TextInputComponent {
         if (key === 'minlength') {
           msgs.push(
             msg.replace('{n}', this.control.errors[key].requiredLength),
+          );
+        } else if (key === 'max') {
+          msgs.push(
+            msg.replace('{n}', this.control.errors[key].max),
           );
         } else if (key === 'invalidPassword') {
           msgs.push(this.control.errors[key].message || msg);

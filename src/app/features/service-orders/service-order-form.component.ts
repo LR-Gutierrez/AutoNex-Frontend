@@ -244,7 +244,13 @@ import type { MaskitoOptions } from '@maskito/core';
                         placeholder="Seleccionar"
                         [options]="consumableOptions()"
                         [revealDelay]="0"
+                        emptyMessage="No hay consumibles disponibles con stock. Crea uno desde el inventario."
                       ></app-select-field>
+                      @if (consumableOptions().length === 0) {
+                        <p class="text-xs text-yellow-400 mt-1 mb-0 px-1">
+                          No hay consumibles disponibles con stock. Crea uno desde el inventario.
+                        </p>
+                      }
                     }
                   </div>
                   <div class="grid grid-cols-2 gap-3 mt-2">
@@ -448,10 +454,13 @@ export class ServiceOrderFormComponent implements OnInit {
     this.consumableService.loadAll().subscribe({
       next: () => {
         this.consumableOptions.set(
-          this.consumableService.consumables().map((c) => ({
-            value: c.id,
-            label: c.name,
-          })),
+          this.consumableService
+            .consumables()
+            .filter((c) => c.stockQuantity > 0)
+            .map((c) => ({
+              value: c.id,
+              label: `${c.name} (stock: ${c.stockQuantity})`,
+            })),
         );
       },
     });
@@ -520,6 +529,7 @@ export class ServiceOrderFormComponent implements OnInit {
       const service = this.serviceService.services().find((s) => s.id === id);
       if (service && !group.get('unitPrice')!.dirty) {
         group.get('unitPrice')!.setValue(service.defaultPrice.toFixed(2));
+        queueMicrotask(() => group.get('unitPrice')!.updateValueAndValidity());
       }
     });
 
@@ -530,7 +540,15 @@ export class ServiceOrderFormComponent implements OnInit {
         .find((c) => c.id === id);
       if (consumable && !group.get('unitPrice')!.dirty) {
         group.get('unitPrice')!.setValue(consumable.unitPrice.toFixed(2));
+        queueMicrotask(() => group.get('unitPrice')!.updateValueAndValidity());
       }
+      const qtyControl = group.get('quantity')!;
+      if (consumable && consumable.stockQuantity > 0) {
+        qtyControl.setValidators([Validators.required, Validators.min(1), Validators.max(consumable.stockQuantity)]);
+      } else {
+        qtyControl.setValidators([Validators.required, Validators.min(1)]);
+      }
+      qtyControl.updateValueAndValidity();
     });
 
     group.get('type')!.valueChanges.subscribe((t) => {
@@ -540,13 +558,22 @@ export class ServiceOrderFormComponent implements OnInit {
           group.get('serviceId')!.setValidators(Validators.required);
           group.get('consumableId')!.clearValidators();
           group.get('consumableId')!.setValue(null);
+          group.get('quantity')!.setValidators([Validators.required, Validators.min(1)]);
         } else {
           group.get('consumableId')!.setValidators(Validators.required);
           group.get('serviceId')!.clearValidators();
           group.get('serviceId')!.setValue(null);
+          const consumableId = group.get('consumableId')!.value;
+          if (consumableId) {
+            const consumable = this.consumableService.consumables().find(c => c.id === consumableId);
+            if (consumable && consumable.stockQuantity > 0) {
+              group.get('quantity')!.setValidators([Validators.required, Validators.min(1), Validators.max(consumable.stockQuantity)]);
+            }
+          }
         }
         group.get('serviceId')!.updateValueAndValidity();
         group.get('consumableId')!.updateValueAndValidity();
+        group.get('quantity')!.updateValueAndValidity();
       });
     });
 

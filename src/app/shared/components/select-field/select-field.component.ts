@@ -40,6 +40,7 @@ export interface SelectOption {
           [formControl]="control"
           [placeholder]="placeholder"
           [interface]="interface"
+          [interfaceOptions]="effectiveInterfaceOptions"
           [cancelText]="cancelText"
           [okText]="okText"
           class="w-full"
@@ -71,9 +72,18 @@ export class SelectFieldComponent {
   @Input() cancelText = 'Cancelar';
   @Input() okText = 'Aceptar';
   @Input() revealDelay = 200;
+  @Input() emptyMessage = '';
+  @Input() interfaceOptions: any = {};
   @Input() errorMessages: Record<string, string> = {
     required: 'Requerido',
   };
+
+  get effectiveInterfaceOptions(): any {
+    if (this.emptyMessage && this.options.length === 0) {
+      return { ...this.interfaceOptions, message: this.emptyMessage };
+    }
+    return this.interfaceOptions;
+  }
 
   get activeErrors(): string[] {
     if (!this.control?.errors) return [];
