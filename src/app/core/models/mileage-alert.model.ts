@@ -8,7 +8,7 @@ export interface MileageAlertResponse {
   remainingKm: number;
   isDue: boolean;
   lastAlertDate?: string;
-  isActive: boolean;
+  status: 'Pending' | 'Completed';
   createdAt: string;
 }
 

@@ -33,7 +33,7 @@ import { FormsModule } from '@angular/forms';
       background: rgba(74, 222, 128, 0.15);
       color: #4ade80;
     }
-    .badge-active {
+    .badge-status {
       display: inline-flex;
       align-items: center;
       gap: 3px;
@@ -42,13 +42,13 @@ import { FormsModule } from '@angular/forms';
       font-size: 11px;
       font-weight: 700;
     }
-    .badge-active--yes {
+    .badge-status--pending {
+      background: rgba(250, 204, 21, 0.2);
+      color: #facc15;
+    }
+    .badge-status--completed {
       background: rgba(74, 222, 128, 0.15);
       color: #4ade80;
-    }
-    .badge-active--no {
-      background: rgba(148, 163, 184, 0.15);
-      color: #94a3b8;
     }
     .badge-days {
       display: inline-flex;
@@ -157,19 +157,19 @@ import { FormsModule } from '@angular/forms';
               </span>
             </span>
             <span class="flex items-center gap-1">
-              <span class="badge-active" [class.badge-active--yes]="alert.isActive" [class.badge-active--no]="!alert.isActive">
-                {{ alert.isActive ? 'Activa' : 'Inactiva' }}
+              <span class="badge-status" [class.badge-status--pending]="alert.status === 'Pending'" [class.badge-status--completed]="alert.status === 'Completed'">
+                {{ alert.status === 'Pending' ? 'Pendiente' : 'Completada' }}
               </span>
             </span>
           </div>
           <div actions>
-            @if (alert.isActive) {
+            @if (alert.status === 'Pending') {
               <button class="action-btn action-btn-review" (click)="reviewAlert(alert.id)">
                 <ion-icon name="checkmark-circle-outline" class="text-[16px]"></ion-icon>
                 Revisar
               </button>
             }
-            @if (alert.isActive) {
+            @if (alert.status === 'Pending') {
               <button class="action-btn action-btn-dismiss" (click)="dismissAlert(alert.id)">
                 <ion-icon name="close-circle-outline" class="text-[16px]"></ion-icon>
                 Desestimar

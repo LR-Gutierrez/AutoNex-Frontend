@@ -1004,7 +1004,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                 class="text-(--app-text-muted) text-xs max-sm:text-[10px] font-bold uppercase tracking-[0.1em]"
                 >Alertas KM</span
               >
-              @if ((dashboard.data()?.kmAlerts?.overdue ?? 0) > 0) {
+              @if ((dashboard.data()?.kmAlerts?.completed ?? 0) > 0) {
                 <span
                   class="text-[10px] max-sm:text-[8px] bg-[rgba(255,59,48,0.12)] text-[#ff5a52] px-2.5 py-1 rounded-full font-bold animate-pulse"
                   >URGENTE</span
@@ -1014,21 +1014,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             <div class="flex items-end justify-between gap-2.5">
               <div class="stat-value stat-value-danger">
                 {{
-                  (dashboard.data()?.kmAlerts?.active ?? 0) +
-                    (dashboard.data()?.kmAlerts?.overdue ?? 0)
+                  (dashboard.data()?.kmAlerts?.pending ?? 0) +
+                    (dashboard.data()?.kmAlerts?.completed ?? 0)
                 }}
               </div>
               <div class="badge bg-[rgba(255,59,48,0.12)] text-[#ff5a52]">
-                {{ dashboard.data()?.kmAlerts?.overdue ?? 0 }} vencidas
+                {{ dashboard.data()?.kmAlerts?.completed ?? 0 }} completadas
               </div>
             </div>
             <div
               class="flex gap-3 mt-3 text-xs max-sm:text-[9px] text-(--app-text-muted) font-medium flex-wrap"
             >
-              <span>{{ dashboard.data()?.kmAlerts?.active ?? 0 }} activas</span>
+              <span>{{ dashboard.data()?.kmAlerts?.pending ?? 0 }} pendientes</span>
               <span>•</span>
               <span
-                >{{ dashboard.data()?.kmAlerts?.overdue ?? 0 }} vencidas</span
+                >{{ dashboard.data()?.kmAlerts?.completed ?? 0 }} completadas</span
               >
             </div>
           </div>
@@ -1201,21 +1201,21 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
               <div class="metric-box text-center">
                 <span
                   class="block text-[24px] max-sm:text-[20px] font-extrabold text-amber-400"
-                  >{{ dashboard.data()?.kmAlerts?.active ?? 0 }}</span
+                  >{{ dashboard.data()?.kmAlerts?.pending ?? 0 }}</span
                 >
                 <span
                   class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                  >Activas</span
+                  >Pendientes</span
                 >
               </div>
               <div class="metric-box text-center border-[rgba(255,59,48,0.2)]">
                 <span
                   class="block text-[24px] max-sm:text-[20px] font-extrabold text-[#ff5a52]"
-                  >{{ dashboard.data()?.kmAlerts?.overdue ?? 0 }}</span
+                  >{{ dashboard.data()?.kmAlerts?.completed ?? 0 }}</span
                 >
                 <span
                   class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                  >Vencidas</span
+                  >Completadas</span
                 >
               </div>
             </div>

@@ -21,8 +21,8 @@ export interface DashboardLowStockItem {
 }
 
 export interface DashboardAlertsSummary {
-  active: number;
-  overdue: number;
+  pending: number;
+  completed: number;
 }
 
 export interface DashboardMonthlyFinances {

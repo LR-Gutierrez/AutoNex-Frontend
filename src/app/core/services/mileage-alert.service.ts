@@ -59,6 +59,6 @@ export class MileageAlertService {
   }
 
   review(id: number): Observable<MileageAlertResponse> {
-    return this.api.patch<MileageAlertResponse>('/mileage-alerts', id, { isActive: false });
+    return this.api.patch<MileageAlertResponse>('/mileage-alerts', id, { status: 'Completed' });
   }
 }

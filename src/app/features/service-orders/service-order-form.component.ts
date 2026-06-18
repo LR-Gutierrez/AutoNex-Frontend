@@ -484,7 +484,6 @@ export class ServiceOrderFormComponent implements OnInit {
             ),
           );
         }
-        this.skipAutoFill = false;
         this.form.patchValue({
           vehicleId: order.vehicleId,
           currentKm: order.currentKm.toString(),
@@ -493,6 +492,7 @@ export class ServiceOrderFormComponent implements OnInit {
           date: order.date.substring(0, 10),
           notes: order.notes ?? '',
         });
+        this.skipAutoFill = false;
         this.selectedClientName.set(order.clientName);
         this.loadingOrder.set(false);
       },
@@ -512,8 +512,8 @@ export class ServiceOrderFormComponent implements OnInit {
   ) {
     const group = this.fb.group({
       type: [type, Validators.required],
-      serviceId: [null as number | null],
-      consumableId: [null as number | null],
+      serviceId: [serviceId as number | null],
+      consumableId: [consumableId as number | null],
       quantity: [quantity, [Validators.required, Validators.min(1)]],
       unitPrice: [unitPrice.toFixed(2), Validators.required],
     });
@@ -527,8 +527,8 @@ export class ServiceOrderFormComponent implements OnInit {
     group.get('serviceId')!.valueChanges.subscribe((id) => {
       if (!id || this.skipAutoFill) return;
       const service = this.serviceService.services().find((s) => s.id === id);
-      if (service && !group.get('unitPrice')!.dirty) {
-        group.get('unitPrice')!.setValue(service.defaultPrice.toFixed(2));
+      if (service) {
+        group.get('unitPrice')!.setValue(service.defaultPrice.toFixed(2).replace('.', ','));
         queueMicrotask(() => group.get('unitPrice')!.updateValueAndValidity());
       }
     });
@@ -538,8 +538,8 @@ export class ServiceOrderFormComponent implements OnInit {
       const consumable = this.consumableService
         .consumables()
         .find((c) => c.id === id);
-      if (consumable && !group.get('unitPrice')!.dirty) {
-        group.get('unitPrice')!.setValue(consumable.unitPrice.toFixed(2));
+      if (consumable) {
+        group.get('unitPrice')!.setValue(consumable.unitPrice.toFixed(2).replace('.', ','));
         queueMicrotask(() => group.get('unitPrice')!.updateValueAndValidity());
       }
       const qtyControl = group.get('quantity')!;
@@ -548,7 +548,7 @@ export class ServiceOrderFormComponent implements OnInit {
       } else {
         qtyControl.setValidators([Validators.required, Validators.min(1)]);
       }
-      qtyControl.updateValueAndValidity();
+      queueMicrotask(() => qtyControl.updateValueAndValidity());
     });
 
     group.get('type')!.valueChanges.subscribe((t) => {
@@ -605,7 +605,12 @@ export class ServiceOrderFormComponent implements OnInit {
           : { consumableId: item.consumableId }),
         quantity: item.quantity,
         unitPrice: parseFloat(
-          String(rawPrice).replace?.(/\./g, '').replace(',', '.') ?? rawPrice,
+          (() => {
+            const raw = String(rawPrice);
+            return raw.includes(',')
+              ? raw.replace(/\./g, '').replace(',', '.')
+              : raw;
+          })(),
         ),
       };
     });
