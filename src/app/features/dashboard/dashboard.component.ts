@@ -1,350 +1,1316 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { IonSkeletonText } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
-import { ClientService } from '../../core/services/client.service';
-import { VehicleService } from '../../core/services/vehicle.service';
-import { ServiceOrderService } from '../../core/services/service-order.service';
-import { FinancialRecordService } from '../../core/services/financial-record.service';
-import { AuthStateService } from '../../core/services/auth-state.service';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { DashboardSkeletonComponent } from '../../shared/components/dashboard-skeleton/dashboard-skeleton.component';
+import {
+  DashboardService,
+  PRESETS,
+} from '../../core/services/dashboard.service';
+import { SignalRService } from '../../core/services/signalr.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { PageTitleService } from '../../core/services/page-title.service';
-import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
+import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pipe';
+import { PresetKey } from '../../core/models/dashboard.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, IonSkeletonText, EnumLabelPipe],
+  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, DatePipe],
   styles: `
     :host {
       display: block;
       --card-bg: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
+        145deg,
+        rgba(28, 30, 50, 0.95),
+        rgba(20, 22, 40, 0.95)
       );
+      --glow-blue: 0 0 30px rgba(59, 130, 246, 0.15);
+    }
+
+    .fade-transition {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* === CONTENEDOR DE PRESETS CON SCROLL HORIZONTAL === */
+    .presets-wrapper {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      padding: 6px;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      overflow-y: hidden;
+      gap: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+      -webkit-overflow-scrolling: touch;
+      /* Ocultar scrollbar en Firefox */
+      scrollbar-width: thin;
+      /* Ocultar scrollbar en Chrome/Safari */
+      &::-webkit-scrollbar {
+        height: 3px;
+      }
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: rgba(59, 130, 246, 0.3);
+        border-radius: 10px;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background: rgba(59, 130, 246, 0.5);
+      }
+    }
+
+    .presets-wrapper:hover {
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.05);
+    }
+
+    /* === BOTONES TIPO CHIP/SEGMENTO === */
+    .chip {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      user-select: none;
+      color: rgba(243, 244, 251, 0.5);
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      position: relative;
+      overflow: hidden;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    .chip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at center,
+        rgba(59, 130, 246, 0.1),
+        transparent 70%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .chip:hover::before {
+      opacity: 1;
+    }
+
+    .chip:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: rgba(243, 244, 251, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .chip:active {
+      transform: scale(0.95);
+    }
+
+    /* === ICONOS EN PRESETS === */
+    .chip-icon {
+      font-size: 14px;
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+    }
+
+    .chip-active .chip-icon {
+      opacity: 1;
+    }
+
+    /* === ESTADO SELECCIONADO === */
+    .chip-active {
+      background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.25) 0%,
+        rgba(99, 102, 241, 0.15) 100%
+      ) !important;
+      border: 1px solid rgba(59, 130, 246, 0.4) !important;
+      color: #3b82f6 !important;
+      font-weight: 700;
+      box-shadow:
+        0 0 20px rgba(59, 130, 246, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transform: translateY(-1px);
+    }
+
+    .chip-active::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #818cf8);
+      border-radius: 2px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        width: 0;
+        opacity: 0;
+      }
+      to {
+        width: 20px;
+        opacity: 1;
+      }
+    }
+
+    /* === INDICADOR DE RANGO PERSONALIZADO === */
+    .custom-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.15);
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #93bbfc;
+    }
+
+    .custom-indicator .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #3b82f6;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+
+    /* === MEJORA DE FILTROS DE FECHA === */
+    .date-filter-container {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 20px 24px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      animation: fadeSlideDown 0.3s ease;
+    }
+
+    @keyframes fadeSlideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .date-filter-container:hover {
+      border-color: rgba(59, 130, 246, 0.2);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .date-filter-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .date-filter-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .date-filter-label span {
+      font-size: 14px;
+    }
+
+    .date-filter-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px 16px;
+      color: #f3f4fb;
+      font-size: 13px;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(4px);
+      min-width: 150px;
+      cursor: pointer;
+    }
+    .date-filter-input:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .date-filter-input:focus {
+      border-color: rgba(59, 130, 246, 0.5);
+      box-shadow:
+        0 0 0 4px rgba(59, 130, 246, 0.08),
+        0 0 20px rgba(59, 130, 246, 0.05);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .date-filter-input::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+      opacity: 0.6;
+      transition:
+        opacity 0.2s,
+        transform 0.2s;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    .date-filter-input::-webkit-calendar-picker-indicator:hover {
+      opacity: 1;
+      transform: scale(1.1);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .date-filter-separator {
+      color: rgba(255, 255, 255, 0.15);
+      font-weight: 300;
+      font-size: 20px;
+      padding: 0 4px;
+    }
+
+    .date-filter-error {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #ff5a52;
+      background: rgba(255, 59, 48, 0.08);
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 59, 48, 0.12);
+      margin-top: 12px;
+      animation: shake 0.4s ease;
+    }
+
+    .date-filter-error-icon {
+      font-size: 16px;
+    }
+
+    .date-filter-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .date-filter-clear {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .date-filter-clear:hover {
+      background: rgba(255, 59, 48, 0.1);
+      border-color: rgba(255, 59, 48, 0.2);
+      color: #ff5a52;
+      transform: translateY(-1px);
+    }
+    .date-filter-clear:active {
+      transform: scale(0.95);
+    }
+
+    .date-filter-apply {
+      background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.2),
+        rgba(99, 102, 241, 0.15)
+      );
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      padding: 8px 20px;
+      color: #93bbfc;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .date-filter-apply:hover {
+      background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.3),
+        rgba(99, 102, 241, 0.25)
+      );
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+      transform: translateY(-1px);
+    }
+    .date-filter-apply:active {
+      transform: scale(0.95);
+    }
+
+    .date-filter-apply:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    @keyframes shake {
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(-4px);
+      }
+      75% {
+        transform: translateX(4px);
+      }
+    }
+
+    /* === STAT CARDS === */
+    .stat-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        var(--glow-blue),
+        0 8px 30px rgba(0, 0, 0, 0.3);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .detail-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .detail-card:hover {
+      border-color: rgba(59, 130, 246, 0.15);
+      box-shadow: var(--glow-blue);
+    }
+
+    .stat-value {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #f3f4fb 0%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-value-danger {
+      background: linear-gradient(135deg, #ff5a52 0%, #ff8a80 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-value-success {
+      background: linear-gradient(135deg, #4ade80 0%, #86efac 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .badge {
+      padding: 4px 14px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      backdrop-filter: blur(4px);
+    }
+
+    .low-stock-item {
+      transition: all 0.2s ease;
+      cursor: default;
+    }
+    .low-stock-item:hover {
+      background: rgba(255, 59, 48, 0.12);
+      transform: translateX(4px);
+    }
+
+    .metric-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 14px;
+      padding: 14px;
+      transition: all 0.2s ease;
+    }
+    .metric-box:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #f3f4fb 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* === RESPONSIVE - SOLO PARA PRESETS CON SCROLL === */
+    /* Tablets y dispositivos medianos */
+    @media (max-width: 1024px) {
+      .stat-value {
+        font-size: 36px;
+      }
+
+      .chip {
+        font-size: 12px;
+        padding: 6px 14px;
+        min-height: 36px;
+      }
+    }
+
+    /* Móviles grandes y tablets pequeñas */
+    @media (max-width: 768px) {
+      .presets-wrapper {
+        padding: 4px;
+        border-radius: 12px;
+        gap: 3px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .chip {
+        padding: 6px 12px;
+        font-size: 11px;
+        min-height: 32px;
+        flex: 0 0 auto;
+        min-width: fit-content;
+        justify-content: center;
+        border-radius: 10px;
+        /* Asegurar que los botones no se envuelvan */
+        white-space: nowrap;
+      }
+
+      .chip-icon {
+        font-size: 12px;
+      }
+
+      .chip-active::after {
+        width: 14px;
+        bottom: 1px;
+      }
+
+      /* Indicador visual de scroll en móvil */
+      .presets-wrapper::after {
+        content: '';
+        position: sticky;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 20px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(15, 23, 42, 0.6)
+        );
+        pointer-events: none;
+        flex-shrink: 0;
+      }
+
+      .stat-value {
+        font-size: 28px;
+      }
+
+      .stat-card {
+        padding: 16px !important;
+        min-height: 110px !important;
+      }
+
+      .date-filter-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      .date-filter-label {
+        font-size: 10px;
+      }
+
+      .date-filter-input {
+        min-width: 100%;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      .date-filter-separator {
+        text-align: center;
+        padding: 0;
+        font-size: 16px;
+      }
+
+      .date-filter-actions {
+        margin-left: 0;
+        margin-top: 4px;
+        justify-content: stretch;
+      }
+
+      .date-filter-actions button {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+        font-size: 11px;
+        padding: 8px 12px;
+      }
+
+      .date-filter-container {
+        padding: 14px 16px;
+        border-radius: 14px;
+      }
+
+      .detail-card {
+        padding: 16px !important;
+      }
+
+      .metric-box {
+        padding: 12px;
+      }
+
+      .metric-box span.block {
+        font-size: 20px !important;
+      }
+    }
+
+    /* Móviles pequeños */
+    @media (max-width: 480px) {
+      .presets-wrapper {
+        padding: 3px;
+        border-radius: 10px;
+        gap: 2px;
+      }
+
+      .chip {
+        padding: 4px 10px;
+        font-size: 10px;
+        min-height: 28px;
+        border-radius: 8px;
+        gap: 4px;
+      }
+
+      .chip-icon {
+        font-size: 10px;
+      }
+
+      .chip-active::after {
+        width: 10px;
+        height: 1.5px;
+        bottom: 0;
+      }
+
+      .stat-value {
+        font-size: 24px;
+      }
+
+      .stat-card {
+        padding: 14px !important;
+        min-height: 100px !important;
+      }
+
+      .badge {
+        font-size: 9px;
+        padding: 3px 10px;
+      }
+
+      .date-filter-container {
+        padding: 12px 12px;
+        border-radius: 12px;
+      }
+
+      .date-filter-input {
+        padding: 6px 10px;
+        font-size: 11px;
+        border-radius: 8px;
+        min-height: 36px;
+      }
+
+      .date-filter-label {
+        font-size: 9px;
+      }
+
+      .date-filter-actions button {
+        font-size: 10px;
+        padding: 6px 10px;
+        min-height: 32px;
+      }
+
+      .detail-card {
+        padding: 14px !important;
+        border-radius: 16px !important;
+      }
+
+      .detail-card h2 {
+        font-size: 16px !important;
+        margin-bottom: 12px !important;
+      }
+
+      .metric-box {
+        padding: 10px 8px;
+        border-radius: 10px;
+      }
+
+      .metric-box span.block {
+        font-size: 18px !important;
+      }
+
+      .metric-box span.text-xs {
+        font-size: 9px !important;
+      }
+
+      .status-text {
+        display: none;
+      }
+    }
+
+    /* Para pantallas muy pequeñas (menos de 360px) */
+    @media (max-width: 360px) {
+      .chip {
+        font-size: 9px;
+        padding: 3px 8px;
+        min-height: 24px;
+        gap: 3px;
+      }
+
+      .chip-icon {
+        font-size: 9px;
+      }
+
+      .stat-value {
+        font-size: 20px;
+      }
+
+      .stat-card {
+        padding: 12px !important;
+        min-height: 90px !important;
+      }
+
+      .stat-card .text-xs {
+        font-size: 9px !important;
+      }
+
+      .date-filter-container {
+        padding: 10px 10px;
+      }
+
+      .date-filter-input {
+        font-size: 10px;
+        padding: 5px 8px;
+        min-height: 32px;
+      }
+
+      .metric-box span.block {
+        font-size: 16px !important;
+      }
     }
   `,
   template: `
-    <div class="p-5 max-md:p-3.5 text-(--app-text) box-border">
-      <section class="mb-5">
-        <h1
-          class="m-0 text-[34px] max-md:text-[28px] leading-[1.1] font-extrabold tracking-[-0.03em]"
-        >
-          Panel de Control
-        </h1>
-        <p class="mt-1.5 text-(--app-text-muted) text-sm">
-          Resumen operativo de la red de servicios AutoNex
-        </p>
+    <div class="p-6 max-md:p-4 text-(--app-text) box-border">
+      <!-- Header -->
+      <section class="mb-6">
+        <div class="flex items-start justify-between">
+          <div>
+            <h1
+              class="m-0 text-[38px] max-md:text-[30px] max-sm:text-[24px] leading-[1.1] font-extrabold tracking-[-0.03em] gradient-text"
+            >
+              Panel de Control
+            </h1>
+            <p
+              class="mt-1.5 text-(--app-text-muted) text-sm max-sm:text-xs font-medium tracking-wide"
+            >
+              Resumen operativo de la red de servicios AutoNex
+            </p>
+          </div>
+          <div class="flex items-center gap-2 max-sm:hidden">
+            @if (signalr.dashboardStatus() === 'connected') {
+              <div
+                class="w-2.5 h-2.5 rounded-full bg-green-400 animate-pulse"
+              ></div>
+              <span
+                class="text-xs text-(--app-text-muted) font-medium status-text"
+                >En vivo</span
+              >
+            } @else if (signalr.dashboardStatus() === 'connecting' || signalr.dashboardStatus() === 'reconnecting') {
+              <div
+                class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"
+              ></div>
+              <span
+                class="text-xs text-amber-400 font-medium status-text"
+                >Conectando...</span
+              >
+            } @else {
+              <div
+                class="w-2.5 h-2.5 rounded-full bg-gray-500"
+              ></div>
+              <span
+                class="text-xs text-(--app-text-muted) font-medium status-text"
+                >Sin conexión</span
+              >
+            }
+          </div>
+        </div>
       </section>
 
-      @if (loading()) {
-        <div
-          class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-5"
-        >
-          @for (_ of [1, 2, 3, 4]; track $index) {
-            <div
-              class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
-            >
-              <ion-skeleton-text
-                animated
-                class="w-[45%]! h-3!"
-              ></ion-skeleton-text>
-              <ion-skeleton-text
-                animated
-                class="w-[35%]! h-10.5! mt-4.5"
-              ></ion-skeleton-text>
-              <ion-skeleton-text
-                animated
-                class="w-[28%]! h-6! mt-3"
-              ></ion-skeleton-text>
+      <!-- PRESETS CON SCROLL HORIZONTAL EN MÓVIL -->
+      <div class="presets-wrapper mb-6">
+        @for (preset of presets; track preset.key) {
+          <button
+            class="chip"
+            [class.chip-active]="
+              dashboard.selectedRange().preset === preset.key
+            "
+            (click)="selectPreset(preset.key)"
+          >
+            <span class="chip-icon">{{ getPresetIcon(preset.key) }}</span>
+            <span class="chip-label">{{ preset.label }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- Custom Range -->
+      @if (dashboard.selectedRange().preset === 'custom') {
+        <div class="date-filter-container mb-6">
+          <div class="date-filter-group">
+            <div class="date-filter-label"><span>📅</span> Desde</div>
+            <input
+              type="date"
+              class="date-filter-input"
+              [value]="customStart()"
+              (change)="onCustomStart($event)"
+            />
+
+            <span class="date-filter-separator">—</span>
+
+            <div class="date-filter-label"><span>📅</span> Hasta</div>
+            <input
+              type="date"
+              class="date-filter-input"
+              [value]="customEnd()"
+              (change)="onCustomEnd($event)"
+            />
+
+            <div class="date-filter-actions">
+              <button
+                class="date-filter-clear"
+                (click)="clearCustomRange()"
+                type="button"
+              >
+                ✕ Limpiar
+              </button>
+              <button
+                class="date-filter-apply"
+                [disabled]="rangeInvalid() || !customStart() || !customEnd()"
+                (click)="applyCustomRange()"
+                type="button"
+              >
+                ✓ Aplicar
+              </button>
+            </div>
+          </div>
+
+          @if (rangeInvalid()) {
+            <div class="date-filter-error">
+              <span class="date-filter-error-icon">⚠️</span>
+              La fecha de inicio no puede ser posterior a la de fin
             </div>
           }
         </div>
-      } @else {
-        <section
-          class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-5"
+      }
+
+      <!-- Date Range Label -->
+      @if (
+        dashboard.selectedRange().preset !== 'today' && !dashboard.loading()
+      ) {
+        <p
+          class="text-xs text-(--app-text-muted) font-medium mb-5 flex items-center gap-2 max-sm:text-[10px]"
         >
+          <span>📅</span>
+          Mostrando del
+          {{ dashboard.selectedRange().startDate | date: 'dd/MM/yyyy' }} al
+          {{ dashboard.selectedRange().endDate | date: 'dd/MM/yyyy' }}
+        </p>
+      }
+
+      <!-- Loading -->
+      @if (dashboard.loading()) {
+        <div class="fade-transition">
+          <app-dashboard-skeleton />
+        </div>
+      }
+      <!-- Error -->
+      @else if (dashboard.error()) {
+        <div
+          class="flex items-center justify-center p-8 rounded-2xl bg-[rgba(255,59,48,0.06)] border border-[rgba(255,59,48,0.12)] mb-6"
+        >
+          <div class="text-center">
+            <span class="text-3xl mb-2 block">⚠️</span>
+            <p class="text-[#ff5a52] text-sm font-medium">
+              Error al cargar datos: {{ dashboard.error() }}
+            </p>
+          </div>
+        </div>
+      }
+      <!-- Stats -->
+      @else {
+        <section
+          class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-6 fade-transition"
+        >
+          <!-- Orders -->
           <div
-            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
+            class="stat-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5 min-h-[130px]"
           >
-            <div
-              class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5"
-            >
-              Total clientes
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="text-(--app-text-muted) text-xs max-sm:text-[10px] font-bold uppercase tracking-[0.1em]"
+                >Órdenes</span
+              >
+              <span
+                class="text-[10px] max-sm:text-[8px] bg-[rgba(34,197,94,0.12)] text-[#4ade80] px-2.5 py-1 rounded-full font-bold"
+                >+12%</span
+              >
             </div>
             <div class="flex items-end justify-between gap-2.5">
-              <div
-                class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word"
-              >
-                {{ clientCount() }}
+              <div class="stat-value">
+                {{ dashboard.data()?.ordersToday?.total ?? 0 }}
               </div>
-              <div
-                class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(34,197,94,0.12)] text-[#4ade80]"
-              >
-                +12%
+              <div class="badge bg-[rgba(34,197,94,0.12)] text-[#4ade80]">
+                \${{
+                  dashboard.data()?.ordersToday?.totalAmount?.toFixed(0) ?? '0'
+                }}
               </div>
+            </div>
+            <div
+              class="flex gap-3 mt-3 text-xs max-sm:text-[9px] text-(--app-text-muted) font-medium flex-wrap"
+            >
+              <span
+                >{{ dashboard.data()?.ordersToday?.open ?? 0 }} abiertas</span
+              >
+              <span>•</span>
+              <span
+                >{{ dashboard.data()?.ordersToday?.inProgress ?? 0 }} en
+                progreso</span
+              >
+              <span>•</span>
+              <span
+                >{{
+                  dashboard.data()?.ordersToday?.completed ?? 0
+                }}
+                completadas</span
+              >
             </div>
           </div>
 
+          <!-- Low Stock -->
           <div
-            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
+            class="stat-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5 min-h-[130px]"
           >
-            <div
-              class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5"
-            >
-              Vehículos en taller
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="text-(--app-text-muted) text-xs max-sm:text-[10px] font-bold uppercase tracking-[0.1em]"
+                >Stock bajo</span
+              >
+              @if ((dashboard.data()?.lowStock?.items?.length ?? 0) > 0) {
+                <span
+                  class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"
+                ></span>
+              }
             </div>
             <div class="flex items-end justify-between gap-2.5">
-              <div
-                class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word"
-              >
-                {{ vehicleCount() }}
+              <div class="stat-value">
+                {{ dashboard.data()?.lowStock?.items?.length ?? 0 }}
               </div>
-              <div
-                class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(245,158,11,0.12)] text-[#fbbf24]"
+              @if ((dashboard.data()?.lowStock?.items?.length ?? 0) > 0) {
+                <div class="badge bg-[rgba(245,158,11,0.12)] text-amber-400">
+                  por reordenar
+                </div>
+              }
+            </div>
+            @if ((dashboard.data()?.lowStock?.items?.length ?? 0) === 0) {
+              <p
+                class="text-xs max-sm:text-[9px] text-(--app-text-muted) mt-3 font-medium"
               >
-                8 espera
+                ✅ Todo en orden
+              </p>
+            }
+          </div>
+
+          <!-- KM Alerts -->
+          <div
+            class="stat-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5 min-h-[130px]"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="text-(--app-text-muted) text-xs max-sm:text-[10px] font-bold uppercase tracking-[0.1em]"
+                >Alertas KM</span
+              >
+              @if ((dashboard.data()?.kmAlerts?.overdue ?? 0) > 0) {
+                <span
+                  class="text-[10px] max-sm:text-[8px] bg-[rgba(255,59,48,0.12)] text-[#ff5a52] px-2.5 py-1 rounded-full font-bold animate-pulse"
+                  >URGENTE</span
+                >
+              }
+            </div>
+            <div class="flex items-end justify-between gap-2.5">
+              <div class="stat-value stat-value-danger">
+                {{
+                  (dashboard.data()?.kmAlerts?.active ?? 0) +
+                    (dashboard.data()?.kmAlerts?.overdue ?? 0)
+                }}
               </div>
+              <div class="badge bg-[rgba(255,59,48,0.12)] text-[#ff5a52]">
+                {{ dashboard.data()?.kmAlerts?.overdue ?? 0 }} vencidas
+              </div>
+            </div>
+            <div
+              class="flex gap-3 mt-3 text-xs max-sm:text-[9px] text-(--app-text-muted) font-medium flex-wrap"
+            >
+              <span>{{ dashboard.data()?.kmAlerts?.active ?? 0 }} activas</span>
+              <span>•</span>
+              <span
+                >{{ dashboard.data()?.kmAlerts?.overdue ?? 0 }} vencidas</span
+              >
             </div>
           </div>
 
+          <!-- Finances -->
           <div
-            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
+            class="stat-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5 min-h-[130px]"
           >
-            <div class="text-xs uppercase tracking-[0.08em] mb-3.5 text-white">
-              Stock crítico
+            <div class="flex items-center justify-between mb-3">
+              <span
+                class="text-(--app-text-muted) text-xs max-sm:text-[10px] font-bold uppercase tracking-[0.1em]"
+                >Finanzas</span
+              >
+              <span
+                class="text-[10px] max-sm:text-[8px] text-(--app-text-muted) font-medium"
+                >mes actual</span
+              >
             </div>
             <div class="flex items-end justify-between gap-2.5">
               <div
-                class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word text-[#ff5a52]"
+                class="stat-value"
+                [class.stat-value-success]="
+                  (dashboard.data()?.financialMonth?.balance ?? 0) >= 0
+                "
               >
-                15
+                \${{
+                  dashboard.data()?.financialMonth?.balance?.toFixed(0) ?? '0'
+                }}
               </div>
               <div
-                class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(255,59,48,0.12)] text-[#ff5a52]"
+                class="badge"
+                [class.bg-[rgba(34,197,94,0.12)]]="
+                  (dashboard.data()?.financialMonth?.balance ?? 0) >= 0
+                "
+                [class.text-[#4ade80]]="
+                  (dashboard.data()?.financialMonth?.balance ?? 0) >= 0
+                "
+                [class.bg-[rgba(255,59,48,0.12)]]="
+                  (dashboard.data()?.financialMonth?.balance ?? 0) < 0
+                "
+                [class.text-[#ff5a52]]="
+                  (dashboard.data()?.financialMonth?.balance ?? 0) < 0
+                "
               >
-                3 alertas
+                {{
+                  (dashboard.data()?.financialMonth?.balance ?? 0) >= 0
+                    ? 'positivo'
+                    : 'negativo'
+                }}
               </div>
             </div>
-          </div>
-
-          <div
-            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 min-h-30.5 box-border"
-          >
             <div
-              class="text-(--app-text-muted) text-xs uppercase tracking-[0.08em] mb-3.5"
+              class="flex gap-3 mt-3 text-xs max-sm:text-[9px] text-(--app-text-muted) font-medium flex-wrap"
             >
-              Ingresos mes
-            </div>
-            <div class="flex items-end justify-between gap-2.5">
-              <div
-                class="text-[40px] font-extrabold leading-none tracking-[-0.04em] min-w-0 wrap-break-word"
+              <span
+                >💰
+                {{
+                  dashboard.data()?.financialMonth?.income | currencyFormat
+                }}</span
               >
-                {{ balanceLabel() }}
-              </div>
-              <div
-                class="text-xs px-2.5 py-1.5 rounded-full font-bold whitespace-nowrap bg-[rgba(34,197,94,0.12)] text-[#4ade80]"
+              <span>•</span>
+              <span
+                >💸
+                {{
+                  dashboard.data()?.financialMonth?.expenses | currencyFormat
+                }}</span
               >
-                +8.4%
-              </div>
             </div>
           </div>
         </section>
       }
 
+      <!-- Detail Sections -->
       <section
-        class="grid grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] max-xl:grid-cols-1 gap-5 mb-5 min-w-0"
+        class="grid grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] max-xl:grid-cols-1 gap-5 min-w-0 fade-transition"
       >
+        <!-- Orders Detail -->
         <div
-          class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) min-w-0 p-4.5 box-border"
+          class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
         >
-          <div class="pb-1.5">
-            <h2 class="text-(--app-text) text-lg font-bold m-0">
-              Órdenes de Servicio Recientes
+          <div class="pb-2">
+            <h2
+              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 flex items-center gap-2"
+            >
+              <span>📋</span> Órdenes de Servicio
             </h2>
-            <p class="text-(--app-text-muted) text-sm m-0 mt-0.5">
-              Últimos movimientos registrados
+            <p
+              class="text-(--app-text-muted) text-sm max-sm:text-xs m-0 mt-1 font-medium"
+            >
+              Resumen de {{ dashboard.data()?.ordersToday?.total ?? 0 }} órdenes
             </p>
           </div>
 
-          <div>
-            @if (ordersLoading()) {
+          <div class="grid grid-cols-3 gap-3 mt-4">
+            <div class="metric-box text-center">
+              <span
+                class="block text-[24px] max-sm:text-[20px] font-extrabold text-amber-400"
+                >{{ dashboard.data()?.ordersToday?.open ?? 0 }}</span
+              >
+              <span
+                class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                >Abiertas</span
+              >
+            </div>
+            <div class="metric-box text-center">
+              <span
+                class="block text-[24px] max-sm:text-[20px] font-extrabold text-blue-400"
+                >{{ dashboard.data()?.ordersToday?.inProgress ?? 0 }}</span
+              >
+              <span
+                class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                >En Progreso</span
+              >
+            </div>
+            <div class="metric-box text-center">
+              <span
+                class="block text-[24px] max-sm:text-[20px] font-extrabold text-green-400"
+                >{{ dashboard.data()?.ordersToday?.completed ?? 0 }}</span
+              >
+              <span
+                class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                >Completadas</span
+              >
+            </div>
+          </div>
+
+          <!-- Low Stock Items -->
+          @if ((dashboard.data()?.lowStock?.items?.length ?? 0) > 0) {
+            <div class="mt-5 pt-4 border-t border-[rgba(255,255,255,0.06)]">
+              <h3
+                class="text-(--app-text) text-sm max-sm:text-xs font-bold m-0 mb-3 flex items-center gap-2"
+              >
+                <span>⚠️</span> Items con Stock Bajo
+              </h3>
               <div class="grid gap-2">
-                @for (_ of [1, 2, 3, 4]; track $index) {
-                  <div class="flex items-center gap-3 py-2">
-                    <div class="flex-1">
-                      <ion-skeleton-text
-                        animated
-                        class="w-[70%]!"
-                      ></ion-skeleton-text>
-                      <ion-skeleton-text
-                        animated
-                        class="w-[45%]! mt-1"
-                      ></ion-skeleton-text>
-                    </div>
+                @for (
+                  item of dashboard.data()?.lowStock?.items ?? [];
+                  track item.id
+                ) {
+                  <div
+                    class="low-stock-item flex items-center justify-between p-3 max-sm:p-2 rounded-xl bg-[rgba(255,59,48,0.06)] border border-[rgba(255,59,48,0.1)]"
+                  >
+                    <span class="text-sm max-sm:text-xs font-medium">{{
+                      item.name
+                    }}</span>
+                    <span
+                      class="text-xs max-sm:text-[10px] text-[#ff5a52] font-bold bg-[rgba(255,59,48,0.1)] px-3 py-1 rounded-full"
+                    >
+                      {{ item.stockQuantity }} / {{ item.minStock }}
+                    </span>
                   </div>
                 }
               </div>
-            } @else if (recentOrders().length === 0) {
-              <div class="py-4 text-center text-(--app-text-muted)">
-                No hay órdenes de servicio registradas.
-              </div>
-            } @else {
-              <div class="grid gap-2 min-w-0">
-                @for (order of recentOrders(); track order.id) {
-                  <a
-                    class="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto] max-md:grid-cols-1 gap-3 items-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] transition duration-200 ease-in-out no-underline hover:bg-[rgba(255,255,255,0.04)] min-w-0 box-border"
-                    [routerLink]="['/service-orders', order.id]"
-                  >
-                    <div>
-                      <h3
-                        class="m-0 mb-1 text-sm font-bold text-(--app-text) overflow-wrap-anywhere"
-                      >
-                        {{ order.vehicleInfo }}
-                      </h3>
-                      <p
-                        class="m-0 text-xs text-(--app-text-muted) overflow-wrap-anywhere"
-                      >
-                        {{ order.clientName }}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p
-                        class="m-0 text-xs text-(--app-text-muted) overflow-wrap-anywhere"
-                      >
-                        Orden #{{ order.id }}
-                      </p>
-                    </div>
-
-                    <span [class]="badgeClasses(order.status)">
-                      {{ order.status | enumLabel }}
-                    </span>
-                  </a>
-                }
-              </div>
-            }
-          </div>
+            </div>
+          }
         </div>
 
-        <div class="grid gap-3.5 min-w-0">
+        <!-- Right Column -->
+        <div class="grid gap-4 min-w-0">
+          <!-- KM Alerts Detail -->
           <div
-            class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-4.5 box-border min-w-0"
+            class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
           >
-            <h2 class="text-(--app-text) text-lg font-bold m-0 mb-3.5">
-              Alertas de KM
+            <h2
+              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
+            >
+              <span>🚗</span> Alertas de KM
+            </h2>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="metric-box text-center">
+                <span
+                  class="block text-[24px] max-sm:text-[20px] font-extrabold text-amber-400"
+                  >{{ dashboard.data()?.kmAlerts?.active ?? 0 }}</span
+                >
+                <span
+                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                  >Activas</span
+                >
+              </div>
+              <div class="metric-box text-center border-[rgba(255,59,48,0.2)]">
+                <span
+                  class="block text-[24px] max-sm:text-[20px] font-extrabold text-[#ff5a52]"
+                  >{{ dashboard.data()?.kmAlerts?.overdue ?? 0 }}</span
+                >
+                <span
+                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                  >Vencidas</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Financial Detail -->
+          <div
+            class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
+          >
+            <h2
+              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
+            >
+              <span>📊</span> Resumen Financiero
             </h2>
 
             <div
-              class="flex items-center gap-3 py-3 border-b border-[rgba(255,255,255,0.06)] last:border-b-0 last:pb-0 min-w-0"
+              class="grid grid-cols-3 max-md:grid-cols-3 max-sm:grid-cols-1 gap-3"
             >
-              <div
-                class="w-11 h-11 rounded-full grid place-items-center border-2 border-[rgba(255,59,48,0.4)] text-[#ff5a52] text-xs font-bold shrink-0"
-              >
-                90%
+              <div class="metric-box text-center">
+                <span
+                  class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1 text-[#4ade80]"
+                >
+                  {{
+                    dashboard.data()?.financialMonth?.income | currencyFormat
+                  }}
+                </span>
+                <span
+                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                  >Ingresos</span
+                >
               </div>
-              <div>
-                <div class="font-bold">Toyota Hilux</div>
-                <div class="text-xs text-(--app-text-muted)">
-                  Servicio de 50,000 KM
-                </div>
-              </div>
-            </div>
 
-            <div
-              class="flex items-center gap-3 py-3 border-b border-[rgba(255,255,255,0.06)] last:border-b-0 last:pb-0 min-w-0"
-            >
-              <div
-                class="w-11 h-11 rounded-full grid place-items-center border-2 border-[rgba(148,163,184,0.35)] text-[#a1a1aa] text-xs font-bold shrink-0"
-              >
-                85%
+              <div class="metric-box text-center">
+                <span
+                  class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1 text-[#ff6b63]"
+                >
+                  {{
+                    dashboard.data()?.financialMonth?.expenses | currencyFormat
+                  }}
+                </span>
+                <span
+                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                  >Egresos</span
+                >
               </div>
-              <div>
-                <div class="font-bold">Ford Ranger</div>
-                <div class="text-xs text-(--app-text-muted)">
-                  Cambio de aceite
-                </div>
+
+              <div
+                class="metric-box text-center border-[rgba(255,255,255,0.08)]"
+              >
+                <span
+                  class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1"
+                  [class.text-[#4ade80]]="
+                    (dashboard.data()?.financialMonth?.balance ?? 0) >= 0
+                  "
+                  [class.text-[#ff6b63]]="
+                    (dashboard.data()?.financialMonth?.balance ?? 0) < 0
+                  "
+                >
+                  {{
+                    dashboard.data()?.financialMonth?.balance | currencyFormat
+                  }}
+                </span>
+                <span
+                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                  >Balance</span
+                >
               </div>
             </div>
           </div>
-
-          @if (summary(); as fin) {
-            <div
-              class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-4.5 box-border min-w-0"
-            >
-              <h2 class="text-(--app-text) text-lg font-bold m-0 mb-3.5">
-                Resumen Financiero
-              </h2>
-
-              <div class="grid grid-cols-3 max-md:grid-cols-1 gap-4">
-                <div
-                  class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border"
-                >
-                  <span
-                    class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere text-[#4ade80]"
-                  >
-                    \${{ fin.totalIncome.toFixed(2) }}
-                  </span>
-                  <span class="text-(--app-text-muted) text-xs">Ingresos</span>
-                </div>
-
-                <div
-                  class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border"
-                >
-                  <span
-                    class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere text-[#ff6b63]"
-                  >
-                    \${{ fin.totalExpenses.toFixed(2) }}
-                  </span>
-                  <span class="text-(--app-text-muted) text-xs">Egresos</span>
-                </div>
-
-                <div
-                  class="text-center p-3.5 rounded-[14px] bg-[rgba(255,255,255,0.025)] border border-[rgba(255,255,255,0.04)] min-w-0 box-border"
-                >
-                  <span
-                    class="block text-[22px] font-extrabold mb-1.5 overflow-wrap-anywhere"
-                    [class.text-[#4ade80]]="fin.balance >= 0"
-                    [class.text-[#ff6b63]]="fin.balance < 0"
-                  >
-                    \${{ fin.balance.toFixed(2) }}
-                  </span>
-                  <span class="text-(--app-text-muted) text-xs">Balance</span>
-                </div>
-              </div>
-            </div>
-          }
         </div>
       </section>
     </div>
   `,
 })
 export class DashboardComponent implements OnInit {
-  private readonly clientService = inject(ClientService);
-  private readonly vehicleService = inject(VehicleService);
-  private readonly orderService = inject(ServiceOrderService);
-  private readonly financialService = inject(FinancialRecordService);
-  readonly authState = inject(AuthStateService);
+  readonly dashboard = inject(DashboardService);
+  readonly signalr = inject(SignalRService);
+  readonly presets = PRESETS;
+  protected readonly customStart = signal('');
+  protected readonly customEnd = signal('');
+  protected readonly rangeInvalid = computed(() => {
+    if (this.customStart() && this.customEnd()) {
+      return this.customStart() > this.customEnd();
+    }
+    return false;
+  });
   private readonly refreshService = inject(RefreshService);
   private readonly pageTitle = inject(PageTitleService);
 
-  readonly loading = signal(true);
-  readonly ordersLoading = signal(true);
-  readonly clientCount = signal(0);
-  readonly vehicleCount = signal(0);
-  readonly orderCount = signal(0);
-  readonly balanceLabel = signal('--');
-  readonly recentOrders = this.orderService.orders;
-  readonly summary = this.financialSummary;
-
   constructor() {
-    addIcons(allIcons);
-  }
-
-  private get financialSummary() {
-    return this.financialService.summary;
+    this.refreshService.refresh$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.dashboard.load().subscribe());
   }
 
   ngOnInit() {
@@ -352,65 +1318,62 @@ export class DashboardComponent implements OnInit {
     this.pageTitle.subtitle.set(
       'Resumen operativo de la red de servicios AutoNex',
     );
-    this.loadData();
-    this.refreshService.refresh$.subscribe(() => this.loadData());
+    this.dashboard.load().subscribe();
   }
 
-  private loadData() {
-    this.loading.set(true);
-    this.ordersLoading.set(true);
-
-    this.clientService.loadAll().subscribe({
-      next: () => {
-        this.clientCount.set(this.clientService.pagination()?.totalCount ?? 0);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false),
-    });
-
-    this.vehicleService.loadAll().subscribe({
-      next: () => {
-        this.vehicleCount.set(
-          this.vehicleService.pagination()?.totalCount ?? 0,
-        );
-      },
-    });
-
-    this.orderService.loadAll().subscribe({
-      next: () => {
-        this.orderCount.set(this.orderService.pagination()?.totalCount ?? 0);
-        this.ordersLoading.set(false);
-      },
-      error: () => this.ordersLoading.set(false),
-    });
-
-    this.financialService.loadSummary().subscribe({
-      next: (summary) => {
-        if (summary) {
-          this.balanceLabel.set(`$${summary.balance.toFixed(0)}`);
-        }
-      },
-    });
-  }
-
-  statusColor(status: string): string {
-    const map: Record<string, string> = {
-      Open: 'warning',
-      InProgress: 'primary',
-      Completed: 'success',
-      Cancelled: 'medium',
+  /**
+   * Obtiene el ícono correspondiente para cada preset
+   */
+  getPresetIcon(key: PresetKey): string {
+    const icons: Record<PresetKey, string> = {
+      today: '📅',
+      yesterday: '📆',
+      'this-week': '📊',
+      'this-month': '📈',
+      'last-month': '📉',
+      custom: '✏️',
     };
-    return map[status] ?? 'medium';
+    return icons[key] || '📌';
   }
 
-  badgeClasses(status: string): string {
-    const base = 'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset';
-    const colorMap: Record<string, string> = {
-      warning: 'bg-amber-400/10 text-amber-400 ring-amber-400/20',
-      primary: 'bg-blue-400/10 text-blue-400 ring-blue-400/20',
-      success: 'bg-green-400/10 text-green-400 ring-green-400/20',
-      medium: 'bg-gray-400/10 text-gray-400 ring-gray-400/20',
-    };
-    return `${base} ${colorMap[this.statusColor(status)]}`;
+  selectPreset(key: PresetKey): void {
+    if (key === 'custom') {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      this.customStart.set(start.toISOString().slice(0, 10));
+      this.customEnd.set(start.toISOString().slice(0, 10));
+      this.dashboard.setRange('custom', this.customStart(), this.customEnd());
+    } else {
+      this.customStart.set('');
+      this.customEnd.set('');
+      this.dashboard.setRange(key);
+    }
+  }
+
+  onCustomStart(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.customStart.set(value);
+    if (this.customEnd() && !this.rangeInvalid()) {
+      this.dashboard.setRange('custom', this.customStart(), this.customEnd());
+    }
+  }
+
+  onCustomEnd(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.customEnd.set(value);
+    if (this.customStart() && !this.rangeInvalid()) {
+      this.dashboard.setRange('custom', this.customStart(), this.customEnd());
+    }
+  }
+
+  clearCustomRange(): void {
+    this.customStart.set('');
+    this.customEnd.set('');
+  }
+
+  applyCustomRange(): void {
+    if (this.customStart() && this.customEnd() && !this.rangeInvalid()) {
+      this.dashboard.setRange('custom', this.customStart(), this.customEnd());
+    }
   }
 }

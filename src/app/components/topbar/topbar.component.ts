@@ -1,6 +1,5 @@
-// topbar.component.ts - Versión corregida
-
 import { Component, computed, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import {
   IonButtons,
@@ -14,6 +13,10 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  IonText,
+  IonNote,
+  IonAvatar,
+  IonThumbnail,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import * as allIcons from 'ionicons/icons';
@@ -22,11 +25,13 @@ import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 import { PageTitleService } from '../../core/services/page-title.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
   imports: [
+    DatePipe,
     RouterLink,
     IonButtons,
     IonMenuButton,
@@ -39,6 +44,10 @@ import { PageTitleService } from '../../core/services/page-title.service';
     IonList,
     IonItem,
     IonLabel,
+    IonText,
+    IonNote,
+    IonAvatar,
+    IonThumbnail,
     UserAvatarComponent,
   ],
   styles: `
@@ -329,6 +338,143 @@ import { PageTitleService } from '../../core/services/page-title.service';
         display: none;
       }
     }
+
+    .notif-popover {
+      --background: var(--app-surface);
+      --border-color: var(--app-border);
+      --border-radius: 14px;
+      --box-shadow: var(--app-shadow);
+      --width: 360px;
+      --max-height: 400px;
+      --backdrop-background: rgba(0, 0, 0, 0.5);
+      --backdrop-opacity: 0.3;
+    }
+
+    .notif-popover::part(content) {
+      border: 1px solid var(--app-border);
+    }
+
+    .notif-popover ion-content {
+      --background: transparent;
+      --color: var(--app-text);
+    }
+
+    .notif-popover ion-list {
+      background: transparent;
+      padding: 0;
+    }
+
+    .notif-item {
+      --background: transparent;
+      --background-hover: var(--app-surface-2);
+      --color: var(--app-text);
+      --border-radius: 0;
+      --padding-start: 14px;
+      --padding-end: 14px;
+      --min-height: 60px;
+      --inner-padding-end: 0;
+      --inner-border-width: 0;
+      font-size: 13px;
+      border-bottom: 1px solid var(--app-border);
+    }
+
+    .notif-item:last-child {
+      border-bottom: none;
+    }
+
+    .notif-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .notif-content {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .notif-message {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--app-text);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .notif-time {
+      font-size: 10px;
+      color: var(--app-text-muted);
+      font-weight: 400;
+    }
+
+    .notif-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--app-border);
+    }
+
+    .notif-header-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--app-text);
+    }
+
+    .notif-header-action {
+      font-size: 11px;
+      font-weight: 600;
+      color: #3b82f6;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .notif-header-action:hover {
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .notif-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+      color: var(--app-text-muted);
+    }
+
+    .notif-empty-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      opacity: 0.4;
+    }
+
+    .notif-empty-text {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .notif-loading {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      color: var(--app-text-muted);
+      font-size: 12px;
+    }
   `,
   template: `
     <div class="header-left">
@@ -355,12 +501,21 @@ import { PageTitleService } from '../../core/services/page-title.service';
           slot="start"
           style="color: #fff;"
         ></ion-icon>
-        <span class="primary-label" style="color: #fff;">Orden</span>
+        <span class="primary-label" style="color: #fff;">Servicios</span>
       </ion-button>
 
-      <ion-button class="icon-button" fill="clear" aria-label="Notificaciones">
+      <ion-button
+        id="notif-trigger"
+        class="icon-button"
+        fill="clear"
+        aria-label="Notificaciones"
+      >
         <ion-icon name="notifications-outline" slot="icon-only"></ion-icon>
-        <ion-badge class="notification-badge" color="danger">3</ion-badge>
+        @if (notificationService.unreadCount() > 0) {
+          <ion-badge class="notification-badge" color="danger">
+            {{ notificationService.unreadCount() > 99 ? '99+' : notificationService.unreadCount() }}
+          </ion-badge>
+        }
       </ion-button>
 
       <ion-button
@@ -397,6 +552,50 @@ import { PageTitleService } from '../../core/services/page-title.service';
           </ion-content>
         </ng-template>
       </ion-popover>
+
+      <ion-popover
+        #notifPopover
+        trigger="notif-trigger"
+        trigger-action="click"
+        class="notif-popover"
+        (ionPopoverDidPresent)="onNotifOpen()"
+      >
+        <ng-template>
+          <ion-content>
+            <div class="notif-header">
+              <span class="notif-header-title">Notificaciones</span>
+              @if (notificationService.unreadCount() > 0) {
+                <button class="notif-header-action" (click)="markAllRead(); notifPopover.dismiss()">
+                  Marcar leídas
+                </button>
+              }
+            </div>
+
+            @if (notificationService.loading()) {
+              <div class="notif-loading">Cargando...</div>
+            } @else if (notificationService.notifications().length === 0) {
+              <div class="notif-empty">
+                <div class="notif-empty-icon">🔔</div>
+                <span class="notif-empty-text">Sin notificaciones</span>
+              </div>
+            } @else {
+              <ion-list lines="none">
+                @for (notif of notificationService.notifications(); track notif.id) {
+                  <ion-item class="notif-item" button (click)="notifPopover.dismiss()">
+                    <div class="notif-icon" slot="start">
+                      {{ notif.type === 'WhatsApp' ? '💬' : notif.type === 'Sms' ? '📱' : '📧' }}
+                    </div>
+                    <div class="notif-content">
+                      <span class="notif-message">{{ notif.message }}</span>
+                      <span class="notif-time">{{ notif.createdAt | date:'dd/MM/yy HH:mm' }}</span>
+                    </div>
+                  </ion-item>
+                }
+              </ion-list>
+            }
+          </ion-content>
+        </ng-template>
+      </ion-popover>
     </div>
   `,
 })
@@ -406,6 +605,7 @@ export class TopbarComponent {
   private readonly router = inject(Router);
   readonly pageTitle = inject(PageTitleService);
   readonly themeService = inject(ThemeService);
+  readonly notificationService = inject(NotificationService);
 
   readonly themeIcon = computed(() => {
     const mode = this.themeService.mode();
@@ -433,6 +633,15 @@ export class TopbarComponent {
 
   constructor() {
     addIcons(allIcons);
+    this.notificationService.load();
+  }
+
+  onNotifOpen(): void {
+    this.notificationService.load();
+  }
+
+  markAllRead(): void {
+    this.notificationService.markAllRead();
   }
 
   logout(): void {
