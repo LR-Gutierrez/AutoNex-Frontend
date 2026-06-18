@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { mailOutline, lockClosedOutline, arrowForward, logoTwitter, logoFacebook, logoInstagram, logoLinkedin } from 'ionicons/icons';
 import { emailValidator } from '../../../shared/validators/email.validators';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthBrandingComponent } from '../../../shared/components/auth-branding/auth-branding.component';
@@ -287,7 +287,7 @@ export class LoginComponent implements OnInit {
     private alertController: AlertController,
     private authService: AuthService,
   ) {
-    addIcons(allIcons);
+    addIcons({ mailOutline, lockClosedOutline, arrowForward, logoTwitter, logoFacebook, logoInstagram, logoLinkedin });
   }
 
   ngOnInit() {

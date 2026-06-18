@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { arrowBackOutline, barcodeOutline, calendarOutline, carOutline, clipboardOutline, personOutline } from 'ionicons/icons';
 import type { MaskitoOptions } from '@maskito/core';
 import { VehicleService } from '../../core/services/vehicle.service';
 import { ClientService } from '../../core/services/client.service';
@@ -192,7 +192,7 @@ export class VehicleFormComponent implements OnInit {
   });
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ arrowBackOutline, barcodeOutline, calendarOutline, carOutline, clipboardOutline, personOutline });
   }
 
   ngOnInit() {

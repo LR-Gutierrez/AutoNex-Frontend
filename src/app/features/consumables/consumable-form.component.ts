@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { alertCircleOutline, arrowBackOutline, businessOutline, cashOutline, cubeOutline, pricetagOutline, waterOutline } from 'ionicons/icons';
 import { ConsumableService } from '../../core/services/consumable.service';
 import { SupplierService } from '../../core/services/supplier.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -192,7 +192,7 @@ export class ConsumableFormComponent implements OnInit {
   });
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ alertCircleOutline, arrowBackOutline, businessOutline, cashOutline, cubeOutline, pricetagOutline, waterOutline });
   }
 
   ngOnInit() {

@@ -6,7 +6,7 @@ import {
   IonContent,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { personOutline, mailOutline, lockClosedOutline, callOutline, shieldOutline } from 'ionicons/icons';
 import { emailValidator } from '../../../shared/validators/email.validators';
 import { passwordValidator } from '../../../shared/validators/password.validator';
 import { AuthService } from '../../../core/services/auth.service';
@@ -243,7 +243,7 @@ export class RegisterComponent implements OnInit {
   ];
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ personOutline, mailOutline, lockClosedOutline, callOutline, shieldOutline });
   }
 
   ngOnInit() {}

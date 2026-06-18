@@ -13,18 +13,23 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonText,
   IonNote,
   IonAvatar,
-  IonThumbnail,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import {
+  calendarOutline,
+  addCircleOutline,
+  notificationsOutline,
+  sunnyOutline,
+  moonOutline,
+  desktopOutline,
+  logOutOutline,
+} from 'ionicons/icons';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
-import { PageTitleService } from '../../core/services/page-title.service';
 import { NotificationService } from '../../core/services/notification.service';
 
 @Component({
@@ -44,10 +49,8 @@ import { NotificationService } from '../../core/services/notification.service';
     IonList,
     IonItem,
     IonLabel,
-    IonText,
     IonNote,
     IonAvatar,
-    IonThumbnail,
     UserAvatarComponent,
   ],
   styles: `
@@ -603,7 +606,6 @@ export class TopbarComponent {
   private readonly authState = inject(AuthStateService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  readonly pageTitle = inject(PageTitleService);
   readonly themeService = inject(ThemeService);
   readonly notificationService = inject(NotificationService);
 
@@ -632,7 +634,7 @@ export class TopbarComponent {
   });
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ calendarOutline, addCircleOutline, notificationsOutline, sunnyOutline, moonOutline, desktopOutline, logOutOutline });
     this.notificationService.load();
   }
 

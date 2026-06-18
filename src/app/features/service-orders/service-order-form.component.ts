@@ -8,7 +8,7 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { addOutline, arrowBackOutline, calendarOutline, carOutline, cashOutline, constructOutline, cubeOutline, documentTextOutline, peopleOutline, speedometerOutline, swapHorizontalOutline, trashOutline, waterOutline } from 'ionicons/icons';
 import { ServiceOrderService } from '../../core/services/service-order.service';
 import { VehicleService } from '../../core/services/vehicle.service';
 import { ServiceService } from '../../core/services/service.service';
@@ -392,7 +392,7 @@ export class ServiceOrderFormComponent implements OnInit {
   }
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ addOutline, arrowBackOutline, calendarOutline, carOutline, cashOutline, constructOutline, cubeOutline, documentTextOutline, peopleOutline, speedometerOutline, swapHorizontalOutline, trashOutline, waterOutline });
   }
 
   private todayString(): string {

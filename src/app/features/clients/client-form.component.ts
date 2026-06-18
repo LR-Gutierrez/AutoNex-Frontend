@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { arrowBackOutline, callOutline, locationOutline, mailOutline, personOutline } from 'ionicons/icons';
 import { ClientService } from '../../core/services/client.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import type { MaskitoOptions } from '@maskito/core';
@@ -174,7 +174,7 @@ export class ClientFormComponent implements OnInit {
   };
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ arrowBackOutline, callOutline, locationOutline, mailOutline, personOutline });
   }
 
   ngOnInit() {

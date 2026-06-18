@@ -10,7 +10,11 @@ import {
   IonButton,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import {
+  gridOutline, peopleOutline, carOutline, businessOutline, waterOutline,
+  buildOutline, folderOutline, constructOutline, documentTextOutline,
+  speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline
+} from 'ionicons/icons';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthBrandingComponent } from '../../shared/components/auth-branding/auth-branding.component';
 
@@ -261,7 +265,7 @@ export class SidebarComponent {
   ];
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ gridOutline, peopleOutline, carOutline, businessOutline, waterOutline, buildOutline, folderOutline, constructOutline, documentTextOutline, speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline });
   }
 
   isActive(path: string): boolean {

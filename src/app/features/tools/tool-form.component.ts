@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { arrowBackOutline, buildOutline, calendarOutline, checkmarkCircleOutline, folderOutline, layersOutline } from 'ionicons/icons';
 import type { MaskitoOptions } from '@maskito/core';
 import { ToolService } from '../../core/services/tool.service';
 import { ToolCategoryService } from '../../core/services/tool-category.service';
@@ -183,7 +183,7 @@ export class ToolFormComponent implements OnInit {
   });
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ arrowBackOutline, buildOutline, calendarOutline, checkmarkCircleOutline, folderOutline, layersOutline });
   }
 
   ngOnInit() {

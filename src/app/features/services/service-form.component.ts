@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { arrowBackOutline, arrowForwardOutline, calendarOutline, constructOutline, informationCircleOutline, pricetagOutline } from 'ionicons/icons';
 import { priceMask } from '../../shared/masks/price.mask';
 import { kmMask } from '../../shared/masks/km.mask';
 import { ServiceService } from '../../core/services/service.service';
@@ -177,7 +177,7 @@ export class ServiceFormComponent implements OnInit {
   });
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ arrowBackOutline, arrowForwardOutline, calendarOutline, constructOutline, informationCircleOutline, pricetagOutline });
   }
 
   ngOnInit() {

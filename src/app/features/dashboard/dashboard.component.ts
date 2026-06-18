@@ -59,8 +59,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       scrollbar-width: thin;
       scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
       -webkit-overflow-scrolling: touch;
-      /* Ocultar scrollbar en Firefox */
-      scrollbar-width: thin;
       /* Ocultar scrollbar en Chrome/Safari */
       &::-webkit-scrollbar {
         height: 3px;

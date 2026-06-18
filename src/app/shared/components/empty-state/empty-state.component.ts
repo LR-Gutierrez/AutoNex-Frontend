@@ -1,16 +1,43 @@
 import { Component, Input } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { folderOpenOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-empty-state',
   standalone: true,
   imports: [IonIcon],
+  styles: `
+    :host {
+      display: block;
+    }
+
+    .empty-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 24px;
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.4;
+    }
+
+    .empty-message {
+      color: var(--app-text-muted);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      margin: 0;
+    }
+  `,
   template: `
-    <div class="flex flex-col items-center justify-center py-16">
-      <ion-icon [name]="icon" class="text-6xl" color="medium"></ion-icon>
-      <p class="text-gray-500 mt-4">{{ message }}</p>
+    <div class="empty-wrap">
+      <ion-icon [name]="icon" class="empty-icon"></ion-icon>
+      <p class="empty-message">{{ message }}</p>
     </div>
   `,
 })
@@ -19,6 +46,6 @@ export class EmptyStateComponent {
   @Input() message = 'No se encontraron resultados';
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ folderOpenOutline });
   }
 }

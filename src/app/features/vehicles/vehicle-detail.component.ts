@@ -3,7 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { IonIcon, IonSkeletonText } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { arrowBackOutline } from 'ionicons/icons';
 import { VehicleService } from '../../core/services/vehicle.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pipe';
@@ -134,7 +134,7 @@ export class VehicleDetailComponent implements OnInit {
   readonly loading = signal(true);
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ arrowBackOutline });
   }
 
   ngOnInit() {

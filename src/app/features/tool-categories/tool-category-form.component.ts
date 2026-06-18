@@ -3,7 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import * as allIcons from 'ionicons/icons';
+import { arrowBackOutline, folderOutline } from 'ionicons/icons';
 import { ToolCategoryService } from '../../core/services/tool-category.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
@@ -126,7 +126,7 @@ export class ToolCategoryFormComponent implements OnInit {
   });
 
   constructor() {
-    addIcons(allIcons);
+    addIcons({ arrowBackOutline, folderOutline });
   }
 
   ngOnInit() {
