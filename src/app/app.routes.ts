@@ -66,6 +66,11 @@ export const appRoutes: Routes = [
           import('./features/vehicles/vehicle-form.component').then(m => m.VehicleFormComponent),
       },
       {
+        path: 'vehicles/:id',
+        loadComponent: () =>
+          import('./features/vehicles/vehicle-detail.component').then(m => m.VehicleDetailComponent),
+      },
+      {
         path: 'vehicles/:id/edit',
         loadComponent: () =>
           import('./features/vehicles/vehicle-form.component').then(m => m.VehicleFormComponent),

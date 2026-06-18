@@ -109,7 +109,9 @@ interface MenuItem {
     ion-item::part(native) {
       border-radius: 14px;
       background: transparent;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition:
+        background 0.2s ease,
+        transform 0.2s ease;
     }
 
     ion-item ion-icon {
@@ -213,10 +215,10 @@ interface MenuItem {
           <ion-button
             expand="block"
             class="footer-button"
-            (click)="goToNewService()"
+            (click)="goToNewOrder()"
           >
             <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-            Nuevo Servicio
+            Nueva Orden
           </ion-button>
         </div>
       </div>
@@ -266,8 +268,8 @@ export class SidebarComponent {
     return this.router.url === path || this.router.url.startsWith(path + '/');
   }
 
-  goToNewService() {
-    this.router.navigate(['/services']);
+  goToNewOrder() {
+    this.router.navigate(['/service-orders/new']);
   }
 
   logout() {

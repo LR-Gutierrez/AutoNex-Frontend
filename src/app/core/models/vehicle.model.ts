@@ -1,3 +1,12 @@
+export interface ServiceOrderBriefResponse {
+  id: number;
+  vehicleInfo: string;
+  clientName: string;
+  date: string;
+  status: string;
+  totalAmount: number;
+}
+
 export interface VehicleBriefResponse {
   id: number;
   brand: string;
@@ -16,6 +25,7 @@ export interface VehicleResponse {
   licensePlate: string;
   vin?: string;
   createdAt: string;
+  serviceOrders: ServiceOrderBriefResponse[];
 }
 
 export interface CreateVehicleRequest {

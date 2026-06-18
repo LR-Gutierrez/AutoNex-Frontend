@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { VehicleService } from '../../core/services/vehicle.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -10,7 +11,7 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
 @Component({
   selector: 'app-vehicle-list',
   standalone: true,
-  imports: [ListShellComponent, ListItemComponent, IonIcon],
+  imports: [ListShellComponent, ListItemComponent, IonIcon, RouterLink],
   template: `
     <app-list-shell
       title="Vehículos"
@@ -35,9 +36,11 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
           [deleteMessage]="getDeleteMessage(vehicle.brand, vehicle.model, vehicle.licensePlate)"
           (deleteConfirm)="deleteVehicle(vehicle.id)"
         >
-          <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
-            {{ vehicle.brand }} {{ vehicle.model }}
-          </h3>
+          <a [routerLink]="['/vehicles', vehicle.id]" class="no-underline">
+            <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap hover:text-(--ion-color-danger) transition-colors">
+              {{ vehicle.brand }} {{ vehicle.model }}
+            </h3>
+          </a>
           <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-(--app-text-muted)">
             <span class="flex items-center gap-1">
               <ion-icon name="calendar-outline" class="text-[14px]"></ion-icon>
