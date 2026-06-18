@@ -1,6 +1,13 @@
 import { Component, Input, Output, EventEmitter, signal } from '@angular/core';
 import { IonIcon, IonSkeletonText } from '@ionic/angular/standalone';
 import { AddButtonComponent } from '../add-button/add-button.component';
+import { addIcons } from 'ionicons';
+import {
+  searchOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+  folderOutline,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-list-shell',
@@ -103,6 +110,10 @@ import { AddButtonComponent } from '../add-button/add-button.component';
   `,
 })
 export class ListShellComponent {
+  constructor() {
+    addIcons({ searchOutline, chevronBackOutline, chevronForwardOutline, folderOutline });
+  }
+
   @Input({ required: true }) title!: string;
   @Input() subtitle = '';
   @Input() addRoute = '';

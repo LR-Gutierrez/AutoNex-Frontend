@@ -22,6 +22,8 @@ export class SignalRService implements OnDestroy {
   private readonly authState = inject(AuthStateService);
   private readonly destroy$ = new Subject<void>();
   private readonly hubs = new Map<string, HubState>();
+  private readonly connectionAttempted = new Map<string, boolean>();
+  private authSubscription: (() => void) | null = null;
 
   readonly dashboardStatus = signal<ConnectionStatus>('disconnected');
   readonly notificationsStatus = signal<ConnectionStatus>('disconnected');
@@ -30,12 +32,15 @@ export class SignalRService implements OnDestroy {
     for (const [name] of this.hubs) {
       this.stopConnection(name);
     }
+    this.authSubscription?.();
     this.destroy$.next();
     this.destroy$.complete();
   }
 
   startConnection(hubName: string): void {
     if (this.hubs.has(hubName)) return;
+    if (this.connectionAttempted.get(hubName)) return;
+    this.connectionAttempted.set(hubName, true);
 
     const statusSignal = this.getStatusSignal(hubName);
     statusSignal.set('connecting');
@@ -43,12 +48,20 @@ export class SignalRService implements OnDestroy {
     const token = this.authState.token();
     if (!token) {
       statusSignal.set('disconnected');
+      this.retryWhenTokenAvailable(hubName);
       return;
     }
 
+    this.buildHubConnection(hubName, token);
+  }
+
+  private buildHubConnection(hubName: string, token: string): void {
+    const statusSignal = this.getStatusSignal(hubName);
+    statusSignal.set('connecting');
+
     const connection = new HubConnectionBuilder()
       .withUrl(`${environment.hubUrl}/${hubName}`, {
-        accessTokenFactory: () => token,
+        accessTokenFactory: () => this.authState.token() ?? '',
       })
       .withAutomaticReconnect([0, 2000, 5000, 10000, 30000])
       .configureLogging(LogLevel.Warning)
@@ -81,19 +94,39 @@ export class SignalRService implements OnDestroy {
     this.hubs.set(hubName, state);
   }
 
+  private retryWhenTokenAvailable(hubName: string): void {
+    this.authSubscription?.();
+
+    const interval = setInterval(() => {
+      const token = this.authState.token();
+      if (token) {
+        clearInterval(interval);
+        this.buildHubConnection(hubName, token);
+      }
+    }, 1000);
+
+    this.authSubscription = () => {
+      clearInterval(interval);
+    };
+  }
+
   stopConnection(hubName: string): void {
     const state = this.hubs.get(hubName);
     if (state) {
       state.connection.stop();
       state.status.set('disconnected');
+      state.subjects.forEach(subject => subject.complete());
+      state.subjects.clear();
       this.hubs.delete(hubName);
     }
+    this.connectionAttempted.delete(hubName);
   }
 
   on<T>(hubName: string, event: string): Observable<T> {
     const state = this.hubs.get(hubName);
     if (!state) {
-      return new Subject<T>().asObservable();
+      const fallback = new Subject<T>();
+      return fallback.asObservable();
     }
 
     if (!state.subjects.has(event)) {

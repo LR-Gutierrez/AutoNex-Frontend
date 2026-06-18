@@ -13,8 +13,6 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonNote,
-  IonAvatar,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -49,8 +47,6 @@ import { NotificationService } from '../../core/services/notification.service';
     IonList,
     IonItem,
     IonLabel,
-    IonNote,
-    IonAvatar,
     UserAvatarComponent,
   ],
   styles: `

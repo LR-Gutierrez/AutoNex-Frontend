@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
+import { NgOptimizedImage } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { RevealDirective } from '../../directives/reveal.directive';
 
 @Component({
   selector: 'app-auth-branding',
   standalone: true,
-  imports: [IonIcon, RevealDirective],
+  imports: [IonIcon, RevealDirective, NgOptimizedImage],
   host: {
     '[class.layout-horizontal]': 'layout === "horizontal"',
   },
@@ -24,7 +25,7 @@ import { RevealDirective } from '../../directives/reveal.directive';
       @if (layout === 'horizontal') {
         <div class="w-[42px] h-[42px] rounded-[12px] grid place-items-center bg-gradient-to-br from-[rgba(255,59,48,0.22)] to-[rgba(255,59,48,0.06)] shadow-[inset_0_0_0_1px_rgba(255,59,48,0.12)] shrink-0 overflow-hidden">
           @if (logoSrc) {
-            <img [src]="logoSrc" alt="AutoNex" class="w-full h-full object-contain rounded-[10px]" />
+            <img [ngSrc]="logoSrc" alt="AutoNex" width="42" height="42" priority class="w-full h-full object-contain rounded-[10px]" />
           } @else {
             <ion-icon [name]="placeholderIcon" class="text-[20px] text-[#d31d1d]"></ion-icon>
           }
@@ -42,11 +43,12 @@ import { RevealDirective } from '../../directives/reveal.directive';
         <div class="mb-2">
           @if (logoSrc) {
             <img
-              [src]="logoSrc"
+              [ngSrc]="logoSrc"
               alt="AutoNex"
               class="object-contain mx-auto max-[374px]:!w-[100px] max-[374px]:!h-[100px]"
-              [style.width.px]="logoSize"
-              [style.height.px]="logoSize"
+              [width]="logoSize"
+              [height]="logoSize"
+              priority
             />
           } @else {
             <div

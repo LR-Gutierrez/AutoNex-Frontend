@@ -1,6 +1,6 @@
-import { Injectable, OnDestroy, inject, signal } from '@angular/core';
+import { Injectable, OnDestroy, inject, signal, effect, untracked } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
-import { Observable, tap, catchError, throwError, takeUntil, Subject } from 'rxjs';
+import { Observable, tap, catchError, throwError, takeUntil, Subject, debounceTime, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { SignalRService } from './signalr.service';
 import { DashboardResponse, DateRange, PresetKey } from '../models/dashboard.model';
@@ -95,11 +95,23 @@ export class DashboardService implements OnDestroy {
   constructor() {
     this.signalr.startConnection('dashboard');
 
-    this.signalr.on<DashboardResponse>('dashboard', 'DashboardUpdated')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(data => {
-        this.dataSignal.set(data);
-      });
+    this.signalr.on<void>('dashboard', 'dashboardUpdated')
+      .pipe(
+        debounceTime(500),
+        switchMap(() => this.load()),
+        takeUntil(this.destroy$),
+      )
+      .subscribe();
+
+    effect(() => {
+      const status = this.signalr.dashboardStatus();
+      if (status === 'connected') {
+        const preset = untracked(() => this.rangeSignal().preset);
+        if (preset && preset !== 'custom') {
+          this.signalr.joinGroup('dashboard', preset);
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {

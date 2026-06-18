@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, inject, signal } from '@angular/core';
+import { Injectable, OnDestroy, inject, signal, effect, untracked } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from './api.service';
@@ -25,13 +25,20 @@ export class NotificationService implements OnDestroy {
   constructor() {
     this.signalr.startConnection('notifications');
 
-    this.signalr.on<NotificationResponse>('notifications', 'NewNotification')
+    this.signalr.on<NotificationResponse>('notifications', 'newNotification')
       .pipe(takeUntil(this.destroy$))
       .subscribe(notification => {
         this.notificationsSignal.update(list => [notification, ...list]);
         this.unreadCountSignal.update(c => c + 1);
         this.playNotificationSound();
       });
+
+    effect(() => {
+      const status = this.signalr.notificationsStatus();
+      if (status === 'connected') {
+        untracked(() => this.signalr.joinGroup('notifications', 'all', 'JoinGroup'));
+      }
+    });
   }
 
   ngOnDestroy(): void {
