@@ -186,6 +186,21 @@ export const appRoutes: Routes = [
           import('./features/tool-categories/tool-category-form.component').then(m => m.ToolCategoryFormComponent),
       },
       {
+        path: 'exchange-rates',
+        loadComponent: () =>
+          import('./features/exchange-rates/exchange-rate-list.component').then(m => m.ExchangeRateListComponent),
+      },
+      {
+        path: 'exchange-rates/new',
+        loadComponent: () =>
+          import('./features/exchange-rates/exchange-rate-form.component').then(m => m.ExchangeRateFormComponent),
+      },
+      {
+        path: 'exchange-rates/:id/edit',
+        loadComponent: () =>
+          import('./features/exchange-rates/exchange-rate-form.component').then(m => m.ExchangeRateFormComponent),
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',

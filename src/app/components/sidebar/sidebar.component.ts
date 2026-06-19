@@ -13,7 +13,8 @@ import { addIcons } from 'ionicons';
 import {
   gridOutline, peopleOutline, carOutline, businessOutline, waterOutline,
   buildOutline, folderOutline, constructOutline, documentTextOutline,
-  speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline
+  speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline,
+  swapHorizontalOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthBrandingComponent } from '../../shared/components/auth-branding/auth-branding.component';
@@ -258,6 +259,11 @@ export class SidebarComponent {
     },
     { path: '/financial-records', label: 'Finanzas', icon: 'cash-outline' },
     {
+      path: '/exchange-rates',
+      label: 'Tasas de Cambio',
+      icon: 'swap-horizontal-outline',
+    },
+    {
       path: '/form-demo',
       label: 'Formulario Demo',
       icon: 'code-slash-outline',
@@ -265,7 +271,7 @@ export class SidebarComponent {
   ];
 
   constructor() {
-    addIcons({ gridOutline, peopleOutline, carOutline, businessOutline, waterOutline, buildOutline, folderOutline, constructOutline, documentTextOutline, speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline });
+    addIcons({ gridOutline, peopleOutline, carOutline, businessOutline, waterOutline, buildOutline, folderOutline, constructOutline, documentTextOutline, speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline, swapHorizontalOutline });
   }
 
   isActive(path: string): boolean {

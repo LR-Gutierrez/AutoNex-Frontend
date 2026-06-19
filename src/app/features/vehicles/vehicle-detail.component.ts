@@ -109,9 +109,12 @@ import type { VehicleResponse } from '../../core/models/vehicle.model';
                       [class.bg-green-400/10]="order.status === 'Completed'"
                       [class.text-green-400]="order.status === 'Completed'"
                       [class.ring-green-400/20]="order.status === 'Completed'"
-                      [class.bg-gray-400/10]="order.status === 'Cancelled'"
-                      [class.text-gray-400]="order.status === 'Cancelled'"
-                      [class.ring-gray-400/20]="order.status === 'Cancelled'"
+              [class.bg-violet-400/10]="order.status === 'Paid'"
+              [class.text-violet-400]="order.status === 'Paid'"
+              [class.ring-violet-400/20]="order.status === 'Paid'"
+              [class.bg-gray-400/10]="order.status === 'Cancelled'"
+              [class.text-gray-400]="order.status === 'Cancelled'"
+              [class.ring-gray-400/20]="order.status === 'Cancelled'"
                     >
                       {{ order.status | enumLabel }}
                     </span>

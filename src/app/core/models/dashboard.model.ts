@@ -3,6 +3,7 @@ export interface DashboardResponse {
   lowStock: { totalItems: number; items: DashboardLowStockItem[] };
   kmAlerts: DashboardAlertsSummary;
   financialMonth: DashboardMonthlyFinances;
+  exchangeRate?: DashboardExchangeRate;
 }
 
 export interface DashboardOrdersSummary {
@@ -10,6 +11,7 @@ export interface DashboardOrdersSummary {
   open: number;
   inProgress: number;
   completed: number;
+  paid: number;
   totalAmount: number;
 }
 
@@ -29,6 +31,12 @@ export interface DashboardMonthlyFinances {
   income: number;
   expenses: number;
   balance: number;
+}
+
+export interface DashboardExchangeRate {
+  rate: number;
+  source: string;
+  date: string;
 }
 
 export type PresetKey = 'today' | 'yesterday' | 'this-week' | 'this-month' | 'last-month' | 'custom';

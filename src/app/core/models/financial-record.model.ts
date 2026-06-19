@@ -17,6 +17,7 @@ export interface FinancialRecordResponse {
   type: FinancialRecordType;
   category: FinancialCategory;
   amount: number;
+  amountBs?: number;
   description: string;
   date: string;
   userId: number;
@@ -28,6 +29,7 @@ export interface CreateFinancialRecordRequest {
   type: FinancialRecordType;
   category: FinancialCategory;
   amount: number;
+  amountBs?: number;
   description: string;
   date: string;
   userId: number;
@@ -37,6 +39,7 @@ export interface UpdateFinancialRecordRequest {
   type: FinancialRecordType;
   category: FinancialCategory;
   amount: number;
+  amountBs?: number;
   description: string;
   date: string;
 }

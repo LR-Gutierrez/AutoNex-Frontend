@@ -2,6 +2,7 @@ export enum ServiceOrderStatus {
   Open = 'Open',
   InProgress = 'InProgress',
   Completed = 'Completed',
+  Paid = 'Paid',
   Cancelled = 'Cancelled',
 }
 
@@ -55,4 +56,11 @@ export interface CreateServiceOrderItemRequest {
 
 export interface UpdateServiceOrderStatusRequest {
   status: ServiceOrderStatus;
+}
+
+export interface PayServiceOrderRequest {
+  paymentMethod: 'pago-movil' | 'transferencia' | 'efectivo-dolares' | 'efectivo-bolivares';
+  operationNumber?: string;
+  operationDate?: string;
+  amountBs?: number;
 }

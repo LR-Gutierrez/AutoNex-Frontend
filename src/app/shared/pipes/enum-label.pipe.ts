@@ -4,6 +4,7 @@ const LABEL_MAP: Record<string, string> = {
   Open: 'Abierta',
   InProgress: 'En Progreso',
   Completed: 'Completada',
+  Paid: 'Pagado',
   Cancelled: 'Cancelada',
   Income: 'Ingreso',
   Expense: 'Egreso',

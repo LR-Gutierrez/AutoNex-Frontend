@@ -45,7 +45,7 @@ import { AlertController } from '@ionic/angular';
         </div>
         <div class="flex items-center gap-2 shrink-0">
           <ng-content select="[actions]"></ng-content>
-          @if (!hideEdit) {
+          @if (!hideEdit && editLink) {
             <a
               [routerLink]="editLink"
               class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 action-btn"
@@ -69,7 +69,7 @@ import { AlertController } from '@ionic/angular';
 export class ListItemComponent {
   private readonly alertController = inject(AlertController);
 
-  @Input({ required: true }) editLink!: any[];
+  @Input({ required: true }) editLink!: any[] | null;
   @Input() deleteMessage = '';
   @Input() hideEdit = false;
   @Input() hideDelete = false;

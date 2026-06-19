@@ -2,13 +2,16 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
+import { AlertController } from '@ionic/angular';
 import { ServiceOrderService } from '../../core/services/service-order.service';
 import { MileageAlertService } from '../../core/services/mileage-alert.service';
+import { ExchangeRateService } from '../../core/services/exchange-rate.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
+import { PayServiceOrderRequest } from '../../core/models/service-order.model';
 
 @Component({
   selector: 'app-service-order-list',
@@ -53,6 +56,14 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       background: rgba(250, 204, 21, 0.15);
       border-color: rgba(250, 204, 21, 0.6);
     }
+    .status-btn-pay {
+      color: #a78bfa;
+      border: 1px solid rgba(167, 139, 250, 0.35);
+    }
+    .status-btn-pay:hover {
+      background: rgba(167, 139, 250, 0.15);
+      border-color: rgba(167, 139, 250, 0.6);
+    }
   `,
   ],
   template: `
@@ -78,7 +89,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
           [editLink]="['/service-orders', order.id, 'edit']"
           [deleteMessage]="getCancelMessage(order.id)"
           [hideEdit]="order.status !== 'Open'"
-          [hideDelete]="order.status === 'Completed' || order.status === 'Cancelled'"
+          [hideDelete]="order.status === 'Completed' || order.status === 'Paid' || order.status === 'Cancelled'"
           (deleteConfirm)="cancelOrder(order.id)"
         >
           <div actions>
@@ -98,6 +109,12 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
               <button class="status-btn status-btn-alert" (click)="createAlert(order.id)">
                 <ion-icon name="notifications-outline" class="text-[16px]"></ion-icon>
                 Alerta
+              </button>
+            }
+            @if (order.status === 'Completed') {
+              <button class="status-btn status-btn-pay" (click)="payOrder(order.id)">
+                <ion-icon name="cash-outline" class="text-[16px]"></ion-icon>
+                Cobrar
               </button>
             }
           </div>
@@ -130,6 +147,8 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
                 [class.text-blue-400]="order.status === 'InProgress'"
                 [class.bg-green-500/20]="order.status === 'Completed'"
                 [class.text-green-400]="order.status === 'Completed'"
+                [class.bg-violet-500/20]="order.status === 'Paid'"
+                [class.text-violet-400]="order.status === 'Paid'"
                 [class.bg-red-500/20]="order.status === 'Cancelled'"
                 [class.text-red-400]="order.status === 'Cancelled'"
               >
@@ -147,6 +166,8 @@ export class ServiceOrderListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
   private readonly mileageAlertService = inject(MileageAlertService);
+  private readonly alertController = inject(AlertController);
+  private readonly exchangeRateService = inject(ExchangeRateService);
 
   readonly page = signal(1);
   private readonly searchTerm = signal('');
@@ -197,6 +218,126 @@ export class ServiceOrderListComponent implements OnInit {
     this.orderService.completeOrder(id).subscribe({
       next: () => this.loadOrders(),
       error: (err) => console.error('Error al completar orden:', err),
+    });
+  }
+
+  async payOrder(id: number) {
+    const alert = await this.alertController.create({
+      header: 'Cobrar Orden',
+      message: 'Selecciona el método de pago',
+      inputs: [
+        { label: 'Pago Móvil', type: 'radio', value: 'pago-movil' },
+        { label: 'Transferencia Bancaria', type: 'radio', value: 'transferencia' },
+        { label: 'Efectivo Dólares', type: 'radio', value: 'efectivo-dolares' },
+        { label: 'Efectivo Bolívares', type: 'radio', value: 'efectivo-bolivares' },
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Siguiente',
+          handler: (method) => this.onPaymentMethodSelected(id, method),
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  private async onPaymentMethodSelected(id: number, method: string) {
+    if (!method) return;
+
+    if (method === 'pago-movil' || method === 'transferencia') {
+      const detailAlert = await this.alertController.create({
+        header: method === 'pago-movil' ? 'Pago Móvil' : 'Transferencia Bancaria',
+        inputs: [
+          { name: 'operationNumber', type: 'text', placeholder: 'Número de operación' },
+          { name: 'operationDate', type: 'date', value: new Date().toISOString().substring(0, 10) },
+        ],
+        buttons: [
+          { text: 'Cancelar', role: 'cancel' },
+          {
+            text: 'Confirmar Pago',
+            handler: (data) => {
+              if (!data.operationNumber?.trim()) {
+                return false;
+              }
+              this.confirmPayment(id, {
+                paymentMethod: method as PayServiceOrderRequest['paymentMethod'],
+                operationNumber: data.operationNumber.trim(),
+                operationDate: data.operationDate,
+              });
+              return true;
+            },
+          },
+        ],
+      });
+      await detailAlert.present();
+    } else if (method === 'efectivo-bolivares') {
+      this.exchangeRateService.getCurrentUsd().subscribe({
+        next: async (rate) => {
+          const bsAmount = rate.value;
+          const detailAlert = await this.alertController.create({
+            header: 'Efectivo Bolívares',
+            message: `Tasa BCV: Bs. ${bsAmount.toFixed(2)} por USD`,
+            inputs: [
+              { name: 'amountBs', type: 'number', placeholder: 'Monto en Bs.' },
+            ],
+            buttons: [
+              { text: 'Cancelar', role: 'cancel' },
+              {
+                text: 'Confirmar Pago',
+                handler: (data) => {
+                  if (!data.amountBs || parseFloat(data.amountBs) <= 0) {
+                    return false;
+                  }
+                  this.confirmPayment(id, {
+                    paymentMethod: 'efectivo-bolivares',
+                    amountBs: parseFloat(data.amountBs),
+                  });
+                  return true;
+                },
+              },
+            ],
+          });
+          await detailAlert.present();
+        },
+        error: async () => {
+          const fallbackAlert = await this.alertController.create({
+            header: 'Efectivo Bolívares',
+            message: 'No se pudo obtener la tasa de cambio. Ingresa el monto manualmente.',
+            inputs: [
+              { name: 'amountBs', type: 'number', placeholder: 'Monto en Bs.' },
+            ],
+            buttons: [
+              { text: 'Cancelar', role: 'cancel' },
+              {
+                text: 'Confirmar Pago',
+                handler: (data) => {
+                  if (!data.amountBs || parseFloat(data.amountBs) <= 0) {
+                    return false;
+                  }
+                  this.confirmPayment(id, {
+                    paymentMethod: 'efectivo-bolivares',
+                    amountBs: parseFloat(data.amountBs),
+                  });
+                  return true;
+                },
+              },
+            ],
+          });
+          await fallbackAlert.present();
+        },
+      });
+    } else {
+      this.confirmPayment(id, {
+        paymentMethod: method as PayServiceOrderRequest['paymentMethod'],
+      });
+    }
+  }
+
+  private confirmPayment(id: number, request: PayServiceOrderRequest) {
+    this.orderService.payOrder(id, request).subscribe({
+      next: () => this.loadOrders(),
+      error: (err) => console.error('Error al cobrar orden:', err),
     });
   }
 

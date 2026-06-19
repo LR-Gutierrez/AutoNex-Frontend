@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
-import { DatePipe, CurrencyPipe } from '@angular/common';
+import { DatePipe, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { FinancialRecordService } from '../../core/services/financial-record.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -12,7 +12,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 @Component({
   selector: 'app-financial-record-list',
   standalone: true,
-  imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe, DatePipe, CurrencyPipe],
+  imports: [ListShellComponent, ListItemComponent, IonIcon, EnumLabelPipe, DatePipe, CurrencyPipe, DecimalPipe],
   template: `
     <app-list-shell
       title="Finanzas"
@@ -50,6 +50,12 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
                 {{ record.type === 'Income' ? '+' : '-' }}{{ record.amount | currency:'USD':'symbol':'1.2-2' }}
               </span>
             </span>
+            @if (record.amountBs != null) {
+              <span class="flex items-center gap-1">
+                <ion-icon name="swap-horizontal-outline" class="text-[14px] text-emerald-400"></ion-icon>
+                <span class="text-emerald-400">Bs. {{ record.amountBs | number:'1.2-2' }}</span>
+              </span>
+            }
             <span class="flex items-center gap-1">
               <ion-icon name="pricetag-outline" class="text-[14px]"></ion-icon>
               {{ record.category | enumLabel }}

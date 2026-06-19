@@ -6,6 +6,7 @@ import {
   ServiceOrderResponse,
   CreateServiceOrderRequest,
   UpdateServiceOrderStatusRequest,
+  PayServiceOrderRequest,
   ServiceOrderStatus,
 } from '../models/service-order.model';
 import { ApiResponse, PaginationMeta, PagedResponse } from '../models/api-response.model';
@@ -78,5 +79,9 @@ export class ServiceOrderService {
 
   completeOrder(id: number): Observable<ServiceOrderResponse> {
     return this.updateStatus(id, { status: ServiceOrderStatus.Completed });
+  }
+
+  payOrder(id: number, request: PayServiceOrderRequest): Observable<ServiceOrderResponse> {
+    return this.api.post<ServiceOrderResponse>(`/service-orders/${id}/pay`, request);
   }
 }

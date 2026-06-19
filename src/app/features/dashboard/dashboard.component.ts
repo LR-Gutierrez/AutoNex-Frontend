@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { DashboardSkeletonComponent } from '../../shared/components/dashboard-skeleton/dashboard-skeleton.component';
 import {
   DashboardService,
@@ -15,7 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, DatePipe],
+  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, DatePipe, DecimalPipe],
   styles: `
     :host {
       display: block;
@@ -958,6 +958,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                 }}
                 completadas</span
               >
+              <span>•</span>
+              <span
+                >{{
+                  dashboard.data()?.ordersToday?.paid ?? 0
+                }}
+                pagadas</span
+              >
             </div>
           </div>
 
@@ -1122,7 +1129,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             </p>
           </div>
 
-          <div class="grid grid-cols-3 gap-3 mt-4">
+          <div class="grid grid-cols-4 gap-3 mt-4">
             <div class="metric-box text-center">
               <span
                 class="block text-[24px] max-sm:text-[20px] font-extrabold text-amber-400"
@@ -1151,6 +1158,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
               <span
                 class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
                 >Completadas</span
+              >
+            </div>
+            <div class="metric-box text-center">
+              <span
+                class="block text-[24px] max-sm:text-[20px] font-extrabold text-violet-400"
+                >{{ dashboard.data()?.ordersToday?.paid ?? 0 }}</span
+              >
+              <span
+                class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                >Pagadas</span
               >
             </div>
           </div>
@@ -1220,6 +1237,38 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
               </div>
             </div>
           </div>
+
+          <!-- Exchange Rate Widget -->
+          @if (dashboard.data()?.exchangeRate) {
+            <div
+              class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
+            >
+              <h2
+                class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
+              >
+                <span>💱</span> Tasa de Cambio
+              </h2>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span
+                    class="block text-[32px] max-sm:text-[26px] font-extrabold text-emerald-400"
+                  >
+                    Bs. {{ dashboard.data()?.exchangeRate?.rate | number:'1.2-2' }}
+                  </span>
+                  <span
+                    class="text-(--app-text-muted) text-xs font-medium"
+                  >
+                    {{ dashboard.data()?.exchangeRate?.source }} · {{ dashboard.data()?.exchangeRate?.date | date:'dd/MM/yyyy' }}
+                  </span>
+                </div>
+                <div
+                  class="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center"
+                >
+                  <span class="text-2xl">🇻🇪</span>
+                </div>
+              </div>
+            </div>
+          }
 
           <!-- Financial Detail -->
           <div

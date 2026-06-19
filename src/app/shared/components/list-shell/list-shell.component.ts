@@ -34,9 +34,12 @@ import {
             <p class="mt-1.5 text-(--app-text-muted) text-sm">{{ subtitle }}</p>
           }
         </div>
-        @if (addRoute) {
-          <app-add-button [route]="addRoute" [label]="addLabel"></app-add-button>
-        }
+        <div class="flex items-center gap-2">
+          <ng-content select="[header-actions]"></ng-content>
+          @if (addRoute) {
+            <app-add-button [route]="addRoute" [label]="addLabel"></app-add-button>
+          }
+        </div>
       </section>
 
       <div class="flex items-center gap-4 mb-5 max-md:flex-col">
@@ -64,7 +67,7 @@ import {
             </div>
           }
         </div>
-      } @else if (items.length === 0) {
+      } @else if ((items?.length ?? 0) === 0) {
         <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] p-10 text-center">
           <ion-icon [name]="emptyIcon" class="text-[48px] text-(--app-text-muted) mb-4"></ion-icon>
           <p class="text-(--app-text-muted) text-sm m-0">{{ emptyMessage }}</p>
@@ -120,7 +123,7 @@ export class ListShellComponent {
   @Input() addLabel = '';
   @Input() searchPlaceholder = 'Buscar...';
   @Input() loading = false;
-  @Input() items: unknown[] = [];
+  @Input() items: unknown[] | undefined = [];
   @Input() totalPages = 0;
   @Input() currentPage = 1;
   @Input() skeletonCount = 5;
