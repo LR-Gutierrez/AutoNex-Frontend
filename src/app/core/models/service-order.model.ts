@@ -21,6 +21,11 @@ export interface ServiceOrderResponse {
   status: ServiceOrderStatus;
   totalAmount: number;
   notes?: string;
+  paymentMethod?: string;
+  operationNumber?: string;
+  operationDate?: string;
+  amountInBs?: number;
+  exchangeRateValue?: number;
   createdAt: string;
   items: ServiceOrderItemResponse[];
 }
@@ -59,8 +64,8 @@ export interface UpdateServiceOrderStatusRequest {
 }
 
 export interface PayServiceOrderRequest {
-  paymentMethod: 'pago-movil' | 'transferencia' | 'efectivo-dolares' | 'efectivo-bolivares';
+  paymentMethod: 'PagoMovil' | 'Transferencia' | 'EfectivoDolares' | 'EfectivoBolivares';
   operationNumber?: string;
   operationDate?: string;
-  amountBs?: number;
+  amountInBs?: number;
 }

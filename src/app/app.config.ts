@@ -1,7 +1,7 @@
 import { ApplicationConfig, LOCALE_ID } from '@angular/core';
 import { provideRouter, RouteReuseStrategy } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { IonicRouteStrategy } from '@ionic/angular';
+import { IonicRouteStrategy, ModalController } from '@ionic/angular';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
@@ -19,6 +19,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([authInterceptor, errorInterceptor]),
     ),
     provideIonicAngular(),
+    ModalController,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LOCALE_ID, useValue: 'es' },
   ],

@@ -1,13 +1,15 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { DatePipe, CurrencyPipe, DecimalPipe } from '@angular/common';
-import { IonIcon } from '@ionic/angular/standalone';
+import { IonIcon, ModalController } from '@ionic/angular/standalone';
 import { FinancialRecordService } from '../../core/services/financial-record.service';
+import { FinancialRecordResponse } from '../../core/models/financial-record.model';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
+import { FinancialRecordDetailModalComponent } from './financial-record-detail-modal.component';
 
 @Component({
   selector: 'app-financial-record-list',
@@ -37,6 +39,15 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
           [deleteMessage]="getDeleteMessage(record.description)"
           (deleteConfirm)="deleteRecord(record.id)"
         >
+          <div actions>
+            <button
+              (click)="viewDetail(record)"
+              class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 cursor-pointer border-none action-btn"
+              title="Ver detalle"
+            >
+              <ion-icon name="eye-outline" class="text-[18px]"></ion-icon>
+            </button>
+          </div>
           <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
             {{ record.description }}
           </h3>
@@ -80,6 +91,7 @@ export class FinancialRecordListComponent implements OnInit {
   readonly financialService = inject(FinancialRecordService);
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
+  private readonly modalController = inject(ModalController);
 
   readonly page = signal(1);
   private readonly searchTerm = signal('');
@@ -110,6 +122,14 @@ export class FinancialRecordListComponent implements OnInit {
   goToPage(p: number) {
     this.page.set(p);
     this.loadRecords();
+  }
+
+  async viewDetail(record: FinancialRecordResponse) {
+    const modal = await this.modalController.create({
+      component: FinancialRecordDetailModalComponent,
+      componentProps: { record },
+    });
+    await modal.present();
   }
 
   deleteRecord(id: number) {

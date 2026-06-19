@@ -164,6 +164,17 @@
   border-radius: 8px;
 }
 
+.payment-modal {
+  --border-radius: 18px;
+}
+.payment-modal .modal-wrapper {
+  --width: 380px;
+  --height: auto;
+  --max-height: 90vh;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
 .avatars {
   display: flex;
   list-style-type: none;
