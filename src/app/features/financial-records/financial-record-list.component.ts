@@ -128,6 +128,7 @@ export class FinancialRecordListComponent implements OnInit {
     const modal = await this.modalController.create({
       component: FinancialRecordDetailModalComponent,
       componentProps: { record },
+      cssClass: 'payment-modal',
     });
     await modal.present();
   }

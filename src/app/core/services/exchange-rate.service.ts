@@ -6,6 +6,8 @@ import {
   ExchangeRatePublication,
   ExchangeRateListResponse,
   LiveRateResponse,
+  BcvFetchLogResponse,
+  BcvFetchLogListResponse,
 } from '../models/exchange-rate.model';
 
 @Injectable({ providedIn: 'root' })
@@ -68,5 +70,21 @@ export class ExchangeRateService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/exchange-rates/${id}`);
+  }
+
+  bcvFetch(): Observable<BcvFetchLogResponse> {
+    return this.http.post<BcvFetchLogResponse>(`${this.baseUrl}/exchange-rates/bcv-fetch`, {});
+  }
+
+  getFetchLogs(params?: HttpParams): Observable<BcvFetchLogListResponse> {
+    return this.http.get<BcvFetchLogListResponse>(`${this.baseUrl}/exchange-rates/fetch-logs`, { params });
+  }
+
+  getAutoConsultStatus(): Observable<{ bcv_auto_consult: boolean; bcv_retry_enabled: boolean; nextRetryUtc: string | null }> {
+    return this.http.get<{ bcv_auto_consult: boolean; bcv_retry_enabled: boolean; nextRetryUtc: string | null }>(`${this.baseUrl}/exchange-rates/autoupdate-bcv/status`);
+  }
+
+  toggleAutoConsult(): Observable<{ bcv_auto_consult: boolean }> {
+    return this.http.post<{ bcv_auto_consult: boolean }>(`${this.baseUrl}/exchange-rates/autoupdate-bcv/toggle`, {});
   }
 }

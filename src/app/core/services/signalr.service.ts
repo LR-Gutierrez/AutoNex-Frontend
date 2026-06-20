@@ -181,7 +181,7 @@ export class SignalRService implements OnDestroy {
   private getStatusSignal(hubName: string): ReturnType<typeof signal<ConnectionStatus>> {
     if (hubName === 'dashboard') return this.dashboardStatus;
     if (hubName === 'notifications') return this.notificationsStatus;
-    if (hubName === 'exchangeRates') return this.exchangeRatesStatus;
+    if (hubName === 'exchangeRates' || hubName === 'exchange-rates') return this.exchangeRatesStatus;
     return signal<ConnectionStatus>('disconnected');
   }
 }

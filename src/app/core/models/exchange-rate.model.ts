@@ -47,3 +47,43 @@ export interface LiveRateResponse {
   currency: string;
   value: number;
 }
+
+export type BcvFetchAction =
+  | 'Auto_Inserted'
+  | 'Auto_Skipped_AlreadyPublished'
+  | 'Auto_Skipped_AlreadyDraft'
+  | 'Auto_Failed'
+  | 'Manual_Inserted'
+  | 'Manual_Skipped_AlreadyPublished'
+  | 'Manual_Skipped_AlreadyDraft'
+  | 'Manual_Failed'
+  | 'Retry_Inserted'
+  | 'Retry_Skipped_AlreadyPublished'
+  | 'Retry_Skipped_AlreadyDraft'
+  | 'Retry_Skipped_OutsideWindow'
+  | 'Retry_Failed';
+
+/** Extrae la parte semántica después del prefijo */
+export function bcvActionKind(action: BcvFetchAction): string {
+  return action.replace(/^(Auto|Manual|Retry)_/, '');
+}
+
+export type BcvFetchBy = 'Auto' | 'Manual' | 'Retry';
+
+export interface BcvFetchLogResponse {
+  id: number;
+  valueDate: string;
+  ratesJson: string | null;
+  isSuccess: boolean;
+  error: string | null;
+  action: BcvFetchAction;
+  fetchedBy: BcvFetchBy;
+  fetchedAt: string;
+}
+
+export interface BcvFetchLogListResponse {
+  data: BcvFetchLogResponse[];
+  total: number;
+  page: number;
+  perPage: number;
+}

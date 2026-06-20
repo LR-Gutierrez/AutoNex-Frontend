@@ -28,6 +28,7 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
 @Component({
   selector: 'app-financial-record-detail-modal',
   standalone: true,
+  host: { '[class.Expense]': 'record.type === "Expense"' },
   imports: [
     CurrencyPipe,
     DatePipe,
@@ -43,10 +44,14 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
   ],
   styles: `
     :host {
-      --modal-accent: #6366f1;
-      --modal-accent-bg: rgba(99, 102, 241, 0.12);
+      --modal-accent: #4ade80;
+      --modal-accent-bg: rgba(74, 222, 128, 0.12);
       --modal-card-bg: rgba(255, 255, 255, 0.04);
       --modal-card-border: rgba(255, 255, 255, 0.1);
+    }
+    :host.Expense {
+      --modal-accent: #fb7185;
+      --modal-accent-bg: rgba(251, 113, 133, 0.12);
     }
 
     ion-header ion-toolbar {
@@ -62,31 +67,24 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
       --background: rgba(14, 15, 26, 0.98);
     }
 
-    .type-banner {
+    .banner {
       text-align: center;
       padding: 24px 20px 16px;
     }
-    .type-banner ion-icon {
+    .banner ion-icon {
       font-size: 48px;
+      color: var(--modal-accent);
       margin-bottom: 8px;
     }
-    .type-banner .title {
+    .banner .title {
       font-size: 18px;
       font-weight: 700;
-      color: #fff;
+      color: var(--modal-accent);
     }
-    .type-banner .subtitle {
+    .banner .subtitle {
       font-size: 12px;
       color: rgba(255, 255, 255, 0.5);
       margin-top: 4px;
-    }
-    .type-banner.income ion-icon,
-    .type-banner.income .title {
-      color: #4ade80;
-    }
-    .type-banner.expense ion-icon,
-    .type-banner.expense .title {
-      color: #fb7185;
     }
 
     .amount-section {
@@ -105,14 +103,9 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
     .amount-value {
       font-size: 28px;
       font-weight: 700;
+      color: var(--modal-accent);
       letter-spacing: -0.02em;
       margin-top: 2px;
-    }
-    .amount-value.income {
-      color: #4ade80;
-    }
-    .amount-value.expense {
-      color: #fb7185;
     }
     .bs-amount {
       font-size: 14px;
@@ -205,7 +198,7 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
     </ion-header>
 
     <ion-content>
-      <div class="type-banner" [class.income]="record.type === 'Income'" [class.expense]="record.type === 'Expense'">
+      <div class="banner">
         <ion-icon [name]="record.type === 'Income' ? 'trending-up-outline' : 'trending-down-outline'"></ion-icon>
         <div class="title">{{ record.type === 'Income' ? 'Ingreso' : 'Egreso' }}</div>
         <div class="subtitle">Registro #{{ record.id }}</div>
@@ -213,7 +206,7 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
 
       <div class="amount-section">
         <div class="amount-label">Monto</div>
-        <div class="amount-value" [class.income]="record.type === 'Income'" [class.expense]="record.type === 'Expense'">
+        <div class="amount-value">
           {{ record.type === 'Income' ? '+' : '-' }}{{ record.amount | currency:'USD':'symbol':'1.2-2' }}
         </div>
         @if (record.amountBs != null) {
