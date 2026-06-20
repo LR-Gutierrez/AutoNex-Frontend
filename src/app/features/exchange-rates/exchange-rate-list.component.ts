@@ -249,7 +249,7 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
         </button>
       </div>
       <div class="flex items-center gap-2 mt-2 max-md:mt-1.5">
-        @if (retryEnabled() && nextRetryUtc()) {
+        @if (autoConsultEnabled() && retryEnabled() && nextRetryUtc()) {
           <span class="retry-badge">
             <span class="retry-dot"></span>
             {{ retryCountdown() }}
@@ -359,6 +359,7 @@ export class ExchangeRateListComponent implements OnInit {
   readonly retryCountdown = signal('');
   readonly nextRetryUtc = signal<Date | null>(null);
   private countdownTimer: ReturnType<typeof setInterval> | null = null;
+  private validatingTimeout: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly ExchangeRateStatus = ExchangeRateStatus;
   protected readonly getExchangeRateStatusLabel = getExchangeRateStatusLabel;
@@ -388,13 +389,17 @@ export class ExchangeRateListComponent implements OnInit {
     this.signalr.startConnection('exchange-rates');
     this.signalr.on<{ newsletterId: number }>('exchange-rates', 'ExchangeRatePublished')
       .subscribe(() => {
+        if (this.validatingTimeout) {
+          clearTimeout(this.validatingTimeout);
+          this.validatingTimeout = null;
+        }
         this.loadRates();
         this.loadAutoConsultStatus();
       });
 
     const tryJoinGroup = setInterval(() => {
       if (this.signalr.exchangeRatesStatus() === 'connected') {
-        this.signalr.joinGroup('exchange-rates', 'exchange-updates');
+        this.signalr.joinGroup('exchange-rates', 'exchange-updates', 'JoinGroup');
         clearInterval(tryJoinGroup);
       }
     }, 500);
@@ -402,6 +407,7 @@ export class ExchangeRateListComponent implements OnInit {
 
   ngOnDestroy() {
     if (this.countdownTimer) clearInterval(this.countdownTimer);
+    if (this.validatingTimeout) clearTimeout(this.validatingTimeout);
     this.signalr.stopConnection('exchange-rates');
   }
 
@@ -424,9 +430,14 @@ export class ExchangeRateListComponent implements OnInit {
     }
     const diff = next.getTime() - Date.now();
     if (diff <= 0) {
-      this.retryCountdown.set('Ejecutando...');
-      this.loadRates();
-      this.loadAutoConsultStatus();
+      this.retryCountdown.set('Validando...');
+      if (!this.validatingTimeout) {
+        this.validatingTimeout = setTimeout(() => {
+          this.validatingTimeout = null;
+          this.loadRates();
+          this.loadAutoConsultStatus();
+        }, 30000);
+      }
       return;
     }
     const mins = Math.floor(diff / 60000);
