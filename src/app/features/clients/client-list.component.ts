@@ -1,16 +1,32 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
+import { ModalController } from '@ionic/angular';
 import { ClientService } from '../../core/services/client.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { carSportOutline } from 'ionicons/icons';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
+import { VehicleRegisterModalComponent } from './vehicle-register-modal.component';
 
 @Component({
   selector: 'app-client-list',
   standalone: true,
   imports: [ListShellComponent, ListItemComponent, IonIcon],
+  styles: `
+    .action-btn {
+      background: transparent !important;
+      transition:
+        background-color 0.18s ease,
+        color 0.18s ease;
+    }
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.06) !important;
+      color: var(--app-text) !important;
+    }
+  `,
   template: `
     <app-list-shell
       title="Clientes"
@@ -58,6 +74,15 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
               </span>
             }
           </div>
+          <div actions>
+            <button
+              (click)="addVehicle(client)"
+              class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 cursor-pointer border-none action-btn"
+              title="Registrar vehículo"
+            >
+              <ion-icon name="car-sport-outline" class="text-[18px]"></ion-icon>
+            </button>
+          </div>
         </app-list-item>
       }
     </app-list-shell>
@@ -67,6 +92,11 @@ export class ClientListComponent implements OnInit {
   readonly clientService = inject(ClientService);
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
+  private readonly modalController = inject(ModalController);
+
+  constructor() {
+    addIcons({ carSportOutline });
+  }
 
   readonly page = signal(1);
   private readonly searchTerm = signal('');
@@ -101,5 +131,18 @@ export class ClientListComponent implements OnInit {
 
   deleteClient(id: number) {
     this.clientService.delete(id).subscribe({ next: () => this.loadClients() });
+  }
+
+  async addVehicle(client: { id: number; fullName: string }) {
+    const modal = await this.modalController.create({
+      component: VehicleRegisterModalComponent,
+      componentProps: { clientId: client.id, clientName: client.fullName },
+    });
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.success) {
+      this.loadClients();
+    }
   }
 }

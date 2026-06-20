@@ -56,10 +56,10 @@ import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pip
                 {{ formatKm(service.minKmInterval) }} - {{ service.maxKmInterval != null ? formatKm(service.maxKmInterval) : '∞' }} km
               </span>
             }
-            @if (service.recommendedMonths) {
+            @if (service.minMonth != null || service.maxMonth != null) {
               <span class="flex items-center gap-1">
                 <ion-icon name="calendar-outline" class="text-[14px]"></ion-icon>
-                {{ service.recommendedMonths }} meses
+                {{ formatKm(service.minMonth) }} - {{ service.maxMonth != null ? formatKm(service.maxMonth) : '∞' }} meses
               </span>
             }
           </div>

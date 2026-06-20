@@ -430,7 +430,7 @@ export class ServiceOrderFormComponent implements OnInit {
         this.vehicleOptions.set(
           this.vehicleService.vehicles().map((v) => ({
             value: v.id,
-            label: `${v.brand} ${v.model} (${v.licensePlate})`,
+            label: `${v.brand} ${v.model} (${v.licensePlate}) - ${v.clientName}`,
           })),
         );
       },

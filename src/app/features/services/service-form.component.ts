@@ -116,13 +116,22 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
               ></app-text-input>
             </div>
 
-            <app-text-input
-              [control]="form.get('recommendedMonths')!"
-              label="Intervalo en meses (opcional)"
-              icon="calendar-outline"
-              [mask]="kmMask"
-              placeholder="Ej: 6"
-            ></app-text-input>
+            <div class="grid grid-cols-2 gap-3">
+              <app-text-input
+                [control]="form.get('minMonth')!"
+                label="Meses mínimo (opcional)"
+                icon="arrow-back-outline"
+                [mask]="kmMask"
+                placeholder="0"
+              ></app-text-input>
+              <app-text-input
+                [control]="form.get('maxMonth')!"
+                label="Meses máximo (opcional)"
+                icon="arrow-forward-outline"
+                [mask]="kmMask"
+                placeholder="Ej: 12"
+              ></app-text-input>
+            </div>
 
             @if (error()) {
               <div class="text-xs text-[#ff6b6b] mb-4">
@@ -173,7 +182,8 @@ export class ServiceFormComponent implements OnInit {
     defaultPrice: ['', Validators.required],
     minKmInterval: [''],
     maxKmInterval: [''],
-    recommendedMonths: [''],
+    minMonth: [''],
+    maxMonth: [''],
   });
 
   constructor() {
@@ -213,8 +223,11 @@ export class ServiceFormComponent implements OnInit {
           maxKmInterval: service.maxKmInterval != null
             ? formatNum(service.maxKmInterval)
             : '',
-          recommendedMonths: service.recommendedMonths != null
-            ? formatNum(service.recommendedMonths)
+          minMonth: service.minMonth != null
+            ? formatNum(service.minMonth)
+            : '',
+          maxMonth: service.maxMonth != null
+            ? formatNum(service.maxMonth)
             : '',
         });
         this.loadingService.set(false);
@@ -242,8 +255,11 @@ export class ServiceFormComponent implements OnInit {
       maxKmInterval: this.form.value.maxKmInterval !== ''
         ? parseNum(this.form.value.maxKmInterval!)
         : undefined,
-      recommendedMonths: this.form.value.recommendedMonths !== ''
-        ? parseNum(this.form.value.recommendedMonths!)
+      minMonth: this.form.value.minMonth !== ''
+        ? parseNum(this.form.value.minMonth!)
+        : undefined,
+      maxMonth: this.form.value.maxMonth !== ''
+        ? parseNum(this.form.value.maxMonth!)
         : undefined,
     };
 

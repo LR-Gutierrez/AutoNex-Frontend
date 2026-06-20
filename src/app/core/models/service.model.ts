@@ -5,7 +5,8 @@ export interface ServiceResponse {
   defaultPrice: number;
   minKmInterval?: number;
   maxKmInterval?: number;
-  recommendedMonths?: number;
+  minMonth?: number;
+  maxMonth?: number;
   createdAt: string;
 }
 
@@ -15,7 +16,8 @@ export interface CreateServiceRequest {
   defaultPrice: number;
   minKmInterval?: number;
   maxKmInterval?: number;
-  recommendedMonths?: number;
+  minMonth?: number;
+  maxMonth?: number;
 }
 
 export type UpdateServiceRequest = CreateServiceRequest;
