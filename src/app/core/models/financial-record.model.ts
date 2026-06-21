@@ -1,3 +1,5 @@
+import { AccountType } from './account.model';
+
 export enum FinancialRecordType {
   Income = 'Income',
   Expense = 'Expense',
@@ -17,32 +19,37 @@ export interface FinancialRecordResponse {
   type: FinancialRecordType;
   category: FinancialCategory;
   amount: number;
-  amountBs?: number;
+  amountInBs?: number;
   description: string;
   date: string;
   userId: number;
   userName: string;
   createdAt: string;
+  accountType: AccountType;
 }
 
 export interface CreateFinancialRecordRequest {
   type: FinancialRecordType;
   category: FinancialCategory;
   amount: number;
-  amountBs?: number;
+  amountInBs?: number;
   description: string;
   date: string;
   userId: number;
+  accountType: AccountType;
 }
 
 export interface UpdateFinancialRecordRequest {
   type: FinancialRecordType;
   category: FinancialCategory;
   amount: number;
-  amountBs?: number;
+  amountInBs?: number;
   description: string;
   date: string;
+  accountType: AccountType;
 }
+
+import { AccountBalance } from './account.model';
 
 export interface FinancialSummaryResponse {
   totalIncome: number;
@@ -50,6 +57,7 @@ export interface FinancialSummaryResponse {
   balance: number;
   incomeCount: number;
   expenseCount: number;
+  balances: AccountBalance[];
 }
 
 export interface CategorySummaryResponse {

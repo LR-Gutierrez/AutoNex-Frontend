@@ -32,6 +32,8 @@ const LABEL_MAP: Record<string, string> = {
   Rent: 'Alquiler',
   Payroll: 'Nómina',
   Utilities: 'Servicios Públicos',
+  Bolivares: 'Bolívares',
+  Dolares: 'Dólares',
 };
 
 @Pipe({

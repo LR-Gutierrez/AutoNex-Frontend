@@ -1,4 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { DashboardSkeletonComponent } from '../../shared/components/dashboard-skeleton/dashboard-skeleton.component';
 import {
@@ -15,7 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, DatePipe, DecimalPipe],
+  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, DatePipe, DecimalPipe, RouterLink],
   styles: `
     :host {
       display: block;
@@ -1061,8 +1062,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                   (dashboard.data()?.financialMonth?.balance ?? 0) >= 0
                 "
               >
-                \${{
-                  dashboard.data()?.financialMonth?.balance?.toFixed(0) ?? '0'
+                {{
+                  dashboard.data()?.financialMonth?.balance | currencyFormat
                 }}
               </div>
               <div
@@ -1093,14 +1094,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
               <span
                 >💰
                 {{
-                  dashboard.data()?.financialMonth?.income | currencyFormat
+                  dashboard.data()?.financialMonth?.totalIncome | currencyFormat
                 }}</span
               >
               <span>•</span>
               <span
                 >💸
                 {{
-                  dashboard.data()?.financialMonth?.expenses | currencyFormat
+                  dashboard.data()?.financialMonth?.totalExpenses | currencyFormat
                 }}</span
               >
             </div>
@@ -1270,6 +1271,46 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             </div>
           }
 
+          <!-- Account Balances -->
+          @if (dashboard.data()?.financialMonth?.balances; as balances) {
+            <div
+              class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
+            >
+              <h2
+                class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
+              >
+                <span>💰</span> Saldos por Cuenta
+              </h2>
+              <div class="grid grid-cols-2 gap-3">
+                @for (bal of balances; track bal.accountType) {
+                  <div class="metric-box text-center">
+                    <span
+                      class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1"
+                      [class.text-blue-400]="bal.accountType === 'Bolivares'"
+                      [class.text-amber-400]="bal.accountType === 'Dolares'"
+                    >
+                      {{ bal.accountType === 'Bolivares' ? 'Bs.' : '$' }}
+                      {{ bal.balance | number:'1.2-2' }}
+                    </span>
+                    <span
+                      class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
+                    >
+                      {{ bal.accountType === 'Bolivares' ? 'Bolívares' : 'Dólares' }}
+                    </span>
+                  </div>
+                }
+              </div>
+              <div class="mt-3 text-center">
+                <a
+                  routerLink="/financial-records"
+                  class="text-xs text-(--app-text-muted) font-medium hover:text-(--app-text) transition-colors no-underline"
+                >
+                  Ver detalle →
+                </a>
+              </div>
+            </div>
+          }
+
           <!-- Financial Detail -->
           <div
             class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
@@ -1288,7 +1329,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                   class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1 text-[#4ade80]"
                 >
                   {{
-                    dashboard.data()?.financialMonth?.income | currencyFormat
+                    dashboard.data()?.financialMonth?.totalIncome | currencyFormat
                   }}
                 </span>
                 <span
@@ -1302,7 +1343,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                   class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1 text-[#ff6b63]"
                 >
                   {{
-                    dashboard.data()?.financialMonth?.expenses | currencyFormat
+                    dashboard.data()?.financialMonth?.totalExpenses | currencyFormat
                   }}
                 </span>
                 <span
@@ -1357,7 +1398,9 @@ export class DashboardComponent implements OnInit {
   constructor() {
     this.refreshService.refresh$
       .pipe(takeUntilDestroyed())
-      .subscribe(() => this.dashboard.load().subscribe());
+      .subscribe(() => {
+        this.dashboard.load().subscribe();
+      });
   }
 
   ngOnInit() {

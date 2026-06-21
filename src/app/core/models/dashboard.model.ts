@@ -1,3 +1,5 @@
+import { AccountBalance } from './account.model';
+
 export interface DashboardResponse {
   ordersToday: DashboardOrdersSummary;
   lowStock: { totalItems: number; items: DashboardLowStockItem[] };
@@ -28,9 +30,10 @@ export interface DashboardAlertsSummary {
 }
 
 export interface DashboardMonthlyFinances {
-  income: number;
-  expenses: number;
+  totalIncome: number;
+  totalExpenses: number;
   balance: number;
+  balances: AccountBalance[];
 }
 
 export interface DashboardExchangeRate {

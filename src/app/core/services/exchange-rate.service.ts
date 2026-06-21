@@ -68,6 +68,10 @@ export class ExchangeRateService {
     return this.http.post<ExchangeRatePublication>(`${this.baseUrl}/exchange-rates/${id}/authorize`, {});
   }
 
+  publish(id: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/exchange-rates/${id}/publish`, {});
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/exchange-rates/${id}`);
   }

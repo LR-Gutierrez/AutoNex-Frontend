@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
@@ -13,6 +13,7 @@ import {
   timeOutline,
   syncOutline,
   toggleOutline,
+  checkmarkDoneOutline,
 } from 'ionicons/icons';
 import {
   ExchangeRateStatus,
@@ -20,6 +21,7 @@ import {
   bcvActionKind,
 } from '../../core/models/exchange-rate.model';
 import { ExchangeRateService } from '../../core/services/exchange-rate.service';
+import { AuthStateService } from '../../core/services/auth-state.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { SignalRService } from '../../core/services/signalr.service';
@@ -197,6 +199,14 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
         background: rgba(96, 165, 250, 0.1);
         border-color: rgba(96, 165, 250, 0.8);
       }
+      .btn-outline-publish {
+        color: #4ade80;
+        border-color: rgba(74, 222, 128, 0.5);
+      }
+      .btn-outline-publish:hover {
+        background: rgba(74, 222, 128, 0.1);
+        border-color: rgba(74, 222, 128, 0.8);
+      }
     `,
   ],
   template: `
@@ -273,6 +283,15 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
                 Autorizar
               </button>
             }
+            @if (+pub.status === ExchangeRateStatus.Authorized && isAdmin()) {
+              <button class="btn-outline btn-outline-publish" (click)="publish(pub.id)">
+                <ion-icon
+                  name="checkmark-done-outline"
+                  class="text-[16px]"
+                ></ion-icon>
+                Poner en vigencia
+              </button>
+            }
           </div>
           <h3
             class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap"
@@ -344,6 +363,8 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
 })
 export class ExchangeRateListComponent implements OnInit {
   readonly exchangeRateService = inject(ExchangeRateService);
+  private readonly authState = inject(AuthStateService);
+  readonly isAdmin = computed(() => this.authState.role() === 'Admin');
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
   private readonly toastController = inject(ToastController);
@@ -370,6 +391,7 @@ export class ExchangeRateListComponent implements OnInit {
       createOutline,
       documentTextOutline,
       shieldCheckmarkOutline,
+      checkmarkDoneOutline,
       timeOutline,
       syncOutline,
       toggleOutline,
@@ -523,6 +545,12 @@ export class ExchangeRateListComponent implements OnInit {
   authorize(id: number) {
     this.exchangeRateService
       .authorize(id)
+      .subscribe({ next: () => this.loadRates() });
+  }
+
+  publish(id: number) {
+    this.exchangeRateService
+      .publish(id)
       .subscribe({ next: () => this.loadRates() });
   }
 

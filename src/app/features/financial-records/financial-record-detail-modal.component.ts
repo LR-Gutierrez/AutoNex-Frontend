@@ -11,8 +11,11 @@ import {
   IonIcon,
   IonFooter,
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { walletOutline } from 'ionicons/icons';
 import { FinancialRecordResponse } from '../../core/models/financial-record.model';
 import { AmountDisplayComponent } from '../../shared/components/amount-display/amount-display.component';
+import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 
 @Component({
   selector: 'app-financial-record-detail-modal',
@@ -29,6 +32,7 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
     IonIcon,
     IonFooter,
     AmountDisplayComponent,
+    EnumLabelPipe,
   ],
   styles: `
     :host {
@@ -185,7 +189,7 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
         <div class="amount-label">Monto</div>
         <app-amount-display
           [amount]="record.amount"
-          [amountBs]="record.amountBs"
+          [amountBs]="record.amountInBs"
           [prefix]="record.type === 'Income' ? '+' : '-'"
         />
       </div>
@@ -197,6 +201,18 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
             Descripción
           </span>
           <span class="detail-value">{{ record.description }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">
+            <ion-icon name="wallet-outline"></ion-icon>
+            Cuenta
+          </span>
+          <span class="detail-value">
+            <span [class.text-blue-400]="record.accountType === 'Bolivares'" [class.text-amber-400]="record.accountType === 'Dolares'" class="font-bold">
+              {{ record.accountType | enumLabel }}
+            </span>
+          </span>
         </div>
 
         <div class="detail-row">
@@ -252,6 +268,10 @@ export class FinancialRecordDetailModalComponent {
   @Input() record!: FinancialRecordResponse;
 
   private readonly modalCtrl = inject(ModalController);
+
+  constructor() {
+    addIcons({ walletOutline });
+  }
 
   readonly categoryLabels: Record<string, string> = {
     Services: 'Servicios',

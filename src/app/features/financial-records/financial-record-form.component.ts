@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, calendarOutline, cashOutline, documentTextOutline, pricetagOutline, swapHorizontalOutline } from 'ionicons/icons';
+import { arrowBackOutline, calendarOutline, cashOutline, documentTextOutline, pricetagOutline, swapHorizontalOutline, walletOutline } from 'ionicons/icons';
 import { FinancialRecordService } from '../../core/services/financial-record.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
@@ -14,6 +14,7 @@ import {
   FinancialRecordType,
   FinancialCategory,
 } from '../../core/models/financial-record.model';
+import { AccountType } from '../../core/models/account.model';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 import { priceMask } from '../../shared/masks/price.mask';
 import type { MaskitoOptions } from '@maskito/core';
@@ -101,9 +102,17 @@ import type { MaskitoOptions } from '@maskito/core';
               [options]="categoryOptions"
             ></app-select-field>
 
+            <app-select-field
+              [control]="form.get('accountType')!"
+              [label]="accountLabel()"
+              icon="wallet-outline"
+              placeholder="Selecciona la cuenta"
+              [options]="accountTypeOptions"
+            ></app-select-field>
+
             <app-text-input
               [control]="form.get('amount')!"
-              label="Monto"
+              [label]="moneyLabel()"
               icon="cash-outline"
               placeholder="0.00"
               [mask]="priceMask"
@@ -175,18 +184,34 @@ export class FinancialRecordFormComponent implements OnInit {
     }),
   );
 
+  readonly accountTypeOptions: SelectOption[] = [
+    { value: 'Bolivares', label: 'Bolívares' },
+    { value: 'Dolares', label: 'Dólares' },
+  ];
+
+  readonly accountLabel = computed(() => {
+    const type = this.form.get('type')?.value;
+    return type === 'Expense' ? '¿De qué cuenta se descuenta?' : '¿En qué cuenta se registra?';
+  });
+
+  readonly moneyLabel = computed(() => {
+    const accountType = this.form.get('accountType')?.value;
+    return accountType === 'Dolares' ? 'Monto en USD' : 'Monto en Bs.';
+  });
+
   readonly priceMask = priceMask;
 
   form = this.fb.group({
     type: ['', Validators.required],
     category: ['', Validators.required],
+    accountType: ['', Validators.required],
     amount: ['0.00', Validators.required],
     description: ['', Validators.required],
     date: [this.todayString(), Validators.required],
   });
 
   constructor() {
-    addIcons({ arrowBackOutline, calendarOutline, cashOutline, documentTextOutline, pricetagOutline, swapHorizontalOutline });
+    addIcons({ arrowBackOutline, calendarOutline, cashOutline, documentTextOutline, pricetagOutline, swapHorizontalOutline, walletOutline });
   }
 
   private todayString(): string {
@@ -216,6 +241,7 @@ export class FinancialRecordFormComponent implements OnInit {
         this.form.patchValue({
           type: record.type,
           category: record.category,
+          accountType: record.accountType,
           amount: record.amount.toFixed(2),
           description: record.description,
           date: record.date.substring(0, 10),
@@ -240,6 +266,7 @@ export class FinancialRecordFormComponent implements OnInit {
     const request = {
       type: this.form.value.type as FinancialRecordType,
       category: this.form.value.category as FinancialCategory,
+      accountType: this.form.value.accountType as AccountType,
       amount,
       description: this.form.value.description!,
       date: this.form.value.date!,
