@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { IonIcon, IonSpinner } from '@ionic/angular/standalone';
+import { IonIcon } from '@ionic/angular/standalone';
 import { ModalController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -33,7 +33,6 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
     ListShellComponent,
     ListItemComponent,
     IonIcon,
-    IonSpinner,
     DatePipe,
     DecimalPipe,
   ],

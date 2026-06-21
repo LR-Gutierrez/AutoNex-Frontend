@@ -1,5 +1,5 @@
-import { Component, Input, signal, inject } from '@angular/core';
-import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { Component, Input, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import {
   IonHeader,
@@ -10,7 +10,6 @@ import {
   IonContent,
   IonIcon,
   IonFooter,
-  IonSpinner,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -24,14 +23,13 @@ import {
   carOutline,
 } from 'ionicons/icons';
 import { ServiceOrderResponse } from '../../core/models/service-order.model';
+import { AmountDisplayComponent } from '../../shared/components/amount-display/amount-display.component';
 
 @Component({
   selector: 'app-payment-detail-modal',
   standalone: true,
   imports: [
-    CurrencyPipe,
     DatePipe,
-    DecimalPipe,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -40,7 +38,7 @@ import { ServiceOrderResponse } from '../../core/models/service-order.model';
     IonContent,
     IonIcon,
     IonFooter,
-    IonSpinner,
+    AmountDisplayComponent,
   ],
   styles: `
     :host {
@@ -95,13 +93,6 @@ import { ServiceOrderResponse } from '../../core/models/service-order.model';
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: rgba(255, 255, 255, 0.4);
-    }
-    .amount-value {
-      font-size: 28px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.02em;
-      margin-top: 2px;
     }
 
     .detail-list {
@@ -160,27 +151,6 @@ import { ServiceOrderResponse } from '../../core/models/service-order.model';
       background: rgba(251, 191, 36, 0.15);
       color: #fbbf24;
     }
-
-    .bs-amount {
-      font-size: 28px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.02em;
-      margin-top: 2px;
-    }
-    .bs-amount .bs-label {
-      font-size: 14px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.5);
-      margin-right: 4px;
-    }
-    .usd-equivalent {
-      font-size: 14px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.45);
-      margin-top: 4px;
-      letter-spacing: -0.01em;
-    }
   `,
   template: `
     <ion-header class="ion-no-border">
@@ -203,15 +173,10 @@ import { ServiceOrderResponse } from '../../core/models/service-order.model';
 
       <div class="amount-section">
         <div class="amount-label">Total cancelado</div>
-        @if (isBsPayment) {
-          <div class="bs-amount">
-            <span class="bs-label">Bs.</span>
-            {{ order.amountInBs | number:'1.2-2' }}
-          </div>
-          <div class="usd-equivalent">≈ {{ order.totalAmount | currency:'USD':'symbol':'1.2-2' }}</div>
-        } @else {
-          <div class="amount-value">{{ order.totalAmount | currency:'USD':'symbol':'1.2-2' }}</div>
-        }
+        <app-amount-display
+          [amount]="order.totalAmount"
+          [amountBs]="order.amountInBs"
+        />
       </div>
 
       <div class="detail-list">
@@ -297,12 +262,6 @@ export class PaymentDetailModalComponent {
       peopleOutline,
       carOutline,
     });
-  }
-
-  get isBsPayment(): boolean {
-    return this.order.paymentMethod === 'PagoMovil'
-      || this.order.paymentMethod === 'Transferencia'
-      || this.order.paymentMethod === 'EfectivoBolivares';
   }
 
   get methodLabel(): string {

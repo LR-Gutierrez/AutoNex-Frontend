@@ -1,5 +1,5 @@
 import { Component, Input, inject } from '@angular/core';
-import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ModalController } from '@ionic/angular';
 import {
   IonHeader,
@@ -11,28 +11,15 @@ import {
   IonIcon,
   IonFooter,
 } from '@ionic/angular/standalone';
-import { addIcons } from 'ionicons';
-import {
-  trendingUpOutline,
-  trendingDownOutline,
-  cashOutline,
-  closeOutline,
-  calendarOutline,
-  personOutline,
-  pricetagOutline,
-  swapHorizontalOutline,
-  documentTextOutline,
-} from 'ionicons/icons';
 import { FinancialRecordResponse } from '../../core/models/financial-record.model';
+import { AmountDisplayComponent } from '../../shared/components/amount-display/amount-display.component';
 
 @Component({
   selector: 'app-financial-record-detail-modal',
   standalone: true,
   host: { '[class.Expense]': 'record.type === "Expense"' },
   imports: [
-    CurrencyPipe,
     DatePipe,
-    DecimalPipe,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -41,6 +28,7 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
     IonContent,
     IonIcon,
     IonFooter,
+    AmountDisplayComponent,
   ],
   styles: `
     :host {
@@ -93,30 +81,15 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
       border-bottom: 1px solid var(--modal-card-border);
       margin-bottom: 16px;
     }
+    .amount-section app-amount-display {
+      --amount-primary-color: var(--modal-accent);
+    }
     .amount-label {
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: rgba(255, 255, 255, 0.4);
-    }
-    .amount-value {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--modal-accent);
-      letter-spacing: -0.02em;
-      margin-top: 2px;
-    }
-    .bs-amount {
-      font-size: 14px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.45);
-      margin-top: 4px;
-    }
-    .bs-amount ion-icon {
-      vertical-align: middle;
-      font-size: 14px;
-      margin-right: 2px;
     }
 
     .detail-list {
@@ -199,22 +172,22 @@ import { FinancialRecordResponse } from '../../core/models/financial-record.mode
 
     <ion-content>
       <div class="banner">
-        <ion-icon [name]="record.type === 'Income' ? 'trending-up-outline' : 'trending-down-outline'"></ion-icon>
+        @if (record.type === 'Income') {
+          <ion-icon name="trending-up-outline"></ion-icon>
+        } @else {
+          <ion-icon name="trending-down-outline"></ion-icon>
+        }
         <div class="title">{{ record.type === 'Income' ? 'Ingreso' : 'Egreso' }}</div>
         <div class="subtitle">Registro #{{ record.id }}</div>
       </div>
 
       <div class="amount-section">
         <div class="amount-label">Monto</div>
-        <div class="amount-value">
-          {{ record.type === 'Income' ? '+' : '-' }}{{ record.amount | currency:'USD':'symbol':'1.2-2' }}
-        </div>
-        @if (record.amountBs != null) {
-          <div class="bs-amount">
-            <ion-icon name="swap-horizontal-outline"></ion-icon>
-            Bs. {{ record.amountBs | number:'1.2-2' }}
-          </div>
-        }
+        <app-amount-display
+          [amount]="record.amount"
+          [amountBs]="record.amountBs"
+          [prefix]="record.type === 'Income' ? '+' : '-'"
+        />
       </div>
 
       <div class="detail-list">
@@ -288,20 +261,6 @@ export class FinancialRecordDetailModalComponent {
     Utilities: 'Servicios Públicos',
     Other: 'Otros',
   };
-
-  constructor() {
-    addIcons({
-      trendingUpOutline,
-      trendingDownOutline,
-      cashOutline,
-      closeOutline,
-      calendarOutline,
-      personOutline,
-      pricetagOutline,
-      swapHorizontalOutline,
-      documentTextOutline,
-    });
-  }
 
   get categoryLabel(): string {
     return this.categoryLabels[this.record.category] ?? this.record.category;
