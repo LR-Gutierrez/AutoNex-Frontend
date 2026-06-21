@@ -1,12 +1,13 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { DashboardSkeletonComponent } from '../../shared/components/dashboard-skeleton/dashboard-skeleton.component';
 import {
   DashboardService,
   PRESETS,
 } from '../../core/services/dashboard.service';
 import { SignalRService } from '../../core/services/signalr.service';
+import { ExchangeRateService } from '../../core/services/exchange-rate.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pipe';
@@ -16,7 +17,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, DatePipe, DecimalPipe, RouterLink],
+  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, CurrencyPipe, DatePipe, DecimalPipe, RouterLink],
   styles: `
     :host {
       display: block;
@@ -1292,6 +1293,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
                       {{ bal.accountType === 'Bolivares' ? 'Bs.' : '$' }}
                       {{ bal.balance | number:'1.2-2' }}
                     </span>
+                    @if (bal.accountType === 'Bolivares' && usdRate()) {
+                      <span class="block text-[11px] text-(--app-text-muted) -mt-0.5">
+                        ≈ {{ bal.balance / usdRate() | currency:'USD':'symbol':'1.2-2' }}
+                      </span>
+                    }
                     <span
                       class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
                     >
@@ -1394,12 +1400,15 @@ export class DashboardComponent implements OnInit {
   });
   private readonly refreshService = inject(RefreshService);
   private readonly pageTitle = inject(PageTitleService);
+  private readonly exchangeRateService = inject(ExchangeRateService);
+  protected readonly usdRate = signal(0);
 
   constructor() {
     this.refreshService.refresh$
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
         this.dashboard.load().subscribe();
+        this.exchangeRateService.getCurrentUsd().subscribe(r => this.usdRate.set(r.value));
       });
   }
 
@@ -1409,6 +1418,7 @@ export class DashboardComponent implements OnInit {
       'Resumen operativo de la red de servicios AutoNex',
     );
     this.dashboard.load().subscribe();
+    this.exchangeRateService.getCurrentUsd().subscribe(r => this.usdRate.set(r.value));
   }
 
   /**
