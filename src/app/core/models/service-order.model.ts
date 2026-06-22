@@ -20,6 +20,9 @@ export interface ServiceOrderResponse {
   date: string;
   status: ServiceOrderStatus;
   totalAmount: number;
+  applyLaborPercentage: boolean;
+  laborPercentage?: number;
+  laborCharge?: number;
   notes?: string;
   paymentMethod?: string;
   operationNumber?: string;
@@ -47,6 +50,8 @@ export interface CreateServiceOrderRequest {
   currentKm: number;
   estimatedDailyKm?: number;
   daysPerWeek?: number;
+  applyLaborPercentage: boolean;
+  laborPercentage?: number;
   notes?: string;
   items: CreateServiceOrderItemRequest[];
 }

@@ -20,6 +20,7 @@ import {
   SelectOption,
 } from '../../shared/components/select-field/select-field.component';
 import { DateFieldComponent } from '../../shared/components/date-field/date-field.component';
+import { ToggleFieldComponent } from '../../shared/components/toggle-field/toggle-field.component';
 import { AuthButtonComponent } from '../../shared/components/auth-button/auth-button.component';
 import { priceMask } from '../../shared/masks/price.mask';
 import { kmMask } from '../../shared/masks/km.mask';
@@ -35,6 +36,7 @@ import type { MaskitoOptions } from '@maskito/core';
     TextInputComponent,
     SelectFieldComponent,
     DateFieldComponent,
+    ToggleFieldComponent,
     AuthButtonComponent,
   ],
   styles: `
@@ -202,6 +204,22 @@ import type { MaskitoOptions } from '@maskito/core';
               icon="calendar-outline"
             ></app-date-field>
 
+            <app-toggle-field
+              [control]="form.get('applyLaborPercentage')!"
+              label="Aplicar porcentaje de mano de obra"
+              icon="construct-outline"
+            ></app-toggle-field>
+
+            @if (form.get('applyLaborPercentage')?.value) {
+              <app-text-input
+                [control]="form.get('laborPercentage')!"
+                label="Porcentaje de mano de obra"
+                icon="construct-outline"
+                placeholder="15"
+                [mask]="priceMask"
+              ></app-text-input>
+            }
+
             <app-text-input
               [control]="form.get('notes')!"
               label="Notas (opcional)"
@@ -361,6 +379,8 @@ export class ServiceOrderFormComponent implements OnInit {
     estimatedDailyKm: [''],
     daysPerWeek: [''],
     date: [this.todayString(), Validators.required],
+    applyLaborPercentage: [false],
+    laborPercentage: [''],
     notes: [''],
     items: this.fb.array([]),
   });
@@ -490,6 +510,8 @@ export class ServiceOrderFormComponent implements OnInit {
           estimatedDailyKm: order.estimatedDailyKm?.toString() ?? '',
           daysPerWeek: order.daysPerWeek?.toString() ?? '',
           date: order.date.substring(0, 10),
+          applyLaborPercentage: order.applyLaborPercentage,
+          laborPercentage: order.laborPercentage?.toString() ?? '',
           notes: order.notes ?? '',
         });
         this.skipAutoFill = false;
@@ -618,6 +640,18 @@ export class ServiceOrderFormComponent implements OnInit {
     const vehicle = this.vehicleService
       .vehicles()
       .find((v) => v.id === this.form.value.vehicleId);
+    const rawLaborPct = this.form.value.laborPercentage;
+    const laborPercentage = rawLaborPct
+      ? parseFloat(
+          (() => {
+            const raw = String(rawLaborPct);
+            return raw.includes(',')
+              ? raw.replace(/\./g, '').replace(',', '.')
+              : raw;
+          })(),
+        )
+      : undefined;
+
     const request = {
       vehicleId: this.form.value.vehicleId!,
       clientId: vehicle?.clientId ?? 0,
@@ -629,6 +663,9 @@ export class ServiceOrderFormComponent implements OnInit {
       daysPerWeek: this.form.value.daysPerWeek
         ? parseInt(this.form.value.daysPerWeek, 10)
         : undefined,
+      applyLaborPercentage: !!this.form.value.applyLaborPercentage,
+      laborPercentage:
+        this.form.value.applyLaborPercentage ? laborPercentage : undefined,
       notes: this.form.value.notes || undefined,
       items,
     };

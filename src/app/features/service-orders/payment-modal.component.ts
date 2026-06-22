@@ -330,6 +330,7 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
                 [maskito]="priceMask"
                 [maskitoElement]="maskitoPredicate"
                 [attr.aria-label]="'Monto en Bolívares'"
+                readonly
               ></ion-input>
             </div>
             <div class="field-group">
@@ -369,6 +370,7 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
                 [maskito]="priceMask"
                 [maskitoElement]="maskitoPredicate"
                 [attr.aria-label]="'Total en USD'"
+                readonly
               ></ion-input>
             </div>
             <div class="field-group">
@@ -408,6 +410,7 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
                 [maskito]="priceMask"
                 [maskitoElement]="maskitoPredicate"
                 [attr.aria-label]="'Monto en Bolívares'"
+                readonly
               ></ion-input>
             </div>
             <div class="field-group">

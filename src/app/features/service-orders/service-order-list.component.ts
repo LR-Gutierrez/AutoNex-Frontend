@@ -149,7 +149,7 @@ import { ServiceOrderResponse } from '../../core/models/service-order.model';
             }
             @if (order.status === 'Completed') {
               <button
-                class="status-btn status-btn-pay"
+                class="status-btn status-btn-pay ml-1"
                 (click)="payOrder(order.id, order.totalAmount)"
               >
                 <ion-icon name="cash-outline" class="text-[16px]"></ion-icon>
@@ -192,6 +192,11 @@ import { ServiceOrderResponse } from '../../core/models/service-order.model';
             <span class="flex items-center gap-1">
               <ion-icon name="cash-outline" class="text-[14px]"></ion-icon>
               {{ order.totalAmount | currency: 'USD' : 'symbol' : '1.2-2' }}
+              @if (order.applyLaborPercentage && order.laborPercentage) {
+                <span class="text-[10px] opacity-60">
+                  ({{ order.laborPercentage }}% M.O.)
+                </span>
+              }
             </span>
             <span class="flex items-center gap-1">
               <span
