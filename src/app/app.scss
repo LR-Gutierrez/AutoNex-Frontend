@@ -175,6 +175,17 @@
   overflow: hidden;
 }
 
+.test-message-modal {
+  --border-radius: 18px;
+}
+.test-message-modal .modal-wrapper {
+  --width: 400px;
+  --height: auto;
+  --max-height: 85vh;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
 .avatars {
   display: flex;
   list-style-type: none;

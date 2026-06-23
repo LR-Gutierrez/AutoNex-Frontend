@@ -191,6 +191,11 @@ export const appRoutes: Routes = [
           import('./features/tool-categories/tool-category-form.component').then(m => m.ToolCategoryFormComponent),
       },
       {
+        path: 'whatsapp',
+        loadComponent: () =>
+          import('./features/whatsapp/whatsapp.component').then(m => m.WhatsAppComponent),
+      },
+      {
         path: 'exchange-rates',
         loadComponent: () =>
           import('./features/exchange-rates/exchange-rate-list.component').then(m => m.ExchangeRateListComponent),

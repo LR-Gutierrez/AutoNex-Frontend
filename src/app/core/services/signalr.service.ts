@@ -28,6 +28,7 @@ export class SignalRService implements OnDestroy {
   readonly dashboardStatus = signal<ConnectionStatus>('disconnected');
   readonly notificationsStatus = signal<ConnectionStatus>('disconnected');
   readonly exchangeRatesStatus = signal<ConnectionStatus>('disconnected');
+  readonly whatsappStatus = signal<ConnectionStatus>('disconnected');
 
   ngOnDestroy(): void {
     for (const [name] of this.hubs) {
@@ -182,6 +183,7 @@ export class SignalRService implements OnDestroy {
     if (hubName === 'dashboard') return this.dashboardStatus;
     if (hubName === 'notifications') return this.notificationsStatus;
     if (hubName === 'exchangeRates' || hubName === 'exchange-rates') return this.exchangeRatesStatus;
+    if (hubName === 'whatsapp') return this.whatsappStatus;
     return signal<ConnectionStatus>('disconnected');
   }
 }
