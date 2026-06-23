@@ -71,7 +71,7 @@ export class VehicleListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadVehicles());
 
   getDeleteMessage(brand: string, model: string, plate: string): string {
     return `¿Eliminar el vehículo "${brand} ${model}" (${plate})? Esta acción no se puede deshacer.`;

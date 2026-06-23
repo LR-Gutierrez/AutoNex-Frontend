@@ -73,7 +73,7 @@ export class ServiceListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadServices());
 
   formatKm(n: number | null | undefined): string {
     return n != null ? Math.floor(n).toLocaleString('en-US') : '';

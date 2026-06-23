@@ -190,7 +190,7 @@ export class MileageAlertListComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly alertController = inject(AlertController);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadAlerts());
 
   ngOnInit() {
     this.pageTitle.title.set('Alertas de Kilometraje');

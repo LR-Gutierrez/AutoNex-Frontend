@@ -228,7 +228,7 @@ export class ServiceOrderListComponent implements OnInit {
   private readonly mileageAlertService = inject(MileageAlertService);
   private readonly modalController: ModalController;
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadOrders());
 
   constructor() {
     this.modalController = inject(ModalController);

@@ -63,7 +63,7 @@ export class ToolListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadTools());
 
   getDeleteMessage(name: string): string {
     return `¿Eliminar la herramienta "${name}"? Esta acción no se puede deshacer.`;

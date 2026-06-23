@@ -52,7 +52,7 @@ export class ToolCategoryListComponent implements OnInit {
   readonly categories = signal<ToolCategoryResponse[]>([]);
   readonly loading = signal(false);
   readonly pagination = signal<PaginationMeta | null>(null);
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadCategories());
 
   getDeleteMessage(name: string): string {
     return `¿Eliminar la categoría "${name}"? Esta acción no se puede deshacer.`;

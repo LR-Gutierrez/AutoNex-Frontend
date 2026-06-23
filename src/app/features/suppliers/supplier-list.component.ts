@@ -68,7 +68,7 @@ export class SupplierListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadSuppliers());
 
   getDeleteMessage(name: string): string {
     return `¿Eliminar al proveedor "${name}"? Esta acción no se puede deshacer.`;

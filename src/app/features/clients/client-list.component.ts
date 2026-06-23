@@ -94,7 +94,7 @@ export class ClientListComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly modalController = inject(ModalController);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadClients());
 
   constructor() {
     addIcons({ carSportOutline });

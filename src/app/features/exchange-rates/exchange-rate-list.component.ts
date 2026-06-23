@@ -371,7 +371,7 @@ export class ExchangeRateListComponent implements OnInit {
   private readonly modalController = inject(ModalController);
   private readonly signalr = inject(SignalRService);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadRates());
   readonly syncing = signal(false);
   readonly autoConsultEnabled = signal(false);
   readonly retryEnabled = signal(false);

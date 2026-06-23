@@ -76,7 +76,7 @@ export class ConsumableListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadConsumables());
 
   getDeleteMessage(name: string): string {
     return `¿Eliminar el consumible "${name}"? Esta acción no se puede deshacer.`;

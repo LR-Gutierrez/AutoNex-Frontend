@@ -9,7 +9,7 @@ export interface ListSearch {
   buildParams(): HttpParams;
 }
 
-export function createListSearch(): ListSearch {
+export function createListSearch(loadFn?: () => void): ListSearch {
   const page = signal(1);
   const searchTerm = signal('');
 
@@ -23,10 +23,12 @@ export function createListSearch(): ListSearch {
   function onSearch(value: string) {
     searchTerm.set(value);
     page.set(1);
+    loadFn?.();
   }
 
   function goToPage(p: number) {
     page.set(p);
+    loadFn?.();
   }
 
   return { page, searchTerm, onSearch, goToPage, buildParams };

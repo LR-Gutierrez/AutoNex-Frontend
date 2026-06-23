@@ -450,7 +450,7 @@ export class FinancialRecordListComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly modalController = inject(ModalController);
 
-  readonly search = createListSearch();
+  readonly search = createListSearch(() => this.loadRecords());
   readonly usdRate = signal<number | null>(null);
   readonly activeTab = signal<'records' | 'recurring'>('records');
   readonly recurringLoading = signal(false);
