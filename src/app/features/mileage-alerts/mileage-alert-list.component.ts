@@ -129,7 +129,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-(--app-text-muted)">
             <span class="flex items-center gap-1">
               <ion-icon name="speedometer-outline" class="text-[14px]"></ion-icon>
-              Último: {{ alert.lastRecordedKm | number }} km
+              Último: {{ alert.currentKm | number }} km
             </span>
             <span class="flex items-center gap-1">
               <ion-icon name="refresh-outline" class="text-[14px]"></ion-icon>
@@ -141,7 +141,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
             </span>
             <span class="flex items-center gap-1">
               <ion-icon name="resize-outline" class="text-[14px]"></ion-icon>
-              Restan: {{ alert.remainingKm | number }} km
+              Restan: {{ alert.remainingKm != null ? (alert.remainingKm | number) : '—' }} km
             </span>
             <span class="flex items-center gap-1">
               <span class="badge-due" [class.badge-due--yes]="alert.isDue" [class.badge-due--no]="!alert.isDue">
@@ -157,19 +157,17 @@ import { createListSearch } from '../../shared/utils/list-search.util';
               </span>
             </span>
             <span class="flex items-center gap-1">
-              <span class="badge-status" [class.badge-status--pending]="alert.status === 'Pending'" [class.badge-status--completed]="alert.status === 'Completed'">
-                {{ alert.status === 'Pending' ? 'Pendiente' : 'Completada' }}
+              <span class="badge-status" [class.badge-status--pending]="alert.isActive" [class.badge-status--completed]="!alert.isActive">
+                {{ alert.isActive ? 'Pendiente' : 'Atendida' }}
               </span>
             </span>
           </div>
           <div actions>
-            @if (alert.status === 'Pending') {
-              <button class="action-btn action-btn-review" (click)="reviewAlert(alert.id)">
+            @if (alert.isActive) {
+              <button class="action-btn action-btn-review" (click)="attendAlert(alert.id)">
                 <ion-icon name="checkmark-circle-outline" class="text-[16px]"></ion-icon>
-                Revisar
+                Atender
               </button>
-            }
-            @if (alert.status === 'Pending') {
               <button class="action-btn action-btn-dismiss" (click)="dismissAlert(alert.id)">
                 <ion-icon name="close-circle-outline" class="text-[16px]"></ion-icon>
                 Desestimar
@@ -207,8 +205,8 @@ export class MileageAlertListComponent implements OnInit {
     this.alertService.delete(id).subscribe({ next: () => this.loadAlerts() });
   }
 
-  reviewAlert(id: number) {
-    this.alertService.review(id).subscribe({ next: () => this.loadAlerts() });
+  attendAlert(id: number) {
+    this.alertService.attend(id).subscribe({ next: () => this.loadAlerts() });
   }
 
   dismissAlert(id: number) {
@@ -216,7 +214,7 @@ export class MileageAlertListComponent implements OnInit {
   }
 
   estimatedDays(alert: import('../../core/models/mileage-alert.model').MileageAlertResponse): number | null {
-    if (!alert.estimatedWeeklyKm || alert.estimatedWeeklyKm <= 0) return null;
+    if (!alert.estimatedWeeklyKm || alert.estimatedWeeklyKm <= 0 || alert.remainingKm == null) return null;
     return Math.ceil((alert.remainingKm / alert.estimatedWeeklyKm) * 7);
   }
 

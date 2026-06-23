@@ -54,11 +54,11 @@ export class MileageAlertService {
     return this.api.delete<void>('/mileage-alerts', id);
   }
 
-  createFromOrder(orderId: number): Observable<MileageAlertResponse> {
-    return this.api.post<MileageAlertResponse>(`/mileage-alerts/from-order/${orderId}`, {});
+  createFromOrder(orderId: number): Observable<MileageAlertResponse[]> {
+    return this.api.post<MileageAlertResponse[]>(`/mileage-alerts/from-order/${orderId}`, {});
   }
 
-  review(id: number): Observable<MileageAlertResponse> {
-    return this.api.patch<MileageAlertResponse>('/mileage-alerts', id, { status: 'Completed' });
+  attend(id: number): Observable<MileageAlertResponse> {
+    return this.api.post<MileageAlertResponse>(`/mileage-alerts/${id}/attend`, {});
   }
 }

@@ -2,13 +2,21 @@ export interface MileageAlertResponse {
   id: number;
   vehicleId: number;
   vehicleInfo: string;
-  lastRecordedKm: number;
+  serviceId: number;
+  serviceName: string;
+  currentKm: number;
   estimatedWeeklyKm: number;
   nextAlertKm: number;
-  remainingKm: number;
+  remainingKm: number | null;
+  warningKm: number | null;
   isDue: boolean;
-  lastAlertDate?: string;
-  status: 'Pending' | 'Completed';
+  lastAlertDate: string | null;
+  nextAlertDate: string | null;
+  serviceMinKmInterval: number | null;
+  serviceMaxKmInterval: number | null;
+  serviceMinMonth: number | null;
+  serviceMaxMonth: number | null;
+  isActive: boolean;
   createdAt: string;
 }
 
