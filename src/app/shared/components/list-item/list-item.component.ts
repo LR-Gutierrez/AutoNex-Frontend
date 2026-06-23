@@ -10,6 +10,11 @@ import { AlertController } from '@ionic/angular';
   styles: `
     :host {
       display: block;
+      animation: fadeSlideIn 0.25s ease both;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     .card {
       background: var(--card-bg);

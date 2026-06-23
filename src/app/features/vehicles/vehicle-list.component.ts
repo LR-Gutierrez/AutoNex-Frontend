@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { VehicleService } from '../../core/services/vehicle.service';
@@ -7,6 +6,7 @@ import { PageTitleService } from '../../core/services/page-title.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-vehicle-list',
@@ -22,13 +22,13 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
       [loading]="vehicleService.loading()"
       [items]="vehicleService.vehicles()"
       [totalPages]="vehicleService.pagination()?.totalPages ?? 0"
-      [currentPage]="page()"
+      [currentPage]="search.page()"
       emptyIcon="car-outline"
       emptyMessage="No hay vehículos registrados."
       emptyAddRoute="/vehicles/new"
       emptyAddLabel="Registrar primer vehículo"
-      (search)="onSearch($event)"
-      (pageChange)="goToPage($event)"
+      (search)="search.onSearch($event)"
+      (pageChange)="search.goToPage($event)"
     >
       @for (vehicle of vehicleService.vehicles(); track vehicle.id) {
         <app-list-item
@@ -71,8 +71,7 @@ export class VehicleListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly page = signal(1);
-  private readonly searchTerm = signal('');
+  readonly search = createListSearch();
 
   getDeleteMessage(brand: string, model: string, plate: string): string {
     return `¿Eliminar el vehículo "${brand} ${model}" (${plate})? Esta acción no se puede deshacer.`;
@@ -86,20 +85,7 @@ export class VehicleListComponent implements OnInit {
   }
 
   private loadVehicles() {
-    let params = new HttpParams().set('page', this.page().toString());
-    const search = this.searchTerm().trim();
-    if (search) params = params.set('search', search);
-    this.vehicleService.loadAll(params).subscribe();
-  }
-
-  onSearch(value: string) {
-    this.searchTerm.set(value);
-    this.loadVehicles();
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadVehicles();
+    this.vehicleService.loadAll(this.search.buildParams()).subscribe();
   }
 
   deleteVehicle(id: number) {

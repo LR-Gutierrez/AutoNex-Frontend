@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ClientService } from '../../core/services/client.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -10,6 +9,7 @@ import { carSportOutline } from 'ionicons/icons';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
 import { VehicleRegisterModalComponent } from './vehicle-register-modal.component';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-client-list',
@@ -37,13 +37,13 @@ import { VehicleRegisterModalComponent } from './vehicle-register-modal.componen
       [loading]="clientService.loading()"
       [items]="clientService.clients()"
       [totalPages]="clientService.pagination()?.totalPages ?? 0"
-      [currentPage]="page()"
+      [currentPage]="search.page()"
       emptyIcon="people-outline"
       emptyMessage="No hay clientes registrados."
       emptyAddRoute="/clients/new"
       emptyAddLabel="Crear primer cliente"
-      (search)="onSearch($event)"
-      (pageChange)="goToPage($event)"
+      (search)="search.onSearch($event)"
+      (pageChange)="search.goToPage($event)"
     >
       @for (client of clientService.clients(); track client.id) {
         <app-list-item
@@ -94,12 +94,11 @@ export class ClientListComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly modalController = inject(ModalController);
 
+  readonly search = createListSearch();
+
   constructor() {
     addIcons({ carSportOutline });
   }
-
-  readonly page = signal(1);
-  private readonly searchTerm = signal('');
 
   getDeleteMessage(name: string): string {
     return `¿Eliminar al cliente "${name}"? Esta acción no se puede deshacer.`;
@@ -113,20 +112,7 @@ export class ClientListComponent implements OnInit {
   }
 
   private loadClients() {
-    let params = new HttpParams().set('page', this.page().toString());
-    const search = this.searchTerm().trim();
-    if (search) params = params.set('search', search);
-    this.clientService.loadAll(params).subscribe();
-  }
-
-  onSearch(value: string) {
-    this.searchTerm.set(value);
-    this.loadClients();
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadClients();
+    this.clientService.loadAll(this.search.buildParams()).subscribe();
   }
 
   deleteClient(id: number) {

@@ -1,5 +1,4 @@
 import { Component, computed, inject, OnInit, OnDestroy, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { ModalController, ToastController } from '@ionic/angular';
@@ -27,6 +26,7 @@ import { RefreshService } from '../../core/services/refresh.service';
 import { SignalRService } from '../../core/services/signalr.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-exchange-rate-list',
@@ -219,11 +219,11 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
       [loading]="exchangeRateService.loading()"
       [items]="exchangeRateService.rates()"
       [totalPages]="exchangeRateService.pagination()?.totalPages ?? 0"
-      [currentPage]="page()"
+      [currentPage]="search.page()"
       emptyIcon="cash-outline"
       emptyMessage="No hay boletines registrados."
-      (search)="onSearch($event)"
-      (pageChange)="goToPage($event)"
+      (search)="search.onSearch($event)"
+      (pageChange)="search.goToPage($event)"
     >
       <div header-actions class="flex items-center gap-2">
         <button
@@ -371,8 +371,7 @@ export class ExchangeRateListComponent implements OnInit {
   private readonly modalController = inject(ModalController);
   private readonly signalr = inject(SignalRService);
 
-  readonly page = signal(1);
-  private readonly searchTerm = signal('');
+  readonly search = createListSearch();
   readonly syncing = signal(false);
   readonly autoConsultEnabled = signal(false);
   readonly retryEnabled = signal(false);
@@ -477,20 +476,7 @@ export class ExchangeRateListComponent implements OnInit {
   }
 
   private loadRates() {
-    let params = new HttpParams().set('page', this.page().toString());
-    const search = this.searchTerm().trim();
-    if (search) params = params.set('search', search);
-    this.exchangeRateService.loadAll(params).subscribe();
-  }
-
-  onSearch(value: string) {
-    this.searchTerm.set(value);
-    this.loadRates();
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadRates();
+    this.exchangeRateService.loadAll(this.search.buildParams()).subscribe();
   }
 
   syncBcv() {

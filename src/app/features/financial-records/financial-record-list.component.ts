@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 import { DatePipe, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { IonIcon, ModalController } from '@ionic/angular/standalone';
@@ -28,6 +27,7 @@ import { ListShellComponent } from '../../shared/components/list-shell/list-shel
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 import { FinancialRecordDetailModalComponent } from './financial-record-detail-modal.component';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-financial-record-list',
@@ -264,13 +264,13 @@ import { FinancialRecordDetailModalComponent } from './financial-record-detail-m
         [loading]="financialService.loading()"
         [items]="financialService.records()"
         [totalPages]="financialService.pagination()?.totalPages ?? 0"
-        [currentPage]="page()"
+        [currentPage]="search.page()"
         emptyIcon="cash-outline"
         emptyMessage="No hay registros financieros."
         emptyAddRoute="/financial-records/new"
         emptyAddLabel="Crear primer registro"
-        (search)="onSearch($event)"
-        (pageChange)="goToPage($event)"
+        (search)="search.onSearch($event)"
+        (pageChange)="search.goToPage($event)"
       >
         @for (record of financialService.records(); track record.id) {
           <app-list-item
@@ -450,8 +450,7 @@ export class FinancialRecordListComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly modalController = inject(ModalController);
 
-  readonly page = signal(1);
-  private readonly searchTerm = signal('');
+  readonly search = createListSearch();
   readonly usdRate = signal<number | null>(null);
   readonly activeTab = signal<'records' | 'recurring'>('records');
   readonly recurringLoading = signal(false);
@@ -497,10 +496,7 @@ export class FinancialRecordListComponent implements OnInit {
   }
 
   private loadRecords() {
-    let params = new HttpParams().set('page', this.page().toString());
-    const search = this.searchTerm().trim();
-    if (search) params = params.set('search', search);
-    this.financialService.loadAll(params).subscribe();
+    this.financialService.loadAll(this.search.buildParams()).subscribe();
   }
 
   private loadRecurring() {
@@ -517,16 +513,6 @@ export class FinancialRecordListComponent implements OnInit {
   switchToRecurring() {
     this.activeTab.set('recurring');
     this.loadRecurring();
-  }
-
-  onSearch(value: string) {
-    this.searchTerm.set(value);
-    this.loadRecords();
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadRecords();
   }
 
   async viewDetail(record: FinancialRecordResponse) {

@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 import { ToolCategoryService } from '../../core/services/tool-category.service';
 import { ToolCategoryResponse } from '../../core/models/tool-category.model';
 import { PaginationMeta } from '../../core/models/api-response.model';
@@ -7,6 +6,7 @@ import { PageTitleService } from '../../core/services/page-title.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-tool-category-list',
@@ -22,12 +22,13 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
       [loading]="loading()"
       [items]="categories()"
       [totalPages]="pagination()?.totalPages ?? 0"
-      [currentPage]="page()"
+      [currentPage]="search.page()"
       emptyIcon="folder-outline"
       emptyMessage="No hay datos."
       emptyAddRoute="/tool-categories/new"
       emptyAddLabel="Crear primera categoría"
-      (pageChange)="goToPage($event)"
+      (search)="search.onSearch($event)"
+      (pageChange)="search.goToPage($event)"
     >
       @for (cat of categories(); track cat.id) {
         <app-list-item
@@ -51,7 +52,7 @@ export class ToolCategoryListComponent implements OnInit {
   readonly categories = signal<ToolCategoryResponse[]>([]);
   readonly loading = signal(false);
   readonly pagination = signal<PaginationMeta | null>(null);
-  readonly page = signal(1);
+  readonly search = createListSearch();
 
   getDeleteMessage(name: string): string {
     return `¿Eliminar la categoría "${name}"? Esta acción no se puede deshacer.`;
@@ -66,8 +67,7 @@ export class ToolCategoryListComponent implements OnInit {
 
   private loadCategories() {
     this.loading.set(true);
-    const params = new HttpParams().set('page', this.page().toString());
-    this.categoryService.loadAll(params).subscribe({
+    this.categoryService.loadAll(this.search.buildParams()).subscribe({
       next: (res) => {
         this.categories.set(res.items);
         this.pagination.set({
@@ -80,11 +80,6 @@ export class ToolCategoryListComponent implements OnInit {
       },
       error: () => this.loading.set(false),
     });
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadCategories();
   }
 
   deleteCategory(id: number) {

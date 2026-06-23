@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { ConsumableService } from '../../core/services/consumable.service';
@@ -8,6 +7,7 @@ import { RefreshService } from '../../core/services/refresh.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-consumable-list',
@@ -23,13 +23,13 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       [loading]="consumableService.loading()"
       [items]="consumableService.consumables()"
       [totalPages]="consumableService.pagination()?.totalPages ?? 0"
-      [currentPage]="page()"
+      [currentPage]="search.page()"
       emptyIcon="water-outline"
       emptyMessage="No hay consumibles registrados."
       emptyAddRoute="/consumables/new"
       emptyAddLabel="Crear primer consumible"
-      (search)="onSearch($event)"
-      (pageChange)="goToPage($event)"
+      (search)="search.onSearch($event)"
+      (pageChange)="search.goToPage($event)"
     >
       @for (item of consumableService.consumables(); track item.id) {
         <app-list-item
@@ -76,8 +76,7 @@ export class ConsumableListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly page = signal(1);
-  private readonly searchTerm = signal('');
+  readonly search = createListSearch();
 
   getDeleteMessage(name: string): string {
     return `¿Eliminar el consumible "${name}"? Esta acción no se puede deshacer.`;
@@ -91,20 +90,7 @@ export class ConsumableListComponent implements OnInit {
   }
 
   private loadConsumables() {
-    let params = new HttpParams().set('page', this.page().toString());
-    const search = this.searchTerm().trim();
-    if (search) params = params.set('search', search);
-    this.consumableService.loadAll(params).subscribe();
-  }
-
-  onSearch(value: string) {
-    this.searchTerm.set(value);
-    this.loadConsumables();
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadConsumables();
+    this.consumableService.loadAll(this.search.buildParams()).subscribe();
   }
 
   deleteConsumable(id: number) {

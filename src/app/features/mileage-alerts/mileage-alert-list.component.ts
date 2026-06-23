@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { MileageAlertService } from '../../core/services/mileage-alert.service';
@@ -9,6 +8,7 @@ import { ListShellComponent } from '../../shared/components/list-shell/list-shel
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
 import { AlertController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-mileage-alert-list',
@@ -110,11 +110,11 @@ import { FormsModule } from '@angular/forms';
       [loading]="alertService.loading()"
       [items]="alertService.alerts()"
       [totalPages]="alertService.pagination()?.totalPages ?? 0"
-      [currentPage]="page()"
+      [currentPage]="search.page()"
       emptyIcon="speedometer-outline"
       emptyMessage="No hay alertas de kilometraje. Las alertas se crean al completar órdenes de servicio."
-      (search)="onSearch($event)"
-      (pageChange)="goToPage($event)"
+      (search)="search.onSearch($event)"
+      (pageChange)="search.goToPage($event)"
     >
       @for (alert of alertService.alerts(); track alert.id) {
         <app-list-item
@@ -190,8 +190,7 @@ export class MileageAlertListComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly alertController = inject(AlertController);
 
-  readonly page = signal(1);
-  private readonly searchTerm = signal('');
+  readonly search = createListSearch();
 
   ngOnInit() {
     this.pageTitle.title.set('Alertas de Kilometraje');
@@ -201,20 +200,7 @@ export class MileageAlertListComponent implements OnInit {
   }
 
   private loadAlerts() {
-    let params = new HttpParams().set('page', this.page().toString());
-    const search = this.searchTerm().trim();
-    if (search) params = params.set('search', search);
-    this.alertService.loadAll(params).subscribe();
-  }
-
-  onSearch(value: string) {
-    this.searchTerm.set(value);
-    this.loadAlerts();
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadAlerts();
+    this.alertService.loadAll(this.search.buildParams()).subscribe();
   }
 
   deleteAlert(id: number) {

@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { ServiceService } from '../../core/services/service.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -7,6 +6,7 @@ import { RefreshService } from '../../core/services/refresh.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
 import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pipe';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-service-list',
@@ -22,13 +22,13 @@ import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pip
       [loading]="serviceService.loading()"
       [items]="serviceService.services()"
       [totalPages]="serviceService.pagination()?.totalPages ?? 0"
-      [currentPage]="page()"
+      [currentPage]="search.page()"
       emptyIcon="construct-outline"
       emptyMessage="No hay servicios registrados."
       emptyAddRoute="/services/new"
       emptyAddLabel="Crear primer servicio"
-      (search)="onSearch($event)"
-      (pageChange)="goToPage($event)"
+      (search)="search.onSearch($event)"
+      (pageChange)="search.goToPage($event)"
     >
       @for (service of serviceService.services(); track service.id) {
         <app-list-item
@@ -73,8 +73,7 @@ export class ServiceListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly page = signal(1);
-  private readonly searchTerm = signal('');
+  readonly search = createListSearch();
 
   formatKm(n: number | null | undefined): string {
     return n != null ? Math.floor(n).toLocaleString('en-US') : '';
@@ -92,20 +91,7 @@ export class ServiceListComponent implements OnInit {
   }
 
   private loadServices() {
-    let params = new HttpParams().set('page', this.page().toString());
-    const search = this.searchTerm().trim();
-    if (search) params = params.set('search', search);
-    this.serviceService.loadAll(params).subscribe();
-  }
-
-  onSearch(value: string) {
-    this.searchTerm.set(value);
-    this.loadServices();
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadServices();
+    this.serviceService.loadAll(this.search.buildParams()).subscribe();
   }
 
   deleteService(id: number) {

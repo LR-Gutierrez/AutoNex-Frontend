@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { Component, inject, OnInit } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { ToolService } from '../../core/services/tool.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -7,6 +6,7 @@ import { RefreshService } from '../../core/services/refresh.service';
 import { ListShellComponent } from '../../shared/components/list-shell/list-shell.component';
 import { ListItemComponent } from '../../shared/components/list-item/list-item.component';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
+import { createListSearch } from '../../shared/utils/list-search.util';
 
 @Component({
   selector: 'app-tool-list',
@@ -22,13 +22,13 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       [loading]="toolService.loading()"
       [items]="toolService.tools()"
       [totalPages]="toolService.pagination()?.totalPages ?? 0"
-      [currentPage]="page()"
+      [currentPage]="search.page()"
       emptyIcon="build-outline"
       emptyMessage="No hay herramientas registradas."
       emptyAddRoute="/tools/new"
       emptyAddLabel="Crear primera herramienta"
-      (search)="onSearch($event)"
-      (pageChange)="goToPage($event)"
+      (search)="search.onSearch($event)"
+      (pageChange)="search.goToPage($event)"
     >
       @for (tool of toolService.tools(); track tool.id) {
         <app-list-item
@@ -63,8 +63,7 @@ export class ToolListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
 
-  readonly page = signal(1);
-  private readonly searchTerm = signal('');
+  readonly search = createListSearch();
 
   getDeleteMessage(name: string): string {
     return `¿Eliminar la herramienta "${name}"? Esta acción no se puede deshacer.`;
@@ -78,20 +77,7 @@ export class ToolListComponent implements OnInit {
   }
 
   private loadTools() {
-    let params = new HttpParams().set('page', this.page().toString());
-    const search = this.searchTerm().trim();
-    if (search) params = params.set('search', search);
-    this.toolService.loadAll(params).subscribe();
-  }
-
-  onSearch(value: string) {
-    this.searchTerm.set(value);
-    this.loadTools();
-  }
-
-  goToPage(p: number) {
-    this.page.set(p);
-    this.loadTools();
+    this.toolService.loadAll(this.search.buildParams()).subscribe();
   }
 
   deleteTool(id: number) {
