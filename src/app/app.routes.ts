@@ -171,6 +171,11 @@ export const appRoutes: Routes = [
           import('./features/financial-records/financial-record-form.component').then(m => m.FinancialRecordFormComponent),
       },
       {
+        path: 'financial-records/recurring/:id/edit',
+        loadComponent: () =>
+          import('./features/recurring-expenses/recurring-expense-form.component').then(m => m.RecurringExpenseFormComponent),
+      },
+      {
         path: 'tool-categories',
         loadComponent: () =>
           import('./features/tool-categories/tool-category-list.component').then(m => m.ToolCategoryListComponent),

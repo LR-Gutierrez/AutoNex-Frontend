@@ -8,6 +8,7 @@ import {
 } from '../../core/services/dashboard.service';
 import { SignalRService } from '../../core/services/signalr.service';
 import { ExchangeRateService } from '../../core/services/exchange-rate.service';
+import { RecurringExpenseService } from '../../core/services/recurring-expense.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pipe';
@@ -1317,6 +1318,53 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             </div>
           }
 
+          <!-- Recurring Expenses -->
+          <div
+            class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
+          >
+            <h2
+              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
+            >
+              <span>🔄</span> Gastos Fijos
+            </h2>
+
+            @let due = recurringExpenseService.dueToday();
+            @if (due.length > 0) {
+              <div class="space-y-2 mb-3">
+                @for (item of due; track item.id) {
+                  <div
+                    class="flex items-center justify-between bg-[rgba(251,191,36,0.08)] border border-[rgba(251,191,36,0.2)] rounded-xl px-4 py-3"
+                  >
+                    <div>
+                      <span class="block text-sm font-semibold text-(--app-text)">
+                        {{ item.expenseName }}
+                      </span>
+                      <span class="text-xs text-(--app-text-muted)">
+                        Vence hoy
+                      </span>
+                    </div>
+                    <span class="text-sm font-bold text-[#fbbf24]">
+                      {{ item.amount | currency:'USD':'symbol':'1.2-2' }}
+                    </span>
+                  </div>
+                }
+              </div>
+              <div class="text-center">
+                <a
+                  routerLink="/financial-records"
+                  class="text-xs text-(--app-text-muted) font-medium hover:text-(--app-text) transition-colors no-underline"
+                >
+                  Ver todos →
+                </a>
+              </div>
+            } @else {
+              <div class="text-center py-6 text-(--app-text-muted) text-sm">
+                <span class="block text-lg mb-1">✅</span>
+                No hay gastos pendientes hoy
+              </div>
+            }
+          </div>
+
           <!-- Financial Detail -->
           <div
             class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
@@ -1401,6 +1449,7 @@ export class DashboardComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly pageTitle = inject(PageTitleService);
   private readonly exchangeRateService = inject(ExchangeRateService);
+  protected readonly recurringExpenseService = inject(RecurringExpenseService);
   protected readonly usdRate = signal(0);
 
   constructor() {
@@ -1409,6 +1458,7 @@ export class DashboardComponent implements OnInit {
       .subscribe(() => {
         this.dashboard.load().subscribe();
         this.exchangeRateService.getCurrentUsd().subscribe(r => this.usdRate.set(r.value));
+        this.recurringExpenseService.loadDueToday().subscribe();
       });
   }
 
@@ -1419,6 +1469,7 @@ export class DashboardComponent implements OnInit {
     );
     this.dashboard.load().subscribe();
     this.exchangeRateService.getCurrentUsd().subscribe(r => this.usdRate.set(r.value));
+    this.recurringExpenseService.loadDueToday().subscribe();
   }
 
   /**

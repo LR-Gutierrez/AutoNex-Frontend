@@ -3,19 +3,37 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, calendarOutline, cashOutline, documentTextOutline, pricetagOutline, swapHorizontalOutline, walletOutline } from 'ionicons/icons';
+import {
+  arrowBackOutline,
+  arrowForwardOutline,
+  calendarOutline,
+  cashOutline,
+  documentTextOutline,
+  pricetagOutline,
+  swapHorizontalOutline,
+  walletOutline,
+  repeatOutline,
+} from 'ionicons/icons';
 import { FinancialRecordService } from '../../core/services/financial-record.service';
+import { RecurringExpenseService } from '../../core/services/recurring-expense.service';
+import { AccountService } from '../../core/services/account.service';
+import { ExchangeRateService } from '../../core/services/exchange-rate.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
-import { SelectFieldComponent, SelectOption } from '../../shared/components/select-field/select-field.component';
+import {
+  SelectFieldComponent,
+  SelectOption,
+} from '../../shared/components/select-field/select-field.component';
 import { DateFieldComponent } from '../../shared/components/date-field/date-field.component';
 import { AuthButtonComponent } from '../../shared/components/auth-button/auth-button.component';
+import { ToggleFieldComponent } from '../../shared/components/toggle-field/toggle-field.component';
 import {
   FinancialRecordType,
   FinancialCategory,
 } from '../../core/models/financial-record.model';
 import { AccountType } from '../../core/models/account.model';
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
+import { RecurringExpenseFrequency } from '../../core/models/recurring-expense.model';
 import { priceMask } from '../../shared/masks/price.mask';
 import type { MaskitoOptions } from '@maskito/core';
 
@@ -30,6 +48,7 @@ import type { MaskitoOptions } from '@maskito/core';
     SelectFieldComponent,
     DateFieldComponent,
     AuthButtonComponent,
+    ToggleFieldComponent,
   ],
   styles: `
     :host {
@@ -107,16 +126,52 @@ import type { MaskitoOptions } from '@maskito/core';
               [label]="accountLabel()"
               icon="wallet-outline"
               placeholder="Selecciona la cuenta"
-              [options]="accountTypeOptions"
+              [options]="accountTypeOptions()"
             ></app-select-field>
 
-            <app-text-input
-              [control]="form.get('amount')!"
-              [label]="moneyLabel()"
-              icon="cash-outline"
-              placeholder="0.00"
-              [mask]="priceMask"
-            ></app-text-input>
+            <div class="flex items-center gap-2">
+              <div class="flex-1 min-w-0">
+                <app-text-input
+                  [control]="
+                    form.get(swapMode() === 'usd' ? 'amountUsd' : 'amountBs')!
+                  "
+                  [label]="swapMode() === 'usd' ? 'Dólares' : 'Bolívares'"
+                  icon="cash-outline"
+                  placeholder="0.00"
+                  [mask]="priceMask"
+                  [readonly]="false"
+                ></app-text-input>
+              </div>
+              <div class="flex-1 min-w-0">
+                <app-text-input
+                  [control]="
+                    form.get(swapMode() === 'usd' ? 'amountBs' : 'amountUsd')!
+                  "
+                  [label]="swapMode() === 'usd' ? 'Bolívares' : 'Dólares'"
+                  icon="cash-outline"
+                  placeholder="0.00"
+                  [mask]="priceMask"
+                  [readonly]="true"
+                ></app-text-input>
+              </div>
+              <button
+                type="button"
+                (click)="toggleSwap()"
+                class="flex items-center justify-center w-13 h-10 text-(--app-text-muted) hover:bg-[rgba(255,255,255,0.08)] active:scale-90 transition-all duration-200 cursor-pointer border-0 shrink-0"
+                style="border-radius: 12px; overflow: hidden;"
+                [title]="
+                  swapMode() === 'usd'
+                    ? 'Cambiar a Bs → USD'
+                    : 'Cambiar a USD → Bs'
+                "
+                aria-label="Invertir dirección de conversión"
+              >
+                <ion-icon
+                  name="swap-horizontal-outline"
+                  class="text-[20px]"
+                ></ion-icon>
+              </button>
+            </div>
 
             <app-text-input
               [control]="form.get('description')!"
@@ -130,6 +185,34 @@ import type { MaskitoOptions } from '@maskito/core';
               label="Fecha"
               icon="calendar-outline"
             ></app-date-field>
+
+            @if (showRecurringSection()) {
+              <app-toggle-field
+                [control]="form.get('isRecurring')!"
+                label="¿Es recurrente?"
+                icon="repeat-outline"
+              ></app-toggle-field>
+
+              @if (form.get('isRecurring')?.value) {
+                <app-select-field
+                  [control]="form.get('frequency')!"
+                  label="Frecuencia"
+                  icon="calendar-outline"
+                  placeholder="Selecciona frecuencia"
+                  [options]="frequencyOptions"
+                ></app-select-field>
+
+                @if (showDayField()) {
+                  <app-text-input
+                    [control]="form.get('dayOfMonth')!"
+                    [label]="dayLabel()"
+                    icon="calendar-outline"
+                    placeholder="15"
+                    type="number"
+                  ></app-text-input>
+                }
+              }
+            }
 
             @if (error()) {
               <div class="text-xs text-[#ff6b6b] mb-4">
@@ -162,6 +245,9 @@ export class FinancialRecordFormComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly financialService = inject(FinancialRecordService);
+  private readonly recurringService = inject(RecurringExpenseService);
+  private readonly accountService = inject(AccountService);
+  private readonly exchangeRateService = inject(ExchangeRateService);
   private readonly pageTitle = inject(PageTitleService);
 
   readonly isEdit = signal(false);
@@ -171,47 +257,164 @@ export class FinancialRecordFormComponent implements OnInit {
   private recordId: number | null = null;
 
   readonly typeOptions: SelectOption[] = Object.values(FinancialRecordType).map(
-    t => ({
+    (t) => ({
       value: t,
       label: t === 'Income' ? 'Ingreso' : 'Egreso',
     }),
   );
 
-  readonly categoryOptions: SelectOption[] = Object.values(FinancialCategory).map(
-    c => ({
-      value: c,
-      label: new EnumLabelPipe().transform(c),
-    }),
-  );
+  readonly categoryOptions: SelectOption[] = Object.values(
+    FinancialCategory,
+  ).map((c) => ({
+    value: c,
+    label: new EnumLabelPipe().transform(c),
+  }));
 
-  readonly accountTypeOptions: SelectOption[] = [
-    { value: 'Bolivares', label: 'Bolívares' },
-    { value: 'Dolares', label: 'Dólares' },
+  readonly usdRate = signal<number | null>(null);
+
+  readonly accountTypeOptions = computed(() => {
+    const balances = this.accountService.balances();
+    const rate = this.usdRate();
+    const bol = balances.find((b) => b.accountType === 'Bolivares');
+    const dol = balances.find((b) => b.accountType === 'Dolares');
+
+    const bolLabel = bol
+      ? `Bolívares — Saldo Bs. ${bol.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${rate ? ` (~$${(bol.balance / rate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})` : ''}`
+      : 'Bolívares';
+    const dolLabel = dol
+      ? `Dólares — Saldo $${dol.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      : 'Dólares';
+
+    return [
+      { value: 'Bolivares', label: bolLabel },
+      { value: 'Dolares', label: dolLabel },
+    ] as SelectOption[];
+  });
+
+  readonly frequencyOptions: SelectOption[] = [
+    { value: 'Daily', label: 'Diario' },
+    { value: 'Weekly', label: 'Semanal' },
+    { value: 'Biweekly', label: 'Quincenal' },
+    { value: 'Monthly', label: 'Mensual' },
+    { value: 'Bimonthly', label: 'Bimestral' },
+    { value: 'Quarterly', label: 'Trimestral' },
+    { value: 'Yearly', label: 'Anual' },
   ];
 
   readonly accountLabel = computed(() => {
     const type = this.form.get('type')?.value;
-    return type === 'Expense' ? '¿De qué cuenta se descuenta?' : '¿En qué cuenta se registra?';
+    return type === 'Expense'
+      ? '¿De qué cuenta se descuenta?'
+      : '¿En qué cuenta se registra?';
   });
 
-  readonly moneyLabel = computed(() => {
-    const accountType = this.form.get('accountType')?.value;
-    return accountType === 'Dolares' ? 'Monto en USD' : 'Monto en Bs.';
+  readonly showRecurringSection = computed(() => !this.isEdit());
+
+  readonly showDayField = computed(() => {
+    const freq = this.form.get('frequency')?.value;
+    return freq !== 'Daily';
   });
 
+  readonly dayLabel = computed(() => {
+    const freq = this.form.get('frequency')?.value;
+    if (freq === 'Weekly') return 'Día de la semana (1=Lun..7=Dom)';
+    return 'Día del mes';
+  });
+
+  readonly swapMode = signal<'usd' | 'bs'>('usd');
   readonly priceMask = priceMask;
 
   form = this.fb.group({
     type: ['', Validators.required],
     category: ['', Validators.required],
     accountType: ['', Validators.required],
-    amount: ['0.00', Validators.required],
+    amountUsd: ['0.00', Validators.required],
+    amountBs: [{ value: '0.00', disabled: true }, Validators.required],
     description: ['', Validators.required],
     date: [this.todayString(), Validators.required],
+    isRecurring: [false],
+    frequency: ['Monthly'],
+    dayOfMonth: [15],
   });
 
   constructor() {
-    addIcons({ arrowBackOutline, calendarOutline, cashOutline, documentTextOutline, pricetagOutline, swapHorizontalOutline, walletOutline });
+    addIcons({
+      arrowBackOutline,
+      arrowForwardOutline,
+      calendarOutline,
+      cashOutline,
+      documentTextOutline,
+      pricetagOutline,
+      swapHorizontalOutline,
+      walletOutline,
+      repeatOutline,
+    });
+
+    this.form.get('frequency')?.valueChanges.subscribe((freq) => {
+      const dayControl = this.form.get('dayOfMonth');
+      if (!dayControl) return;
+      const max = freq === 'Weekly' ? 7 : 31;
+      dayControl.setValidators([
+        Validators.required,
+        Validators.min(1),
+        Validators.max(max),
+      ]);
+      if (dayControl.value && dayControl.value > max) {
+        dayControl.setValue(max);
+      }
+      dayControl.updateValueAndValidity();
+    });
+
+    this.form.get('amountUsd')?.valueChanges.subscribe((val) => {
+      if (this.swapMode() !== 'usd') return;
+      const rate = this.usdRate();
+      if (!rate) return;
+      const usd = parseFloat(
+        String(val).replace?.(/\./g, '').replace(',', '.') ?? '0',
+      );
+      if (usd > 0) {
+        this.form.get('amountBs')?.setValue(
+          (usd * rate).toLocaleString('es-VE', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }),
+          { emitEvent: false },
+        );
+      }
+    });
+
+    this.form.get('amountBs')?.valueChanges.subscribe((val) => {
+      if (this.swapMode() !== 'bs') return;
+      const rate = this.usdRate();
+      if (!rate) return;
+      const bs = parseFloat(
+        String(val).replace?.(/\./g, '').replace(',', '.') ?? '0',
+      );
+      if (bs > 0) {
+        this.form.get('amountUsd')?.setValue(
+          (bs / rate).toLocaleString('es-VE', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }),
+          { emitEvent: false },
+        );
+      }
+    });
+  }
+
+  toggleSwap() {
+    const rate = this.usdRate();
+    if (!rate) return;
+
+    if (this.swapMode() === 'usd') {
+      this.swapMode.set('bs');
+      this.form.get('amountUsd')?.disable({ emitEvent: false });
+      this.form.get('amountBs')?.enable({ emitEvent: false });
+    } else {
+      this.swapMode.set('usd');
+      this.form.get('amountUsd')?.enable({ emitEvent: false });
+      this.form.get('amountBs')?.disable({ emitEvent: false });
+    }
   }
 
   private todayString(): string {
@@ -231,6 +434,10 @@ export class FinancialRecordFormComponent implements OnInit {
       this.pageTitle.title.set('Nuevo Registro');
       this.pageTitle.subtitle.set('Registra un ingreso o egreso');
     }
+    this.accountService.getBalances().subscribe();
+    this.exchangeRateService.getCurrentUsd().subscribe({
+      next: (res) => this.usdRate.set(res.value),
+    });
   }
 
   private loadRecord() {
@@ -238,11 +445,15 @@ export class FinancialRecordFormComponent implements OnInit {
     this.loadingRecord.set(true);
     this.financialService.getById(this.recordId).subscribe({
       next: (record) => {
+        const usd = record.amount;
+        const bs =
+          record.amountInBs ?? (this.usdRate() ? usd * this.usdRate()! : usd);
         this.form.patchValue({
           type: record.type,
           category: record.category,
           accountType: record.accountType,
-          amount: record.amount.toFixed(2),
+          amountUsd: usd.toFixed(2),
+          amountBs: bs.toFixed(2),
           description: record.description,
           date: record.date.substring(0, 10),
         });
@@ -260,31 +471,78 @@ export class FinancialRecordFormComponent implements OnInit {
     this.submitting.set(true);
     this.error.set(null);
 
-    const rawAmount = this.form.value.amount!;
-    const amount = parseFloat(String(rawAmount).replace?.(/\./g, '').replace(',', '.') ?? rawAmount);
+    // Re-enable controls so values are included in form.value
+    this.form.get('amountUsd')?.enable({ emitEvent: false });
+    this.form.get('amountBs')?.enable({ emitEvent: false });
 
-    const request = {
-      type: this.form.value.type as FinancialRecordType,
-      category: this.form.value.category as FinancialCategory,
-      accountType: this.form.value.accountType as AccountType,
+    const formVal = this.form.value;
+    const accountType = formVal.accountType as AccountType;
+    const rawUsd = parseFloat(
+      String(formVal.amountUsd ?? '0')
+        .replace?.(/\./g, '')
+        .replace(',', '.') ?? '0',
+    );
+    const rawBs = parseFloat(
+      String(formVal.amountBs ?? '0')
+        .replace?.(/\./g, '')
+        .replace(',', '.') ?? '0',
+    );
+    const amount = rawUsd || 0;
+    const rate = this.usdRate();
+    const isBolivares = accountType === 'Bolivares';
+    const amountInBs = isBolivares
+      ? rawBs || (rate ? amount * rate : amount)
+      : undefined;
+    const exchangeRateValue = isBolivares ? (rate ?? undefined) : undefined;
+
+    const recordRequest = {
+      type: formVal.type as FinancialRecordType,
+      category: formVal.category as FinancialCategory,
+      accountType,
       amount,
-      description: this.form.value.description!,
-      date: this.form.value.date!,
+      amountInBs,
+      exchangeRateValue,
+      description: formVal.description!,
+      date: formVal.date!,
       userId: 1,
     };
 
-    const action =
+    const saveRecord =
       this.isEdit() && this.recordId
-        ? this.financialService.update(this.recordId, request)
-        : this.financialService.create(request);
+        ? this.financialService.update(this.recordId, recordRequest)
+        : this.financialService.create(recordRequest);
 
-    action.subscribe({
-      next: () => this.router.navigate(['/financial-records']),
+    saveRecord.subscribe({
+      next: (res) => {
+        if (this.form.value.isRecurring && !this.isEdit()) {
+          const recurringPayload = {
+            name: `[${recordRequest.category}] ${recordRequest.description}`,
+            amount,
+            frequency: this.form.value.frequency as RecurringExpenseFrequency,
+            dayOfMonth: this.form.value.dayOfMonth ?? 15,
+            accountType: recordRequest.accountType,
+            type: recordRequest.type,
+            description: recordRequest.description,
+          };
+          this.recurringService.create(recurringPayload).subscribe({
+            next: () => this.router.navigate(['/financial-records']),
+            error: () => this.router.navigate(['/financial-records']),
+            complete: () => this.submitting.set(false),
+          });
+        } else {
+          this.router.navigate(['/financial-records']);
+          this.submitting.set(false);
+        }
+      },
       error: (err) => {
         this.error.set(err.message);
         this.submitting.set(false);
       },
-      complete: () => this.submitting.set(false),
+      complete: () => {
+        if (!this.form.value.isRecurring || this.isEdit()) {
+          this.submitting.set(false);
+        }
+      },
     });
   }
 }

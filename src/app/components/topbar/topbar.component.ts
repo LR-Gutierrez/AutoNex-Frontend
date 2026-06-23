@@ -1,5 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, computed, inject, OnInit } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import {
   IonButtons,
@@ -23,18 +23,21 @@ import {
   moonOutline,
   desktopOutline,
   logOutOutline,
+  alertCircleOutline,
 } from 'ionicons/icons';
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { UserAvatarComponent } from '../user-avatar/user-avatar.component';
 import { NotificationService } from '../../core/services/notification.service';
+import { RecurringExpenseService } from '../../core/services/recurring-expense.service';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
   imports: [
     DatePipe,
+    CurrencyPipe,
     RouterLink,
     IonButtons,
     IonMenuButton,
@@ -503,6 +506,60 @@ import { NotificationService } from '../../core/services/notification.service';
         <span class="primary-label" style="color: #fff;">Servicios</span>
       </ion-button>
 
+      @if (dueCount() > 0) {
+        <ion-button
+          id="due-expenses-trigger"
+          class="icon-button"
+          fill="clear"
+          aria-label="Gastos pendientes"
+        >
+          <ion-icon name="alert-circle-outline" slot="icon-only" style="color:#fbbf24"></ion-icon>
+          <ion-badge class="notification-badge" color="warning">
+            {{ dueCount() }}
+          </ion-badge>
+        </ion-button>
+
+        <ion-popover
+          #dueExpensesPopover
+          trigger="due-expenses-trigger"
+          trigger-action="click"
+          class="notif-popover"
+        >
+          <ng-template>
+            <ion-content>
+              <div class="notif-header">
+                <span class="notif-title">Pagos pendientes hoy</span>
+              </div>
+              <ion-list lines="none">
+                @for (item of recurringExpenseService.dueToday(); track item.id) {
+                  <ion-item class="notif-item" lines="none">
+                    <ion-icon
+                      name="calendar-outline"
+                      slot="start"
+                      style="font-size:18px;color:#fbbf24"
+                    ></ion-icon>
+                    <ion-label class="ion-text-wrap">
+                      <span class="notif-message">{{ item.expenseName }}</span>
+                      <span class="notif-date">{{ item.amount | currency:'USD':'symbol':'1.2-2' }}</span>
+                    </ion-label>
+                  </ion-item>
+                }
+              </ion-list>
+              <div class="notif-footer">
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  color="medium"
+                   (click)="dueExpensesPopover.dismiss(); router.navigate(['/financial-records'])"
+                >
+                  Ver todos
+                </ion-button>
+              </div>
+            </ion-content>
+          </ng-template>
+        </ion-popover>
+      }
+
       <ion-button
         id="notif-trigger"
         class="icon-button"
@@ -598,12 +655,13 @@ import { NotificationService } from '../../core/services/notification.service';
     </div>
   `,
 })
-export class TopbarComponent {
+export class TopbarComponent implements OnInit {
   private readonly authState = inject(AuthStateService);
   private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+  readonly router = inject(Router);
   readonly themeService = inject(ThemeService);
   readonly notificationService = inject(NotificationService);
+  readonly recurringExpenseService = inject(RecurringExpenseService);
 
   readonly themeIcon = computed(() => {
     const mode = this.themeService.mode();
@@ -629,9 +687,15 @@ export class TopbarComponent {
     return labels[role] ?? role;
   });
 
+  readonly dueCount = computed(() => this.recurringExpenseService.dueToday().length);
+
   constructor() {
-    addIcons({ calendarOutline, addCircleOutline, notificationsOutline, sunnyOutline, moonOutline, desktopOutline, logOutOutline });
+    addIcons({ calendarOutline, addCircleOutline, notificationsOutline, sunnyOutline, moonOutline, desktopOutline, logOutOutline, alertCircleOutline });
     this.notificationService.load();
+  }
+
+  ngOnInit() {
+    this.recurringExpenseService.loadDueToday().subscribe();
   }
 
   onNotifOpen(): void {

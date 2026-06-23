@@ -14,7 +14,7 @@ import {
   gridOutline, peopleOutline, carOutline, businessOutline, waterOutline,
   buildOutline, folderOutline, constructOutline, documentTextOutline,
   speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline,
-  swapHorizontalOutline
+  swapHorizontalOutline, calendarOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthBrandingComponent } from '../../shared/components/auth-branding/auth-branding.component';

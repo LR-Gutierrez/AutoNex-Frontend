@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { IonInput, IonIcon } from '@ionic/angular/standalone';
 import { MaskitoDirective } from '@maskito/angular';
@@ -26,6 +26,11 @@ import { RevealDirective } from '../../directives/reveal.directive';
       --input-icon-hover: rgba(255, 255, 255, 0.8);
       --input-placeholder: rgba(255, 255, 255, 0.4);
       --input-error: #ff6b6b;
+    }
+    :host(.readonly) {
+      --input-bg: rgba(255, 255, 255, 0.02);
+      --input-border: rgba(255, 255, 255, 0.04);
+      opacity: 0.65;
     }
   `,
   template: `
@@ -55,6 +60,7 @@ import { RevealDirective } from '../../directives/reveal.directive';
           [maskito]="mask"
           [maskitoElement]="maskitoPredicate"
           [maxlength]="maxlength"
+          [readonly]="readonly"
           class="flex-1 text-[15px]"
           style="--background: transparent; --color: var(--app-text); --placeholder-color: var(--input-placeholder); --padding-start: 0; --padding-end: 0"
         ></ion-input>
@@ -97,6 +103,8 @@ export class TextInputComponent {
   @Input() mask: MaskitoOptions | null = null;
   @Input() showPasswordToggle = false;
   @Input() revealDelay = 200;
+  @Input() readonly = false;
+  @HostBinding('class.readonly') get isReadonly() { return this.readonly; }
 
   @Input() errorMessages: Record<string, string> = {
     required: 'Requerido',
