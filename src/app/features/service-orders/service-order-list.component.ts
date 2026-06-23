@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
-import { ModalController } from '@ionic/angular/standalone';
+import { ModalController, ToastController } from '@ionic/angular';
 import { ServiceOrderService } from '../../core/services/service-order.service';
 import { MileageAlertService } from '../../core/services/mileage-alert.service';
 import { PageTitleService } from '../../core/services/page-title.service';
@@ -226,6 +226,7 @@ export class ServiceOrderListComponent implements OnInit {
   private readonly pageTitle = inject(PageTitleService);
   private readonly refreshService = inject(RefreshService);
   private readonly mileageAlertService = inject(MileageAlertService);
+  private readonly toastController = inject(ToastController);
   private readonly modalController: ModalController;
 
   readonly search = createListSearch(() => this.loadOrders());
@@ -295,8 +296,19 @@ export class ServiceOrderListComponent implements OnInit {
 
   createAlert(orderId: number) {
     this.mileageAlertService.createFromOrder(orderId).subscribe({
-      next: () => this.loadOrders(),
-      error: (err) => console.error('Error al crear alerta:', err),
+      next: (res) => {
+        this.loadOrders();
+        const data = res as any;
+        const msg = data?.message || 'Alerta creada y notificación enviada';
+        this.toastController.create({ message: msg, duration: 3000, color: 'success', position: 'bottom' }).then(t => t.present());
+      },
+      error: async (err) => {
+        console.error('Error al crear alerta:', err);
+        (await this.toastController.create({
+          message: 'Error al crear alerta',
+          duration: 3000, color: 'danger', position: 'bottom',
+        })).present();
+      },
     });
   }
 }
