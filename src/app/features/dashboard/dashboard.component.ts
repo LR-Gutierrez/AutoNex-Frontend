@@ -16,11 +16,22 @@ import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pip
 import { PresetKey } from '../../core/models/dashboard.model';
 import { DailySummaryResponse } from '../../core/models/financial-record.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IonIcon } from '@ionic/angular/standalone';
+import { ChartComponent } from 'ng-apexcharts';
+import {
+  ApexAxisChartSeries, ApexChart, ApexStroke, ApexFill, ApexMarkers,
+  ApexXAxis, ApexYAxis, ApexGrid, ApexTooltip, ApexDataLabels, ApexLegend,
+} from 'ng-apexcharts';
+import { addIcons } from 'ionicons';
+import {
+  statsChartOutline, walletOutline, syncOutline, flameOutline,
+  pulseOutline, swapHorizontalOutline, speedometerOutline,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, CurrencyPipe, DatePipe, DecimalPipe, RouterLink],
+  imports: [DashboardSkeletonComponent, CurrencyFormatterPipe, CurrencyPipe, DatePipe, DecimalPipe, RouterLink, IonIcon, ChartComponent],
   styles: `
     :host {
       display: block;
@@ -760,26 +771,12 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       border-radius: 10px;
     }
 
-    .chart-bar {
-      transition: opacity 0.2s ease;
-    }
-    .chart-bar:hover {
-      opacity: 0.8;
-    }
-
-    .chart-tooltip {
-      position: fixed;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      pointer-events: none;
-      z-index: 50;
-      backdrop-filter: blur(8px);
-      white-space: nowrap;
-      transition: opacity 0.15s ease;
+    apx-chart {
+      .apexcharts-tooltip {
+        background: rgba(15, 23, 42, 0.96) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(8px);
+      }
     }
 
     /* Para pantallas muy pequeñas (menos de 360px) */
@@ -880,7 +877,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             "
             (click)="selectPreset(preset.key)"
           >
-            <span class="chip-icon">{{ getPresetIcon(preset.key) }}</span>
+            <ion-icon [name]="getPresetIcon(preset.key)" class="chip-icon text-sm"></ion-icon>
             <span class="chip-label">{{ preset.label }}</span>
           </button>
         }
@@ -890,7 +887,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       @if (dashboard.selectedRange().preset === 'custom') {
         <div class="date-filter-container mb-6">
           <div class="date-filter-group">
-            <div class="date-filter-label"><span>📅</span> Desde</div>
+            <div class="date-filter-label"><ion-icon name="calendar-outline" class="text-sm"></ion-icon> Desde</div>
             <input
               type="date"
               class="date-filter-input"
@@ -900,7 +897,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
             <span class="date-filter-separator">—</span>
 
-            <div class="date-filter-label"><span>📅</span> Hasta</div>
+            <div class="date-filter-label"><ion-icon name="calendar-outline" class="text-sm"></ion-icon> Hasta</div>
             <input
               type="date"
               class="date-filter-input"
@@ -929,7 +926,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
           @if (rangeInvalid()) {
             <div class="date-filter-error">
-              <span class="date-filter-error-icon">⚠️</span>
+              <ion-icon name="warning-outline" class="text-sm text-[#ff5a52]"></ion-icon>
               La fecha de inicio no puede ser posterior a la de fin
             </div>
           }
@@ -943,7 +940,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         <p
           class="text-xs text-(--app-text-muted) font-medium mb-5 flex items-center gap-2 max-sm:text-[10px]"
         >
-          <span>📅</span>
+          <ion-icon name="calendar-outline" class="text-sm text-(--app-text-muted)"></ion-icon>
           Mostrando del
           {{ dashboard.selectedRange().startDate | date: 'dd/MM/yyyy' }} al
           {{ dashboard.selectedRange().endDate | date: 'dd/MM/yyyy' }}
@@ -962,7 +959,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
           class="flex items-center justify-center p-8 rounded-2xl bg-[rgba(255,59,48,0.06)] border border-[rgba(255,59,48,0.12)] mb-6"
         >
           <div class="text-center">
-            <span class="text-3xl mb-2 block">⚠️</span>
+            <ion-icon name="warning-outline" class="text-3xl mb-2 block text-[#ff5a52]"></ion-icon>
             <p class="text-[#ff5a52] text-sm font-medium">
               Error al cargar datos: {{ dashboard.error() }}
             </p>
@@ -1055,7 +1052,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
               <p
                 class="text-xs max-sm:text-[9px] text-(--app-text-muted) mt-3 font-medium"
               >
-                ✅ Todo en orden
+                <ion-icon name="checkmark-circle-outline" class="text-sm text-[#4ade80] align-text-bottom"></ion-icon> Todo en orden
               </p>
             }
           </div>
@@ -1148,15 +1145,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             <div
               class="flex gap-3 mt-3 text-xs max-sm:text-[9px] text-(--app-text-muted) font-medium flex-wrap"
             >
-              <span
-                >💰
+                <span class="flex items-center gap-1"
+                ><ion-icon name="trending-up-outline" class="text-sm text-[#4ade80]"></ion-icon>
                 {{
                   dashboard.data()?.financialMonth?.totalIncome | currencyFormat
                 }}</span
               >
               <span>•</span>
-              <span
-                >💸
+              <span class="flex items-center gap-1"
+                ><ion-icon name="trending-down-outline" class="text-sm text-[#ff6b63]"></ion-icon>
                 {{
                   dashboard.data()?.financialMonth?.totalExpenses | currencyFormat
                 }}</span
@@ -1167,206 +1164,183 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       }
 
       <!-- Detail Sections -->
-      <section
-        class="grid grid-cols-[minmax(0,2fr)_minmax(300px,0.95fr)] max-xl:grid-cols-1 gap-5 min-w-0 fade-transition"
-      >
-        <!-- Orders Detail -->
-        <div
-          class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
-        >
-          <div class="pb-2">
-            <h2
-              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 flex items-center gap-2"
-            >
-              <span>📋</span> Órdenes de Servicio
+      <section class="min-w-0 fade-transition flex flex-col gap-4">
+        <!-- Full-width Line Chart -->
+        <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5">
+          <div class="flex items-center justify-between mb-1">
+            <h2 class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 flex items-center gap-2">
+              <ion-icon name="stats-chart-outline" class="text-[#818cf8] text-xl"></ion-icon>
+              Ingresos vs Egresos
             </h2>
-            <p
-              class="text-(--app-text-muted) text-sm max-sm:text-xs m-0 mt-1 font-medium"
-            >
-              Resumen de {{ dashboard.data()?.ordersToday?.total ?? 0 }} órdenes
-            </p>
-          </div>
-
-          <div class="grid grid-cols-4 gap-3 mt-4">
-            <div class="metric-box text-center">
-              <span
-                class="block text-[24px] max-sm:text-[20px] font-extrabold text-amber-400"
-                >{{ dashboard.data()?.ordersToday?.open ?? 0 }}</span
-              >
-              <span
-                class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                >Abiertas</span
-              >
-            </div>
-            <div class="metric-box text-center">
-              <span
-                class="block text-[24px] max-sm:text-[20px] font-extrabold text-blue-400"
-                >{{ dashboard.data()?.ordersToday?.inProgress ?? 0 }}</span
-              >
-              <span
-                class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                >En Progreso</span
-              >
-            </div>
-            <div class="metric-box text-center">
-              <span
-                class="block text-[24px] max-sm:text-[20px] font-extrabold text-green-400"
-                >{{ dashboard.data()?.ordersToday?.completed ?? 0 }}</span
-              >
-              <span
-                class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                >Completadas</span
-              >
-            </div>
-            <div class="metric-box text-center">
-              <span
-                class="block text-[24px] max-sm:text-[20px] font-extrabold text-violet-400"
-                >{{ dashboard.data()?.ordersToday?.paid ?? 0 }}</span
-              >
-              <span
-                class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                >Pagadas</span
-              >
+            <div class="flex items-center gap-3 text-xs text-(--app-text-muted) font-medium">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#4ade80]"></span>
+                Ingresos
+              </span>
+              <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#ff6b63]"></span>
+                Egresos
+              </span>
             </div>
           </div>
+          <p class="text-(--app-text-muted) text-xs max-sm:text-[10px] font-medium mb-4">
+            {{ dashboard.data()?.financialMonth?.totalIncome | currencyFormat }} ingresos ·
+            {{ dashboard.data()?.financialMonth?.totalExpenses | currencyFormat }} egresos ·
+            Balance
+            <span [class.text-[#4ade80]]="(dashboard.data()?.financialMonth?.balance ?? 0) >= 0"
+                  [class.text-[#ff6b63]]="(dashboard.data()?.financialMonth?.balance ?? 0) < 0">
+              {{ dashboard.data()?.financialMonth?.balance | currencyFormat }}
+            </span>
+          </p>
 
-          <!-- Low Stock Items -->
-          @if ((dashboard.data()?.lowStock?.items?.length ?? 0) > 0) {
-            <div class="mt-5 pt-4 border-t border-[rgba(255,255,255,0.06)]">
-              <h3
-                class="text-(--app-text) text-sm max-sm:text-xs font-bold m-0 mb-3 flex items-center gap-2"
-              >
-                <span>⚠️</span> Items con Stock Bajo
-              </h3>
-              <div class="grid gap-2">
-                @for (
-                  item of dashboard.data()?.lowStock?.items ?? [];
-                  track item.id
-                ) {
-                  <div
-                    class="low-stock-item flex items-center justify-between p-3 max-sm:p-2 rounded-xl bg-[rgba(255,59,48,0.06)] border border-[rgba(255,59,48,0.1)]"
-                  >
-                    <span class="text-sm max-sm:text-xs font-medium">{{
-                      item.name
-                    }}</span>
-                    <span
-                      class="text-xs max-sm:text-[10px] text-[#ff5a52] font-bold bg-[rgba(255,59,48,0.1)] px-3 py-1 rounded-full"
-                    >
-                      {{ item.stockQuantity }} / {{ item.minStock }}
+          @if (chartOptions(); as opts) {
+            <apx-chart
+              [series]="opts.series"
+              [chart]="opts.chart"
+              [xaxis]="opts.xaxis"
+              [yaxis]="opts.yaxis"
+              [stroke]="opts.stroke"
+              [fill]="opts.fill"
+              [markers]="opts.markers"
+              [colors]="opts.colors"
+              [grid]="opts.grid"
+              [tooltip]="opts.tooltip"
+              [dataLabels]="opts.dataLabels"
+              [legend]="opts.legend"
+              style="height: 220px;"
+            />
+          } @else if (chartLoading()) {
+            <div class="flex items-center justify-center py-10 text-(--app-text-muted) text-sm">
+              Cargando datos del gráfico...
+            </div>
+          } @else {
+            <div class="flex items-center justify-center py-10 text-(--app-text-muted) text-sm">
+              No hay datos financieros en este período
+            </div>
+          }
+        </div>
+
+        <!-- Compact Cards Row -->
+        <div class="grid grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-4">
+          <!-- Orders Compact -->
+          <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+            <h3 class="text-(--app-text) text-sm font-bold m-0 mb-3 flex items-center gap-2">
+              <ion-icon name="clipboard-outline" class="text-[#818cf8] text-sm"></ion-icon> Órdenes
+            </h3>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="metric-box text-center !p-2.5">
+                <span class="block text-[18px] font-extrabold text-amber-400">
+                  {{ dashboard.data()?.ordersToday?.open ?? 0 }}
+                </span>
+                <span class="text-(--app-text-muted) text-[10px] font-medium">Abiertas</span>
+              </div>
+              <div class="metric-box text-center !p-2.5">
+                <span class="block text-[18px] font-extrabold text-blue-400">
+                  {{ dashboard.data()?.ordersToday?.inProgress ?? 0 }}
+                </span>
+                <span class="text-(--app-text-muted) text-[10px] font-medium">Progreso</span>
+              </div>
+              <div class="metric-box text-center !p-2.5">
+                <span class="block text-[18px] font-extrabold text-green-400">
+                  {{ dashboard.data()?.ordersToday?.completed ?? 0 }}
+                </span>
+                <span class="text-(--app-text-muted) text-[10px] font-medium">Completadas</span>
+              </div>
+              <div class="metric-box text-center !p-2.5">
+                <span class="block text-[18px] font-extrabold text-violet-400">
+                  {{ dashboard.data()?.ordersToday?.paid ?? 0 }}
+                </span>
+                <span class="text-(--app-text-muted) text-[10px] font-medium">Pagadas</span>
+              </div>
+            </div>
+            @if ((dashboard.data()?.lowStock?.items?.length ?? 0) > 0) {
+              <div class="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]">
+                <div class="flex flex-wrap gap-1.5">
+                  @for (item of dashboard.data()?.lowStock?.items ?? []; track item.id) {
+                    <span class="text-[10px] text-[#ff5a52] font-medium bg-[rgba(255,59,48,0.08)] px-2 py-0.5 rounded-full">
+                      {{ item.name }} ({{ item.stockQuantity }}/{{ item.minStock }})
                     </span>
-                  </div>
-                }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- KM Alerts -->
+          <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+            <h3 class="text-(--app-text) text-sm font-bold m-0 mb-3 flex items-center gap-2">
+              <ion-icon name="speedometer-outline" class="text-[#fbbf24] text-sm"></ion-icon> Alertas KM
+            </h3>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="metric-box text-center !p-2.5">
+                <span class="block text-[18px] font-extrabold text-amber-400">
+                  {{ dashboard.data()?.kmAlerts?.pending ?? 0 }}
+                </span>
+                <span class="text-(--app-text-muted) text-[10px] font-medium">Pendientes</span>
+              </div>
+              <div class="metric-box text-center !p-2.5 border-[rgba(255,59,48,0.2)]">
+                <span class="block text-[18px] font-extrabold text-[#ff5a52]">
+                  {{ dashboard.data()?.kmAlerts?.completed ?? 0 }}
+                </span>
+                <span class="text-(--app-text-muted) text-[10px] font-medium">Completadas</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exchange Rate -->
+          @if (dashboard.data()?.exchangeRate) {
+            <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+              <h3 class="text-(--app-text) text-sm font-bold m-0 mb-2 flex items-center gap-2">
+                <ion-icon name="swap-horizontal-outline" class="text-emerald-400 text-sm"></ion-icon> Tasa de Cambio
+              </h3>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="block text-[22px] font-extrabold text-emerald-400">
+                    Bs. {{ dashboard.data()?.exchangeRate?.rate | number:'1.2-2' }}
+                  </span>
+                  <span class="text-(--app-text-muted) text-[10px] font-medium">
+                    {{ dashboard.data()?.exchangeRate?.source }}
+                  </span>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                  <ion-icon name="cash-outline" class="text-emerald-400 text-xl"></ion-icon>
+                </div>
               </div>
             </div>
           }
         </div>
 
-        <!-- Right Column -->
-        <div class="grid gap-4 min-w-0">
-          <!-- KM Alerts Detail -->
-          <div
-            class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
-          >
-            <h2
-              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
-            >
-              <span>🚗</span> Alertas de KM
-            </h2>
-            <div class="grid grid-cols-2 gap-3">
-              <div class="metric-box text-center">
-                <span
-                  class="block text-[24px] max-sm:text-[20px] font-extrabold text-amber-400"
-                  >{{ dashboard.data()?.kmAlerts?.pending ?? 0 }}</span
-                >
-                <span
-                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                  >Pendientes</span
-                >
-              </div>
-              <div class="metric-box text-center border-[rgba(255,59,48,0.2)]">
-                <span
-                  class="block text-[24px] max-sm:text-[20px] font-extrabold text-[#ff5a52]"
-                  >{{ dashboard.data()?.kmAlerts?.completed ?? 0 }}</span
-                >
-                <span
-                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                  >Completadas</span
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Exchange Rate Widget -->
-          @if (dashboard.data()?.exchangeRate) {
-            <div
-              class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
-            >
-              <h2
-                class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
-              >
-                <span>💱</span> Tasa de Cambio
-              </h2>
-              <div class="flex items-center justify-between">
-                <div>
-                  <span
-                    class="block text-[32px] max-sm:text-[26px] font-extrabold text-emerald-400"
-                  >
-                    Bs. {{ dashboard.data()?.exchangeRate?.rate | number:'1.2-2' }}
-                  </span>
-                  <span
-                    class="text-(--app-text-muted) text-xs font-medium"
-                  >
-                    {{ dashboard.data()?.exchangeRate?.source }} · {{ dashboard.data()?.exchangeRate?.date | date:'dd/MM/yyyy' }}
-                  </span>
-                </div>
-                <div
-                  class="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center"
-                >
-                  <span class="text-2xl">🇻🇪</span>
-                </div>
-              </div>
-            </div>
-          }
-
+        <!-- Middle Row -->
+        <div class="grid grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 gap-4">
           <!-- Account Balances -->
           @if (dashboard.data()?.financialMonth?.balances; as balances) {
-            <div
-              class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
-            >
-              <h2
-                class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
-              >
-                <span>💰</span> Saldos por Cuenta
-              </h2>
-              <div class="grid grid-cols-2 gap-3">
+            <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+              <h3 class="text-(--app-text) text-sm font-bold m-0 mb-3 flex items-center gap-2">
+                <ion-icon name="wallet-outline" class="text-[#818cf8] text-sm"></ion-icon> Saldos por Cuenta
+              </h3>
+              <div class="grid grid-cols-2 gap-2">
                 @for (bal of balances; track bal.accountType) {
-                  <div class="metric-box text-center">
-                    <span
-                      class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1"
+                  <div class="metric-box text-center !p-2.5">
+                    <span class="block text-[18px] font-extrabold mb-0.5"
                       [class.text-blue-400]="bal.accountType === 'Bolivares'"
-                      [class.text-amber-400]="bal.accountType === 'Dolares'"
-                    >
+                      [class.text-amber-400]="bal.accountType === 'Dolares'">
                       {{ bal.accountType === 'Bolivares' ? 'Bs.' : '$' }}
                       {{ bal.balance | number:'1.2-2' }}
                     </span>
                     @if (bal.accountType === 'Bolivares' && usdRate()) {
-                      <span class="block text-[11px] text-(--app-text-muted) -mt-0.5">
+                      <span class="block text-[10px] text-(--app-text-muted) leading-tight">
                         ≈ {{ bal.balance / usdRate() | currency:'USD':'symbol':'1.2-2' }}
                       </span>
                     }
-                    <span
-                      class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                    >
+                    <span class="text-(--app-text-muted) text-[10px] font-medium">
                       {{ bal.accountType === 'Bolivares' ? 'Bolívares' : 'Dólares' }}
                     </span>
                   </div>
                 }
               </div>
-              <div class="mt-3 text-center">
-                <a
-                  routerLink="/financial-records"
-                  class="text-xs text-(--app-text-muted) font-medium hover:text-(--app-text) transition-colors no-underline"
-                >
+              <div class="mt-2 text-center">
+                <a routerLink="/financial-records"
+                  class="text-[10px] text-(--app-text-muted) font-medium hover:text-(--app-text) transition-colors no-underline">
                   Ver detalle →
                 </a>
               </div>
@@ -1374,117 +1348,41 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
           }
 
           <!-- Recurring Expenses -->
-          <div
-            class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
-          >
-            <h2
-              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
-            >
-              <span>🔄</span> Gastos Fijos
-            </h2>
-
+          <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+            <h3 class="text-(--app-text) text-sm font-bold m-0 mb-3 flex items-center gap-2">
+              <ion-icon name="sync-outline" class="text-[#818cf8] text-sm"></ion-icon> Gastos Fijos
+            </h3>
             @let due = recurringExpenseService.dueToday();
             @if (due.length > 0) {
-              <div class="space-y-2 mb-3">
+              <div class="space-y-1.5">
                 @for (item of due; track item.id) {
-                  <div
-                    class="flex items-center justify-between bg-[rgba(251,191,36,0.08)] border border-[rgba(251,191,36,0.2)] rounded-xl px-4 py-3"
-                  >
-                    <div>
-                      <span class="block text-sm font-semibold text-(--app-text)">
+                  <div class="flex items-center justify-between bg-[rgba(251,191,36,0.08)] border border-[rgba(251,191,36,0.2)] rounded-xl px-3 py-2">
+                    <div class="min-w-0">
+                      <span class="block text-sm font-semibold text-(--app-text) truncate">
                         {{ item.expenseName }}
                       </span>
-                      <span class="text-xs text-(--app-text-muted)">
-                        Vence hoy
-                      </span>
+                      <span class="text-[10px] text-(--app-text-muted)">Vence hoy</span>
                     </div>
-                    <span class="text-sm font-bold text-[#fbbf24]">
+                    <span class="text-sm font-bold text-[#fbbf24] shrink-0 ml-2">
                       {{ item.amount | currency:'USD':'symbol':'1.2-2' }}
                     </span>
                   </div>
                 }
               </div>
-              <div class="text-center">
-                <a
-                  routerLink="/financial-records"
-                  class="text-xs text-(--app-text-muted) font-medium hover:text-(--app-text) transition-colors no-underline"
-                >
+              <div class="mt-2 text-center">
+                <a routerLink="/financial-records"
+                  class="text-[10px] text-(--app-text-muted) font-medium hover:text-(--app-text) transition-colors no-underline">
                   Ver todos →
                 </a>
               </div>
             } @else {
-              <div class="text-center py-6 text-(--app-text-muted) text-sm">
-                <span class="block text-lg mb-1">✅</span>
-                No hay gastos pendientes hoy
+              <div class="text-center py-4 text-(--app-text-muted) text-sm">
+                <ion-icon name="checkmark-circle-outline" class="block text-base mb-0.5 text-[#4ade80] mx-auto"></ion-icon>
+                Sin gastos pendientes hoy
               </div>
             }
           </div>
 
-          <!-- Financial Chart -->
-          <div
-            class="chart-card"
-          >
-            <h2
-              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-1 flex items-center gap-2"
-            >
-              <span>📊</span> Ingresos vs Egresos
-            </h2>
-            <p
-              class="text-(--app-text-muted) text-xs max-sm:text-[10px] font-medium mb-4"
-            >
-              {{ dashboard.data()?.financialMonth?.totalIncome | currencyFormat }} ingresos ·
-              {{ dashboard.data()?.financialMonth?.totalExpenses | currencyFormat }} egresos ·
-              Balance
-              <span [class.text-[#4ade80]]="(dashboard.data()?.financialMonth?.balance ?? 0) >= 0"
-                    [class.text-[#ff6b63]]="(dashboard.data()?.financialMonth?.balance ?? 0) < 0">
-                {{ dashboard.data()?.financialMonth?.balance | currencyFormat }}
-              </span>
-            </p>
-
-            @if (chartData().length > 0) {
-              <div class="chart-container">
-                <div class="flex gap-[3px] min-w-[300px]" style="padding-bottom: 4px;">
-                  @for (day of chartData(); track day.date) {
-                    <div class="flex-1 flex flex-col items-center gap-[2px] min-w-0 group relative">
-                      <div class="flex items-end gap-[2px] w-full" style="height: 100px;">
-                        <div
-                          class="flex-1 rounded-[3px] chart-bar bg-[#4ade80] min-h-[3px]"
-                          [style.height.%]="day.incomePct"
-                          [title]="'Ingresos ' + day.label + ': $' + day.income.toFixed(2)"
-                        ></div>
-                        <div
-                          class="flex-1 rounded-[3px] chart-bar bg-[#ff6b63] min-h-[3px]"
-                          [style.height.%]="day.expensePct"
-                          [title]="'Egresos ' + day.label + ': $' + day.expense.toFixed(2)"
-                        ></div>
-                      </div>
-                      <span class="text-[9px] text-(--app-text-muted) font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-full text-center">
-                        {{ day.date | date:'dd/MM' }}
-                      </span>
-                    </div>
-                  }
-                </div>
-              </div>
-              <div class="flex items-center gap-4 mt-3 text-xs text-(--app-text-muted) font-medium">
-                <span class="flex items-center gap-1.5">
-                  <span class="w-2.5 h-2.5 rounded-[3px] bg-[#4ade80]"></span>
-                  Ingresos
-                </span>
-                <span class="flex items-center gap-1.5">
-                  <span class="w-2.5 h-2.5 rounded-[3px] bg-[#ff6b63]"></span>
-                  Egresos
-                </span>
-              </div>
-            } @else if (chartLoading()) {
-              <div class="flex items-center justify-center py-8 text-(--app-text-muted) text-sm">
-                Cargando datos del gráfico...
-              </div>
-            } @else {
-              <div class="flex items-center justify-center py-8 text-(--app-text-muted) text-sm">
-                No hay datos financieros en este período
-              </div>
-            }
-          </div>
         </div>
       </section>
     </div>
@@ -1511,22 +1409,76 @@ export class DashboardComponent implements OnInit {
   protected readonly dailySummary = signal<DailySummaryResponse[]>([]);
   protected readonly chartLoading = signal(false);
 
-  protected readonly chartData = computed(() => {
+  protected readonly chartOptions = computed(() => {
     const data = this.dailySummary();
-    if (!data.length) return [];
+    if (!data.length) return null;
 
-    const maxVal = Math.max(...data.map(d => Math.max(d.income, d.expense)), 1);
-    return data.map(d => ({
-      date: d.date,
-      label: new Date(d.date).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' }),
-      income: d.income,
-      expense: d.expense,
-      incomePct: (d.income / maxVal) * 100,
-      expensePct: (d.expense / maxVal) * 100,
-    }));
+    return {
+      series: [
+        { name: 'Ingresos', data: data.map(d => +d.income.toFixed(2)) },
+        { name: 'Egresos', data: data.map(d => +d.expense.toFixed(2)) },
+      ] as ApexAxisChartSeries,
+      chart: {
+        type: 'area',
+        height: 220,
+        toolbar: { show: false },
+        zoom: { enabled: false },
+        fontFamily: 'Inter, system-ui, sans-serif',
+        foreColor: 'rgba(255,255,255,0.35)',
+        background: 'transparent',
+        animations: { enabled: true, easing: 'easeinout', speed: 800 },
+      } as ApexChart,
+      colors: ['#4ade80', '#ff6b63'],
+      dataLabels: { enabled: false } as ApexDataLabels,
+      stroke: { curve: 'smooth', width: 2 } as ApexStroke,
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 0,
+          opacityFrom: 0.4,
+          opacityTo: 0.05,
+          stops: [0, 100],
+        },
+      } as ApexFill,
+      markers: {
+        size: 3,
+        strokeWidth: 0,
+        hover: { size: 6 },
+      } as ApexMarkers,
+      xaxis: {
+        type: 'datetime',
+        categories: data.map(d => d.date),
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        labels: { style: { colors: 'rgba(255,255,255,0.3)', fontSize: '10px', fontWeight: 500 } },
+        crosshairs: { show: true, width: 1, stroke: { color: 'rgba(255,255,255,0.08)' } },
+      } as ApexXAxis,
+      yaxis: {
+        labels: {
+          style: { colors: 'rgba(255,255,255,0.3)', fontSize: '10px', fontWeight: 500 },
+          formatter: (val: number) => (val >= 1000 ? '$' + (val / 1000).toFixed(1) + 'k' : '$' + val.toFixed(0)),
+        },
+      } as ApexYAxis,
+      grid: {
+        borderColor: 'rgba(255,255,255,0.05)',
+        strokeDashArray: 4,
+        xaxis: { lines: { show: false } },
+        padding: { left: 0, right: 0 },
+      } as ApexGrid,
+      tooltip: {
+        theme: 'dark',
+        style: { fontSize: '12px', fontFamily: 'Inter, system-ui, sans-serif' },
+        y: {
+          formatter: (val: number) => '$' + val.toFixed(2),
+        },
+      } as ApexTooltip,
+      legend: { show: false } as ApexLegend,
+    };
   });
 
   constructor() {
+    addIcons({ statsChartOutline, walletOutline, syncOutline, flameOutline, pulseOutline, swapHorizontalOutline, speedometerOutline });
+
     effect(() => {
       const range = this.dashboard.selectedRange();
       if (range) {
@@ -1569,14 +1521,14 @@ export class DashboardComponent implements OnInit {
    */
   getPresetIcon(key: PresetKey): string {
     const icons: Record<PresetKey, string> = {
-      today: '📅',
-      yesterday: '📆',
-      'this-week': '📊',
-      'this-month': '📈',
-      'last-month': '📉',
-      custom: '✏️',
+      today: 'calendar-outline',
+      yesterday: 'calendar-outline',
+      'this-week': 'stats-chart-outline',
+      'this-month': 'trending-up-outline',
+      'last-month': 'trending-down-outline',
+      custom: 'create-outline',
     };
-    return icons[key] || '📌';
+    return icons[key] || 'ellipse-outline';
   }
 
   selectPreset(key: PresetKey): void {
