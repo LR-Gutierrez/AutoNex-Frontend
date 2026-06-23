@@ -1287,27 +1287,30 @@ import {
             </div>
           </div>
 
-          <!-- Exchange Rate -->
-          @if (dashboard.data()?.exchangeRate) {
-            <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
-              <h3 class="text-(--app-text) text-sm font-bold m-0 mb-2 flex items-center gap-2">
-                <ion-icon name="swap-horizontal-outline" class="text-emerald-400 text-sm"></ion-icon> Tasa de Cambio
-              </h3>
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="block text-[22px] font-extrabold text-emerald-400">
-                    Bs. {{ dashboard.data()?.exchangeRate?.rate | number:'1.2-2' }}
-                  </span>
-                  <span class="text-(--app-text-muted) text-[10px] font-medium">
-                    {{ dashboard.data()?.exchangeRate?.source }}
-                  </span>
-                </div>
-                <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                  <ion-icon name="cash-outline" class="text-emerald-400 text-xl"></ion-icon>
-                </div>
+          <!-- Mock: Servicios Populares -->
+          <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+            <h3 class="text-(--app-text) text-sm font-bold m-0 mb-3 flex items-center gap-2">
+              <ion-icon name="flame-outline" class="text-orange-400 text-sm"></ion-icon> Servicios Populares
+            </h3>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-(--app-text) font-medium">Cambio de Aceite</span>
+                <span class="text-(--app-text-muted)">24 servicios</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-(--app-text) font-medium">Alineación</span>
+                <span class="text-(--app-text-muted)">18 servicios</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-(--app-text) font-medium">Balanceo</span>
+                <span class="text-(--app-text-muted)">15 servicios</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-(--app-text) font-medium">Frenos</span>
+                <span class="text-(--app-text-muted)">12 servicios</span>
               </div>
             </div>
-          }
+          </div>
         </div>
 
         <!-- Middle Row -->
@@ -1383,6 +1386,89 @@ import {
             }
           </div>
 
+          <!-- Mock: Inventario Rápido -->
+          <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+            <h3 class="text-(--app-text) text-sm font-bold m-0 mb-3 flex items-center gap-2">
+              <ion-icon name="cube-outline" class="text-amber-400 text-sm"></ion-icon> Inventario Rápido
+            </h3>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-(--app-text) font-medium">Aceite 20W50</span>
+                <span class="text-[#4ade80] font-bold">48 uds</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-(--app-text) font-medium">Filtro de Aceite</span>
+                <span class="text-[#fbbf24] font-bold">23 uds</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-(--app-text) font-medium">Pastillas de Freno</span>
+                <span class="text-[#ff5a52] font-bold">6 uds</span>
+              </div>
+              <div class="flex items-center justify-between text-xs">
+                <span class="text-(--app-text) font-medium">Llantas 205/55R16</span>
+                <span class="text-[#4ade80] font-bold">32 uds</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exchange Rate -->
+          @if (dashboard.data()?.exchangeRate) {
+            <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+              <h3 class="text-(--app-text) text-sm font-bold m-0 mb-2 flex items-center gap-2">
+                <ion-icon name="swap-horizontal-outline" class="text-emerald-400 text-sm"></ion-icon> Tasa de Cambio
+              </h3>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="block text-[22px] font-extrabold text-emerald-400">
+                    Bs. {{ dashboard.data()?.exchangeRate?.rate | number:'1.2-2' }}
+                  </span>
+                  <span class="text-(--app-text-muted) text-[10px] font-medium">
+                    {{ dashboard.data()?.exchangeRate?.source }}
+                  </span>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                  <ion-icon name="cash-outline" class="text-emerald-400 text-xl"></ion-icon>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Mock: Actividad Reciente -->
+        <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-(--app-text) text-sm font-bold m-0 flex items-center gap-2">
+              <ion-icon name="pulse-outline" class="text-[#818cf8] text-sm"></ion-icon> Actividad Reciente
+            </h3>
+            <span class="text-[10px] text-(--app-text-muted) font-medium">últimas 24h</span>
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center gap-3 text-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#4ade80] shrink-0"></span>
+              <span class="text-(--app-text-muted) flex-1">Orden #1024 completada — Cambio de Aceite</span>
+              <span class="text-(--app-text-muted) shrink-0">hace 15min</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#818cf8] shrink-0"></span>
+              <span class="text-(--app-text-muted) flex-1">Nueva orden #1025 — Alineación y Balanceo</span>
+              <span class="text-(--app-text-muted) shrink-0">hace 42min</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#fbbf24] shrink-0"></span>
+              <span class="text-(--app-text-muted) flex-1">Pago recibido — Cliente: Juan Pérez</span>
+              <span class="text-(--app-text-muted) shrink-0">hace 1h</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#ff5a52] shrink-0"></span>
+              <span class="text-(--app-text-muted) flex-1">Alerta KM vencida — Vehículo #V-456</span>
+              <span class="text-(--app-text-muted) shrink-0">hace 2h</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#4ade80] shrink-0"></span>
+              <span class="text-(--app-text-muted) flex-1">Stock reabastecido — Filtros de Aceite</span>
+              <span class="text-(--app-text-muted) shrink-0">hace 3h</span>
+            </div>
+          </div>
         </div>
       </section>
     </div>
