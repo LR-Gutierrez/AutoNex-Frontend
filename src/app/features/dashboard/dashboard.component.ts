@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { DashboardSkeletonComponent } from '../../shared/components/dashboard-skeleton/dashboard-skeleton.component';
@@ -9,10 +9,12 @@ import {
 import { SignalRService } from '../../core/services/signalr.service';
 import { ExchangeRateService } from '../../core/services/exchange-rate.service';
 import { RecurringExpenseService } from '../../core/services/recurring-expense.service';
+import { FinancialRecordService } from '../../core/services/financial-record.service';
 import { RefreshService } from '../../core/services/refresh.service';
 import { PageTitleService } from '../../core/services/page-title.service';
 import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pipe';
 import { PresetKey } from '../../core/models/dashboard.model';
+import { DailySummaryResponse } from '../../core/models/financial-record.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -727,6 +729,59 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       }
     }
 
+    /* === CHART CARD === */
+    .chart-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+    .chart-card:hover {
+      border-color: rgba(59, 130, 246, 0.15);
+      box-shadow: var(--glow-blue);
+    }
+
+    .chart-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+    }
+    .chart-container::-webkit-scrollbar {
+      height: 4px;
+    }
+    .chart-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .chart-container::-webkit-scrollbar-thumb {
+      background: rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+    }
+
+    .chart-bar {
+      transition: opacity 0.2s ease;
+    }
+    .chart-bar:hover {
+      opacity: 0.8;
+    }
+
+    .chart-tooltip {
+      position: fixed;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      pointer-events: none;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
+      transition: opacity 0.15s ease;
+    }
+
     /* Para pantallas muy pequeñas (menos de 360px) */
     @media (max-width: 360px) {
       .chip {
@@ -1365,69 +1420,70 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
             }
           </div>
 
-          <!-- Financial Detail -->
+          <!-- Financial Chart -->
           <div
-            class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5"
+            class="chart-card"
           >
             <h2
-              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-4 flex items-center gap-2"
+              class="text-(--app-text) text-lg max-sm:text-base font-bold m-0 mb-1 flex items-center gap-2"
             >
-              <span>📊</span> Resumen Financiero
+              <span>📊</span> Ingresos vs Egresos
             </h2>
-
-            <div
-              class="grid grid-cols-3 max-md:grid-cols-3 max-sm:grid-cols-1 gap-3"
+            <p
+              class="text-(--app-text-muted) text-xs max-sm:text-[10px] font-medium mb-4"
             >
-              <div class="metric-box text-center">
-                <span
-                  class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1 text-[#4ade80]"
-                >
-                  {{
-                    dashboard.data()?.financialMonth?.totalIncome | currencyFormat
-                  }}
-                </span>
-                <span
-                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                  >Ingresos</span
-                >
-              </div>
+              {{ dashboard.data()?.financialMonth?.totalIncome | currencyFormat }} ingresos ·
+              {{ dashboard.data()?.financialMonth?.totalExpenses | currencyFormat }} egresos ·
+              Balance
+              <span [class.text-[#4ade80]]="(dashboard.data()?.financialMonth?.balance ?? 0) >= 0"
+                    [class.text-[#ff6b63]]="(dashboard.data()?.financialMonth?.balance ?? 0) < 0">
+                {{ dashboard.data()?.financialMonth?.balance | currencyFormat }}
+              </span>
+            </p>
 
-              <div class="metric-box text-center">
-                <span
-                  class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1 text-[#ff6b63]"
-                >
-                  {{
-                    dashboard.data()?.financialMonth?.totalExpenses | currencyFormat
-                  }}
-                </span>
-                <span
-                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                  >Egresos</span
-                >
+            @if (chartData().length > 0) {
+              <div class="chart-container">
+                <div class="flex gap-[3px] min-w-[300px]" style="padding-bottom: 4px;">
+                  @for (day of chartData(); track day.date) {
+                    <div class="flex-1 flex flex-col items-center gap-[2px] min-w-0 group relative">
+                      <div class="flex items-end gap-[2px] w-full" style="height: 100px;">
+                        <div
+                          class="flex-1 rounded-[3px] chart-bar bg-[#4ade80] min-h-[3px]"
+                          [style.height.%]="day.incomePct"
+                          [title]="'Ingresos ' + day.label + ': $' + day.income.toFixed(2)"
+                        ></div>
+                        <div
+                          class="flex-1 rounded-[3px] chart-bar bg-[#ff6b63] min-h-[3px]"
+                          [style.height.%]="day.expensePct"
+                          [title]="'Egresos ' + day.label + ': $' + day.expense.toFixed(2)"
+                        ></div>
+                      </div>
+                      <span class="text-[9px] text-(--app-text-muted) font-medium whitespace-nowrap overflow-hidden text-ellipsis max-w-full text-center">
+                        {{ day.date | date:'dd/MM' }}
+                      </span>
+                    </div>
+                  }
+                </div>
               </div>
-
-              <div
-                class="metric-box text-center border-[rgba(255,255,255,0.08)]"
-              >
-                <span
-                  class="block text-[22px] max-sm:text-[18px] font-extrabold mb-1"
-                  [class.text-[#4ade80]]="
-                    (dashboard.data()?.financialMonth?.balance ?? 0) >= 0
-                  "
-                  [class.text-[#ff6b63]]="
-                    (dashboard.data()?.financialMonth?.balance ?? 0) < 0
-                  "
-                >
-                  {{
-                    dashboard.data()?.financialMonth?.balance | currencyFormat
-                  }}
+              <div class="flex items-center gap-4 mt-3 text-xs text-(--app-text-muted) font-medium">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-[3px] bg-[#4ade80]"></span>
+                  Ingresos
                 </span>
-                <span
-                  class="text-(--app-text-muted) text-xs max-sm:text-[9px] font-medium"
-                  >Balance</span
-                >
+                <span class="flex items-center gap-1.5">
+                  <span class="w-2.5 h-2.5 rounded-[3px] bg-[#ff6b63]"></span>
+                  Egresos
+                </span>
               </div>
-            </div>
+            } @else if (chartLoading()) {
+              <div class="flex items-center justify-center py-8 text-(--app-text-muted) text-sm">
+                Cargando datos del gráfico...
+              </div>
+            } @else {
+              <div class="flex items-center justify-center py-8 text-(--app-text-muted) text-sm">
+                No hay datos financieros en este período
+              </div>
+            }
           </div>
         </div>
       </section>
@@ -1449,10 +1505,35 @@ export class DashboardComponent implements OnInit {
   private readonly refreshService = inject(RefreshService);
   private readonly pageTitle = inject(PageTitleService);
   private readonly exchangeRateService = inject(ExchangeRateService);
+  private readonly financialRecordService = inject(FinancialRecordService);
   protected readonly recurringExpenseService = inject(RecurringExpenseService);
   protected readonly usdRate = signal(0);
+  protected readonly dailySummary = signal<DailySummaryResponse[]>([]);
+  protected readonly chartLoading = signal(false);
+
+  protected readonly chartData = computed(() => {
+    const data = this.dailySummary();
+    if (!data.length) return [];
+
+    const maxVal = Math.max(...data.map(d => Math.max(d.income, d.expense)), 1);
+    return data.map(d => ({
+      date: d.date,
+      label: new Date(d.date).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric' }),
+      income: d.income,
+      expense: d.expense,
+      incomePct: (d.income / maxVal) * 100,
+      expensePct: (d.expense / maxVal) * 100,
+    }));
+  });
 
   constructor() {
+    effect(() => {
+      const range = this.dashboard.selectedRange();
+      if (range) {
+        this.loadChartData(range.startDate, range.endDate);
+      }
+    });
+
     this.refreshService.refresh$
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
@@ -1460,6 +1541,17 @@ export class DashboardComponent implements OnInit {
         this.exchangeRateService.getCurrentUsd().subscribe(r => this.usdRate.set(r.value));
         this.recurringExpenseService.loadDueToday().subscribe();
       });
+  }
+
+  private loadChartData(start: string, end: string): void {
+    this.chartLoading.set(true);
+    this.financialRecordService.getDailySummary(start, end).subscribe({
+      next: (data) => {
+        this.dailySummary.set(data);
+        this.chartLoading.set(false);
+      },
+      error: () => this.chartLoading.set(false),
+    });
   }
 
   ngOnInit() {

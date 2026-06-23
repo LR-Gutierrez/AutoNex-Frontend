@@ -65,3 +65,9 @@ export interface CategorySummaryResponse {
   totalAmount: number;
   count: number;
 }
+
+export interface DailySummaryResponse {
+  date: string;
+  income: number;
+  expense: number;
+}

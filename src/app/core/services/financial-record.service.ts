@@ -8,6 +8,7 @@ import {
   UpdateFinancialRecordRequest,
   FinancialSummaryResponse,
   CategorySummaryResponse,
+  DailySummaryResponse,
 } from '../models/financial-record.model';
 import { PaginationMeta, PagedResponse } from '../models/api-response.model';
 
@@ -76,5 +77,12 @@ export class FinancialRecordService {
 
   delete(id: number): Observable<void> {
     return this.api.delete<void>('/financial-records', id);
+  }
+
+  getDailySummary(from?: string, to?: string): Observable<DailySummaryResponse[]> {
+    let params = new HttpParams();
+    if (from) params = params.set('from', from);
+    if (to) params = params.set('to', to);
+    return this.api.get<DailySummaryResponse[]>('/financial-records/daily-summary', params);
   }
 }
