@@ -9,6 +9,8 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
 import { AlertController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { createListSearch } from '../../shared/utils/list-search.util';
+import { addIcons } from 'ionicons';
+import { constructOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-mileage-alert-list',
@@ -71,34 +73,11 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       background: rgba(74, 222, 128, 0.15);
       color: #4ade80;
     }
-    .action-btn {
-      background: transparent;
-      border: 1px solid transparent;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 6px 10px;
-      border-radius: 8px;
-      transition: all 0.2s ease;
+    .action-btn + .action-btn {
+      margin-left: 6px;
     }
-    .action-btn-review {
-      color: #60a5fa;
-      border-color: rgba(96, 165, 250, 0.35);
-    }
-    .action-btn-review:hover {
-      background: rgba(96, 165, 250, 0.15);
-      border-color: rgba(96, 165, 250, 0.6);
-    }
-    .action-btn-dismiss {
-      color: #f87171;
-      border-color: rgba(248, 113, 113, 0.35);
-    }
-    .action-btn-dismiss:hover {
-      background: rgba(248, 113, 113, 0.15);
-      border-color: rgba(248, 113, 113, 0.6);
+    .app-action-btn + .app-action-btn {
+      margin-left: 6px;
     }
   `,
   ],
@@ -119,13 +98,16 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       @for (alert of alertService.alerts(); track alert.id) {
         <app-list-item
           [editLink]="['/mileage-alerts']"
-          [deleteMessage]="'¿Eliminar la alerta de ' + alert.vehicleInfo + '?'"
           [hideEdit]="true"
-          (deleteConfirm)="deleteAlert(alert.id)"
+          [hideDelete]="true"
         >
           <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
             {{ alert.vehicleInfo }}
           </h3>
+          <p class="m-0 mt-1 text-xs text-(--app-text-muted)">
+            <ion-icon name="construct-outline" class="text-[12px] mr-1 align-middle"></ion-icon>
+            {{ alert.serviceName }}
+          </p>
           <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-(--app-text-muted)">
             <span class="flex items-center gap-1">
               <ion-icon name="speedometer-outline" class="text-[14px]"></ion-icon>
@@ -164,16 +146,16 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           </div>
           <div actions>
             @if (alert.isActive) {
-              <button class="action-btn action-btn-review" (click)="attendAlert(alert.id)">
+              <button class="app-action-btn app-action-btn--primary" (click)="attendAlert(alert.id)">
                 <ion-icon name="checkmark-circle-outline" class="text-[16px]"></ion-icon>
-                Atender
+                Atendido
               </button>
-              <button class="action-btn action-btn-dismiss" (click)="dismissAlert(alert.id)">
+              <button class="app-action-btn app-action-btn--danger" (click)="dismissAlert(alert.id)">
                 <ion-icon name="close-circle-outline" class="text-[16px]"></ion-icon>
-                Desestimar
+                Descartar
               </button>
             }
-            <button class="edit-km-btn" (click)="editWeeklyKm(alert)">
+            <button class="app-action-btn app-action-btn--neutral" (click)="editWeeklyKm(alert)">
               <ion-icon name="create-outline" class="text-[16px]"></ion-icon>
             </button>
           </div>
@@ -190,6 +172,10 @@ export class MileageAlertListComponent implements OnInit {
 
   readonly search = createListSearch(() => this.loadAlerts());
 
+  constructor() {
+    addIcons({ constructOutline });
+  }
+
   ngOnInit() {
     this.pageTitle.title.set('Alertas de Kilometraje');
     this.pageTitle.subtitle.set('Monitorea el kilometraje de los vehículos');
@@ -199,10 +185,6 @@ export class MileageAlertListComponent implements OnInit {
 
   private loadAlerts() {
     this.alertService.loadAll(this.search.buildParams()).subscribe();
-  }
-
-  deleteAlert(id: number) {
-    this.alertService.delete(id).subscribe({ next: () => this.loadAlerts() });
   }
 
   attendAlert(id: number) {

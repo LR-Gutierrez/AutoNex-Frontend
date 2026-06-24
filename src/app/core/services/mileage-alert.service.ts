@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, tap, catchError, throwError } from 'rxjs';
 import { ApiService } from './api.service';
-import { MileageAlertResponse, UpdateMileageAlertRequest } from '../models/mileage-alert.model';
+import { MileageAlertResponse, UpdateMileageAlertRequest, AlertPreview } from '../models/mileage-alert.model';
 import { PaginationMeta, PagedResponse } from '../models/api-response.model';
 import { HttpParams } from '@angular/common/http';
 
@@ -60,5 +60,13 @@ export class MileageAlertService {
 
   attend(id: number): Observable<MileageAlertResponse> {
     return this.api.post<MileageAlertResponse>(`/mileage-alerts/${id}/attend`, {});
+  }
+
+  alertPreview(orderId: number): Observable<AlertPreview[]> {
+    return this.api.get<AlertPreview[]>(`/service-orders/${orderId}/alert-preview`);
+  }
+
+  resendAlerts(orderId: number, alertIds?: number[]): Observable<{ sentCount: number; notifications: unknown[] }> {
+    return this.api.post<{ sentCount: number; notifications: unknown[] }>(`/service-orders/${orderId}/resend-alerts`, { alertIds });
   }
 }

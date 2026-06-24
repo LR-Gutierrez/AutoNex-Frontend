@@ -14,7 +14,8 @@ import {
   gridOutline, peopleOutline, carOutline, businessOutline, waterOutline,
   buildOutline, folderOutline, constructOutline, documentTextOutline,
   speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline,
-  swapHorizontalOutline, calendarOutline, logoWhatsapp
+  swapHorizontalOutline, calendarOutline, logoWhatsapp, chatboxEllipsesOutline,
+  settingsOutline
 } from 'ionicons/icons';
 import { AuthService } from '../../core/services/auth.service';
 import { AuthBrandingComponent } from '../../shared/components/auth-branding/auth-branding.component';
@@ -262,6 +263,11 @@ export class SidebarComponent {
       label: 'WhatsApp',
       icon: 'logo-whatsapp',
     },
+    {
+      path: '/message-templates',
+      label: 'Plantillas',
+      icon: 'chatbox-ellipses-outline',
+    },
     { path: '/financial-records', label: 'Finanzas', icon: 'cash-outline' },
     {
       path: '/exchange-rates',
@@ -269,14 +275,14 @@ export class SidebarComponent {
       icon: 'swap-horizontal-outline',
     },
     {
-      path: '/form-demo',
-      label: 'Formulario Demo',
-      icon: 'code-slash-outline',
+      path: '/settings/workshop',
+      label: 'Configuración',
+      icon: 'settings-outline',
     },
   ];
 
   constructor() {
-    addIcons({ gridOutline, peopleOutline, carOutline, businessOutline, waterOutline, buildOutline, folderOutline, constructOutline, documentTextOutline, speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline, swapHorizontalOutline, logoWhatsapp });
+    addIcons({ gridOutline, peopleOutline, carOutline, businessOutline, waterOutline, buildOutline, folderOutline, constructOutline, documentTextOutline, speedometerOutline, cashOutline, codeSlashOutline, addCircleOutline, swapHorizontalOutline, logoWhatsapp, chatboxEllipsesOutline, settingsOutline });
   }
 
   isActive(path: string): boolean {

@@ -85,7 +85,7 @@ import { RecurringExpenseResponse } from '../../core/models/recurring-expense.mo
       gap: 8px;
       margin-top: 12px;
     }
-    .action-btn {
+    .icon-btn {
       background: rgba(255, 255, 255, 0.06);
       border: none;
       color: var(--app-text-muted, rgba(255,255,255,0.5));
@@ -98,11 +98,11 @@ import { RecurringExpenseResponse } from '../../core/models/recurring-expense.mo
       justify-content: center;
       transition: all 0.2s;
     }
-    .action-btn:hover {
+    .icon-btn:hover {
       background: rgba(255, 255, 255, 0.12);
       color: var(--app-text);
     }
-    .action-btn.danger:hover {
+    .icon-btn--danger:hover {
       background: rgba(255, 59, 48, 0.2);
       color: #ff5a52;
     }
@@ -183,13 +183,13 @@ import { RecurringExpenseResponse } from '../../core/models/recurring-expense.mo
             <div class="card-actions">
               <a
                 [routerLink]="['/recurring-expenses', expense.id, 'edit']"
-                class="action-btn"
+                class="icon-btn"
                 title="Editar"
               >
                 <ion-icon name="create-outline" class="text-[16px]"></ion-icon>
               </a>
               <button
-                class="action-btn danger"
+                class="icon-btn icon-btn--danger"
                 title="Eliminar"
                 (click)="onDelete(expense.id)"
               >

@@ -196,6 +196,26 @@ export const appRoutes: Routes = [
           import('./features/whatsapp/whatsapp.component').then(m => m.WhatsAppComponent),
       },
       {
+        path: 'message-templates',
+        loadComponent: () =>
+          import('./features/message-templates/message-template-list.component').then(m => m.MessageTemplateListComponent),
+      },
+      {
+        path: 'message-templates/new',
+        loadComponent: () =>
+          import('./features/message-templates/message-template-form.component').then(m => m.MessageTemplateFormComponent),
+      },
+      {
+        path: 'message-templates/:id/edit',
+        loadComponent: () =>
+          import('./features/message-templates/message-template-form.component').then(m => m.MessageTemplateFormComponent),
+      },
+      {
+        path: 'settings/workshop',
+        loadComponent: () =>
+          import('./features/workshop-info/workshop-info-form.component').then(m => m.WorkshopInfoFormComponent),
+      },
+      {
         path: 'exchange-rates',
         loadComponent: () =>
           import('./features/exchange-rates/exchange-rate-list.component').then(m => m.ExchangeRateListComponent),

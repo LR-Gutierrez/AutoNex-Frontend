@@ -15,18 +15,20 @@ import { createListSearch } from '../../shared/utils/list-search.util';
   selector: 'app-client-list',
   standalone: true,
   imports: [ListShellComponent, ListItemComponent, IonIcon],
-  styles: `
-    .action-btn {
-      background: transparent !important;
-      transition:
-        background-color 0.18s ease,
-        color 0.18s ease;
-    }
-    .action-btn:hover {
-      background: rgba(255, 255, 255, 0.06) !important;
-      color: var(--app-text) !important;
-    }
-  `,
+  styles: [
+    `
+      .icon-btn {
+        background: transparent !important;
+        transition:
+          background-color 0.18s ease,
+          color 0.18s ease;
+      }
+      .icon-btn:hover {
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: var(--app-text) !important;
+      }
+    `,
+  ],
   template: `
     <app-list-shell
       title="Clientes"
@@ -77,7 +79,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           <div actions>
             <button
               (click)="addVehicle(client)"
-              class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 cursor-pointer border-none action-btn"
+              class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 cursor-pointer border-none icon-btn"
               title="Registrar vehículo"
             >
               <ion-icon name="car-sport-outline" class="text-[18px]"></ion-icon>

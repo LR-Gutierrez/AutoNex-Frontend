@@ -28,3 +28,9 @@ export interface CreateMileageAlertRequest {
 export interface UpdateMileageAlertRequest {
   estimatedWeeklyKm: number;
 }
+
+export interface AlertPreview {
+  alertId: number;
+  serviceName: string;
+  message: string;
+}

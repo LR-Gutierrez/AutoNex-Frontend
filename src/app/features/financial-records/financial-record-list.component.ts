@@ -167,7 +167,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       gap: 8px;
       margin-top: 12px;
     }
-    .rec-action-btn {
+    .icon-btn {
       background: rgba(255, 255, 255, 0.06);
       border: none;
       color: rgba(255, 255, 255, 0.5);
@@ -181,11 +181,11 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       transition: all 0.2s;
       text-decoration: none;
     }
-    .rec-action-btn:hover {
+    .icon-btn:hover {
       background: rgba(255, 255, 255, 0.12);
       color: rgba(255, 255, 255, 0.9);
     }
-    .rec-action-btn.danger:hover {
+    .icon-btn--danger:hover {
       background: rgba(255, 59, 48, 0.2);
       color: #ff5a52;
     }
@@ -281,7 +281,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
             <div actions>
               <button
                 (click)="viewDetail(record)"
-                class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 cursor-pointer border-none action-btn"
+                class="flex items-center justify-center w-9 h-9 rounded-[10px] text-(--app-text-muted) transition-all duration-200 cursor-pointer border-none icon-btn"
                 title="Ver detalle"
               >
                 <ion-icon name="eye-outline" class="text-[18px]"></ion-icon>
@@ -418,7 +418,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
                     expense.id,
                     'edit',
                   ]"
-                  class="rec-action-btn"
+                  class="icon-btn"
                   title="Editar"
                 >
                   <ion-icon
@@ -427,7 +427,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
                   ></ion-icon>
                 </a>
                 <button
-                  class="rec-action-btn danger"
+                  class="icon-btn icon-btn--danger"
                   title="Eliminar"
                   (click)="deleteRecurring(expense.id)"
                 >

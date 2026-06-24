@@ -11,6 +11,7 @@ import { ListItemComponent } from '../../shared/components/list-item/list-item.c
 import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
 import { PaymentModalComponent } from './payment-modal.component';
 import { PaymentDetailModalComponent } from './payment-detail-modal.component';
+import { ResendAlertModalComponent } from './resend-alert-modal.component';
 import { ServiceOrderResponse } from '../../core/models/service-order.model';
 import { createListSearch } from '../../shared/utils/list-search.util';
 
@@ -28,58 +29,8 @@ import { createListSearch } from '../../shared/utils/list-search.util';
   ],
   styles: [
     `
-      .status-btn {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 12px;
-        font-weight: 700;
-        padding: 6px 10px;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-      }
-      .status-btn-start {
-        color: #60a5fa;
-        border: 1px solid rgba(96, 165, 250, 0.35);
-      }
-      .status-btn-start:hover {
-        background: rgba(96, 165, 250, 0.15);
-        border-color: rgba(96, 165, 250, 0.6);
-      }
-      .status-btn-complete {
-        color: #4ade80;
-        border: 1px solid rgba(74, 222, 128, 0.35);
-      }
-      .status-btn-complete:hover {
-        background: rgba(74, 222, 128, 0.15);
-        border-color: rgba(74, 222, 128, 0.6);
-      }
-      .status-btn-alert {
-        color: #facc15;
-        border: 1px solid rgba(250, 204, 21, 0.35);
-      }
-      .status-btn-alert:hover {
-        background: rgba(250, 204, 21, 0.15);
-        border-color: rgba(250, 204, 21, 0.6);
-      }
-      .status-btn-pay {
-        color: #a78bfa;
-        border: 1px solid rgba(167, 139, 250, 0.35);
-      }
-      .status-btn-pay:hover {
-        background: rgba(167, 139, 250, 0.15);
-        border-color: rgba(167, 139, 250, 0.6);
-      }
-      .status-btn-info {
-        color: #22c55e;
-        border: 1px solid rgba(34, 197, 94, 0.35);
-      }
-      .status-btn-info:hover {
-        background: rgba(34, 197, 94, 0.15);
-        border-color: rgba(34, 197, 94, 0.6);
+      .app-action-btn + .app-action-btn {
+        margin-left: 6px;
       }
     `,
   ],
@@ -116,7 +67,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           <div actions>
             @if (order.status === 'Open') {
               <button
-                class="status-btn status-btn-start"
+                class="app-action-btn app-action-btn--primary"
                 (click)="startOrder(order.id)"
               >
                 <ion-icon name="play-outline" class="text-[16px]"></ion-icon>
@@ -125,7 +76,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
             }
             @if (order.status === 'InProgress') {
               <button
-                class="status-btn status-btn-complete"
+                class="app-action-btn app-action-btn--success"
                 (click)="completeOrder(order.id)"
               >
                 <ion-icon
@@ -137,8 +88,8 @@ import { createListSearch } from '../../shared/utils/list-search.util';
             }
             @if (order.status === 'Completed' && order.estimatedDailyKm) {
               <button
-                class="status-btn status-btn-alert"
-                (click)="createAlert(order.id)"
+                class="app-action-btn app-action-btn--warning"
+                (click)="resendAlert(order.id)"
               >
                 <ion-icon
                   name="notifications-outline"
@@ -149,7 +100,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
             }
             @if (order.status === 'Completed') {
               <button
-                class="status-btn status-btn-pay ml-1"
+                class="app-action-btn app-action-btn--secondary"
                 (click)="payOrder(order.id, order.totalAmount)"
               >
                 <ion-icon name="cash-outline" class="text-[16px]"></ion-icon>
@@ -158,7 +109,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
             }
             @if (order.status === 'Paid') {
               <button
-                class="status-btn status-btn-info"
+                class="app-action-btn app-action-btn--info"
                 (click)="viewPayment(order)"
               >
                 <ion-icon name="eye-outline" class="text-[16px]"></ion-icon>
@@ -294,21 +245,17 @@ export class ServiceOrderListComponent implements OnInit {
     }
   }
 
-  createAlert(orderId: number) {
-    this.mileageAlertService.createFromOrder(orderId).subscribe({
-      next: (res) => {
-        this.loadOrders();
-        const data = res as any;
-        const msg = data?.message || 'Alerta creada y notificación enviada';
-        this.toastController.create({ message: msg, duration: 3000, color: 'success', position: 'bottom' }).then(t => t.present());
-      },
-      error: async (err) => {
-        console.error('Error al crear alerta:', err);
-        (await this.toastController.create({
-          message: 'Error al crear alerta',
-          duration: 3000, color: 'danger', position: 'bottom',
-        })).present();
-      },
+  async resendAlert(orderId: number) {
+    const modal = await this.modalController.create({
+      component: ResendAlertModalComponent,
+      componentProps: { orderId },
+      cssClass: 'payment-modal',
     });
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.sent) {
+      this.loadOrders();
+    }
   }
 }

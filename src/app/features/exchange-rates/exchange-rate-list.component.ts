@@ -178,34 +178,8 @@ import { createListSearch } from '../../shared/utils/list-search.util';
         0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
         50% { opacity: 0.5; box-shadow: 0 0 6px 2px rgba(52, 211, 153, 0.2); }
       }
-      .btn-outline {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 5px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 700;
-        background: transparent;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border: 1.5px solid;
-      }
-      .btn-outline-authorize {
-        color: #60a5fa;
-        border-color: rgba(96, 165, 250, 0.5);
-      }
-      .btn-outline-authorize:hover {
-        background: rgba(96, 165, 250, 0.1);
-        border-color: rgba(96, 165, 250, 0.8);
-      }
-      .btn-outline-publish {
-        color: #4ade80;
-        border-color: rgba(74, 222, 128, 0.5);
-      }
-      .btn-outline-publish:hover {
-        background: rgba(74, 222, 128, 0.1);
-        border-color: rgba(74, 222, 128, 0.8);
+      .app-action-btn + .app-action-btn {
+        margin-left: 6px;
       }
     `,
   ],
@@ -275,7 +249,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
         >
           <div actions>
             @if (+pub.status === ExchangeRateStatus.Draft) {
-              <button class="btn-outline btn-outline-authorize" (click)="authorize(pub.id)">
+              <button class="app-action-btn app-action-btn--primary" (click)="authorize(pub.id)">
                 <ion-icon
                   name="shield-checkmark-outline"
                   class="text-[16px]"
@@ -284,7 +258,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
               </button>
             }
             @if (+pub.status === ExchangeRateStatus.Authorized && isAdmin()) {
-              <button class="btn-outline btn-outline-publish" (click)="publish(pub.id)">
+              <button class="app-action-btn app-action-btn--success" (click)="publish(pub.id)">
                 <ion-icon
                   name="checkmark-done-outline"
                   class="text-[16px]"
