@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, trashOutline, createOutline } from 'ionicons/icons';
@@ -11,7 +11,7 @@ import { RecurringExpenseResponse } from '../../core/models/recurring-expense.mo
 @Component({
   selector: 'app-recurring-expense-list',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe, DatePipe, IonIcon],
+  imports: [RouterLink, CurrencyPipe, IonIcon],
   styles: `
     :host {
       display: block;

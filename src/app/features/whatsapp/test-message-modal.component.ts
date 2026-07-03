@@ -147,15 +147,9 @@ export class TestMessageModalComponent {
 
     this.sending.set(true);
     this.waNotifier.testSend(this.phoneControl.value, this.messageControl.value).subscribe({
-      next: async () => {
+      next: (res) => {
         this.sending.set(false);
-        await (await this.toastCtrl.create({
-          message: 'Mensaje enviado correctamente',
-          duration: 3000,
-          color: 'success',
-          position: 'bottom',
-        })).present();
-        this.modalCtrl.dismiss({ sent: true });
+        this.modalCtrl.dismiss({ queued: true, messageId: res.messageId });
       },
       error: async (err) => {
         this.sending.set(false);

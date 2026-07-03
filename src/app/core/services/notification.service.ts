@@ -3,7 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from './api.service';
 import { SignalRService } from './signalr.service';
-import { NotificationResponse } from '../models/notification.model';
+import { NotificationResponse, NotificationStatus } from '../models/notification.model';
 import { PagedResponse } from '../models/api-response.model';
 
 @Injectable({ providedIn: 'root' })
@@ -20,17 +20,23 @@ export class NotificationService implements OnDestroy {
   readonly unreadCount = this.unreadCountSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
 
-  private audioCtx: AudioContext | null = null;
-
   constructor() {
     this.signalr.startConnection('notifications');
 
     this.signalr.on<NotificationResponse>('notifications', 'newNotification')
       .pipe(takeUntil(this.destroy$))
       .subscribe(notification => {
-        this.notificationsSignal.update(list => [notification, ...list]);
-        this.unreadCountSignal.update(c => c + 1);
-        this.playNotificationSound();
+        let isNew = false;
+        this.notificationsSignal.update(list => {
+          const existing = list.find(n => n.id === notification.id);
+          if (existing) return list.map(n => n.id === notification.id ? notification : n);
+          isNew = true;
+          return [notification, ...list];
+        });
+        if (isNew) this.unreadCountSignal.update(c => c + 1);
+        if (notification.status !== NotificationStatus.Pending) {
+          this.playNotificationSound();
+        }
       });
 
     effect(() => {
@@ -69,29 +75,7 @@ export class NotificationService implements OnDestroy {
 
   private playNotificationSound(): void {
     try {
-      if (!this.audioCtx) {
-        this.audioCtx = new AudioContext();
-      }
-
-      const ctx = this.audioCtx;
-      const now = ctx.currentTime;
-
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, now);
-      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.05);
-      osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
-
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.15);
+      new Audio('/assets/sounds/notification-pop.wav').play().catch(() => {});
     } catch {
       // Silently fail - audio not available
     }

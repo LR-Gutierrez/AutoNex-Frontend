@@ -697,6 +697,13 @@ ion-content.app-page {
   --btn-disabled-color: rgba(0, 0, 0, 0.25);
 }
 
+/* === Toast info (azul) === */
+ion-toast.toast-info {
+  --background: #125bd0;
+  --color: #ffffff;
+  --button-color: #ffffff;
+}
+
 /* === Alert Styles Globales (todas las verticales) === */
 ion-alert {
   --background: #1a1b2e;

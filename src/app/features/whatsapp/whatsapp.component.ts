@@ -611,6 +611,33 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
           this.qrDataUrl.set(res.qr);
         }),
     );
+
+    this.subs.push(
+      this.signalr
+        .on<{
+          messageId: string;
+          success: boolean;
+          phone: string;
+          error?: string;
+        }>('whatsapp', 'MessageSent')
+        .subscribe(async (res) => {
+          this.fetchLogs(this.currentPage());
+          if (res.success) {
+            new Audio('/assets/sounds/notification-pop.wav')
+              .play()
+              .catch(() => {});
+          }
+          const toast = await this.toastController.create({
+            message: res.success
+              ? 'Mensaje enviado correctamente'
+              : `Error: ${res.error ?? 'no se pudo enviar'}`,
+            duration: 4000,
+            color: res.success ? 'success' : 'danger',
+            position: 'bottom',
+          });
+          toast.present();
+        }),
+    );
   }
 
   async openTestModal() {
@@ -623,7 +650,16 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-    if (data?.['sent']) this.fetchLogs(1);
+    if (data?.['queued']) {
+      (
+        await this.toastController.create({
+          message: 'Mensaje agregado a la cola',
+          duration: 3000,
+          cssClass: 'toast-info',
+          position: 'bottom',
+        })
+      ).present();
+    }
   }
 
   async logout() {
