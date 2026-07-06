@@ -11,7 +11,7 @@ export interface WaMessageLog {
   phone: string;
   message: string;
   type: 'Test' | 'Reminder';
-  success: boolean;
+  status: string;
   errorMessage: string | null;
   sentBy: string;
   createdAt: string;
@@ -46,7 +46,7 @@ export class WaNotifierService {
   }
 
   testSend(phone: string, message: string) {
-    return this.api.post<{ success: boolean; messageId: string }>('/whatsapp/test-send', { phone, message });
+    return this.api.post<{ success: boolean; messageId: string; logId: number }>('/whatsapp/test-send', { phone, message });
   }
 
   getLogs(page = 1, pageSize = 100) {

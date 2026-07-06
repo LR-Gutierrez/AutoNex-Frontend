@@ -246,6 +246,19 @@ import { Subscription } from 'rxjs';
       color: #ef4444;
     }
 
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-top-color: #60a5fa;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     .msg-cell {
       max-width: 220px;
       white-space: nowrap;
@@ -453,7 +466,9 @@ import { Subscription } from 'rxjs';
                     </td>
                     <td>{{ log.sentBy }}</td>
                     <td>
-                      @if (log.success) {
+                      @if (log.status === 'Sending') {
+                        <span class="spinner" title="Enviando..."></span>
+                      } @else if (log.status === 'Sent' || !log.status) {
                         <span class="status-icon success">&#10003;</span>
                       } @else {
                         <span
@@ -616,23 +631,27 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
       this.signalr
         .on<{
           messageId: string;
+          logId: number;
           success: boolean;
+          status: string;
           phone: string;
           error?: string;
         }>('whatsapp', 'MessageSent')
         .subscribe(async (res) => {
           this.fetchLogs(this.currentPage());
-          if (res.success) {
+          if (res.status === 'Sent') {
             new Audio('/assets/sounds/notification-pop.wav')
               .play()
               .catch(() => {});
           }
           const toast = await this.toastController.create({
-            message: res.success
+            message: res.status === 'Sent'
               ? 'Mensaje enviado correctamente'
-              : `Error: ${res.error ?? 'no se pudo enviar'}`,
-            duration: 4000,
-            color: res.success ? 'success' : 'danger',
+              : res.status === 'Failed'
+                ? `Error: ${res.error ?? 'no se pudo enviar'}`
+                : 'Enviando...',
+            duration: res.status === 'Sending' ? 2000 : 4000,
+            color: res.status === 'Sent' ? 'success' : 'danger',
             position: 'bottom',
           });
           toast.present();
@@ -651,6 +670,21 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
 
     const { data } = await modal.onWillDismiss();
     if (data?.['queued']) {
+      const logId = data['logId'] as number;
+      const message = data['message'] as string;
+      const phone = data['phone'] as string;
+      const newLog: WaMessageLog = {
+        id: logId,
+        phone: phone ?? '',
+        message: message ?? '',
+        type: 'Test',
+        status: 'Sending',
+        errorMessage: null,
+        sentBy: 'Tú',
+        createdAt: new Date().toISOString(),
+      };
+      this.logs.update(list => [newLog, ...list]);
+      this.logsTotal.update(c => c + 1);
       (
         await this.toastController.create({
           message: 'Mensaje agregado a la cola',

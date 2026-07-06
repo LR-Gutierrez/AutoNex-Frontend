@@ -3,7 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from './api.service';
 import { SignalRService } from './signalr.service';
-import { NotificationResponse, NotificationStatus } from '../models/notification.model';
+import { NotificationResponse, NotificationStatus, NotificationType } from '../models/notification.model';
 import { PagedResponse } from '../models/api-response.model';
 
 @Injectable({ providedIn: 'root' })
@@ -34,7 +34,7 @@ export class NotificationService implements OnDestroy {
           return [notification, ...list];
         });
         if (isNew) this.unreadCountSignal.update(c => c + 1);
-        if (notification.status !== NotificationStatus.Pending) {
+        if (notification.status !== NotificationStatus.Pending && notification.type !== NotificationType.WhatsApp) {
           this.playNotificationSound();
         }
       });

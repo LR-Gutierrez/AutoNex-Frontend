@@ -149,7 +149,13 @@ export class TestMessageModalComponent {
     this.waNotifier.testSend(this.phoneControl.value, this.messageControl.value).subscribe({
       next: (res) => {
         this.sending.set(false);
-        this.modalCtrl.dismiss({ queued: true, messageId: res.messageId });
+        this.modalCtrl.dismiss({
+          queued: true,
+          messageId: res.messageId,
+          logId: res.logId,
+          phone: this.phoneControl.value,
+          message: this.messageControl.value,
+        });
       },
       error: async (err) => {
         this.sending.set(false);
