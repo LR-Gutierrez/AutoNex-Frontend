@@ -65,4 +65,8 @@ export class MessageTemplateService {
   delete(id: number): Observable<void> {
     return this.api.delete<void>('/message-templates', id);
   }
+
+  setActive(id: number): Observable<MessageTemplateResponse> {
+    return this.api.post<MessageTemplateResponse>(`/message-templates/${id}/activate`, {});
+  }
 }

@@ -3,6 +3,7 @@ export interface MessageTemplateResponse {
   key: string;
   template: string;
   description?: string;
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
