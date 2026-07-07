@@ -20,10 +20,10 @@ import { CurrencyPipe, DecimalPipe } from '@angular/common';
     :host {
       display: block;
       text-align: center;
-      --amount-primary-color: #fff;
+      --amount-primary-color: var(--app-text);
       --amount-primary-size: 28px;
-      --amount-secondary-color: rgba(255, 255, 255, 0.45);
-      --amount-bs-label-color: rgba(255, 255, 255, 0.5);
+      --amount-secondary-color: var(--app-text-muted);
+      --amount-bs-label-color: var(--app-text-muted);
     }
 
     .usd-primary {

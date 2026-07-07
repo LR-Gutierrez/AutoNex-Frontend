@@ -38,20 +38,19 @@ import { BcvFetchLogResponse, bcvActionKind } from '../../core/models/exchange-r
       --border-radius: 18px;
       --modal-accent: #34d399;
       --modal-accent-bg: rgba(52, 211, 153, 0.12);
-      --modal-card-bg: rgba(255, 255, 255, 0.04);
-      --modal-card-border: rgba(255, 255, 255, 0.1);
     }
     ion-header ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
+      --background: var(--app-surface);
+      --color: var(--app-text);
       --border-color: transparent;
     }
     ion-content {
-      --background: rgba(14, 15, 26, 0.98);
+      --background: var(--app-bg);
     }
 
     .log-item {
       padding: 16px 20px;
-      border-bottom: 1px solid var(--modal-card-border);
+      border-bottom: 1px solid var(--app-border);
     }
     .log-header {
       display: flex;
@@ -89,16 +88,16 @@ import { BcvFetchLogResponse, bcvActionKind } from '../../core/models/exchange-r
     .log-title {
       font-size: 14px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
+      color: var(--app-text);
     }
     .log-subtitle {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.45);
+      color: var(--app-text-muted);
       margin-top: 1px;
     }
     .log-desc {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.65);
+      color: var(--app-text-muted);
       line-height: 1.5;
       margin-top: 2px;
     }
@@ -108,22 +107,22 @@ import { BcvFetchLogResponse, bcvActionKind } from '../../core/models/exchange-r
       gap: 12px;
       margin-top: 8px;
       padding: 10px 12px;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--app-surface-2);
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--app-border);
     }
     .log-meta-item {
       display: flex;
       align-items: center;
       gap: 4px;
       font-size: 11px;
-      color: rgba(255, 255, 255, 0.45);
+      color: var(--app-text-muted);
     }
     .log-meta-item ion-icon {
       font-size: 14px;
     }
     .log-meta-item strong {
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--app-text);
       font-weight: 600;
     }
     .log-error {
@@ -157,7 +156,7 @@ import { BcvFetchLogResponse, bcvActionKind } from '../../core/models/exchange-r
     .empty {
       text-align: center;
       padding: 40px 20px;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--app-text-muted);
       font-size: 14px;
     }
     .pagination {
@@ -166,7 +165,7 @@ import { BcvFetchLogResponse, bcvActionKind } from '../../core/models/exchange-r
       justify-content: center;
       gap: 12px;
       padding: 16px;
-      border-top: 1px solid var(--modal-card-border);
+      border-top: 1px solid var(--app-border);
     }
     .pagination button {
       display: inline-flex;
@@ -176,14 +175,14 @@ import { BcvFetchLogResponse, bcvActionKind } from '../../core/models/exchange-r
       border-radius: 8px;
       font-size: 12px;
       font-weight: 600;
-      background: var(--modal-card-bg);
-      border: 1px solid var(--modal-card-border);
-      color: rgba(255, 255, 255, 0.7);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
+      color: var(--app-text-muted);
       cursor: pointer;
       transition: all 0.2s;
     }
     .pagination button:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.08);
+      color: var(--app-text);
     }
     .pagination button:disabled {
       opacity: 0.3;
@@ -191,7 +190,7 @@ import { BcvFetchLogResponse, bcvActionKind } from '../../core/models/exchange-r
     }
     .pagination span {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
     }
   `,
   template: `

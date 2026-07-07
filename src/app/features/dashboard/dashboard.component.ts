@@ -35,11 +35,7 @@ import {
   styles: `
     :host {
       display: block;
-      --card-bg: linear-gradient(
-        145deg,
-        rgba(28, 30, 50, 0.95),
-        rgba(20, 22, 40, 0.95)
-      );
+      --card-bg: var(--app-surface);
       --glow-blue: 0 0 30px rgba(59, 130, 246, 0.15);
     }
 
@@ -60,10 +56,10 @@ import {
 
     /* === CONTENEDOR DE PRESETS CON SCROLL HORIZONTAL === */
     .presets-wrapper {
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       backdrop-filter: blur(8px);
-      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.03);
+      box-shadow: none;
       border-radius: 16px;
       padding: 6px;
       transition: all 0.3s ease;
@@ -101,7 +97,7 @@ import {
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       user-select: none;
-      color: rgba(243, 244, 251, 0.5);
+      color: var(--app-text-muted);
       background: transparent;
       border: 1px solid transparent;
       padding: 8px 16px;
@@ -138,8 +134,8 @@ import {
     }
 
     .chip:hover {
-      background: rgba(255, 255, 255, 0.04);
-      color: rgba(243, 244, 251, 0.9);
+      background: var(--app-surface-2);
+      color: var(--app-text);
       transform: translateY(-1px);
     }
 
@@ -234,8 +230,8 @@ import {
 
     /* === MEJORA DE FILTROS DE FECHA === */
     .date-filter-container {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 16px;
       padding: 20px 24px;
       backdrop-filter: blur(12px);
@@ -282,11 +278,11 @@ import {
     }
 
     .date-filter-input {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 10px;
       padding: 10px 16px;
-      color: #f3f4fb;
+      color: var(--app-text);
       font-size: 13px;
       font-weight: 500;
       outline: none;
@@ -323,10 +319,11 @@ import {
     }
 
     .date-filter-separator {
-      color: rgba(255, 255, 255, 0.15);
+      color: var(--app-text-muted);
       font-weight: 300;
       font-size: 20px;
       padding: 0 4px;
+      opacity: 0.4;
     }
 
     .date-filter-error {
@@ -356,11 +353,11 @@ import {
     }
 
     .date-filter-clear {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 8px;
       padding: 8px 14px;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--app-text-muted);
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
@@ -439,7 +436,7 @@ import {
     .stat-card {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--app-border);
     }
     .stat-card:hover {
       transform: translateY(-2px);
@@ -452,7 +449,7 @@ import {
     .detail-card {
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--app-border);
     }
     .detail-card:hover {
       border-color: rgba(59, 130, 246, 0.15);
@@ -516,7 +513,7 @@ import {
     }
 
     .gradient-text {
-      background: linear-gradient(135deg, #f3f4fb 0%, #818cf8 100%);
+      background: linear-gradient(135deg, var(--app-text) 0%, #818cf8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -743,7 +740,7 @@ import {
     /* === CHART CARD === */
     .chart-card {
       background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--app-border);
       border-radius: 16px;
       padding: 20px;
       transition: all 0.3s ease;
@@ -1254,7 +1251,7 @@ import {
               </div>
             </div>
             @if ((dashboard.data()?.lowStock?.items?.length ?? 0) > 0) {
-              <div class="mt-2 pt-2 border-t border-[rgba(255,255,255,0.06)]">
+              <div class="mt-2 pt-2 border-t border-(--app-border)">
                 <div class="flex flex-wrap gap-1.5">
                   @for (item of dashboard.data()?.lowStock?.items ?? []; track item.id) {
                     <span class="text-[10px] text-[#ff5a52] font-medium bg-[rgba(255,59,48,0.08)] px-2 py-0.5 rounded-full">

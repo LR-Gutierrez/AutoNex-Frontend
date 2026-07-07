@@ -16,11 +16,7 @@ import {
   styles: `
     :host {
       display: block;
-      --card-bg: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
+      --card-bg: var(--app-surface);
     }
   `,
   template: `
@@ -52,7 +48,7 @@ import {
             [value]="searchTerm()"
             (input)="onSearch($event)"
             [placeholder]="searchPlaceholder"
-            class="w-full h-[48px] bg-[rgba(255,255,255,0.05)] border border-(--app-border) rounded-[12px] pl-11 pr-4 text-sm text-(--app-text) outline-none transition-all duration-300 focus:bg-[rgba(255,255,255,0.08)] focus:border-[rgba(211,29,29,0.5)]"
+            class="w-full h-[48px] bg-(--app-surface) border border-(--app-border) rounded-[12px] shadow-(--app-shadow) pl-11 pr-4 text-sm text-(--app-text) outline-none transition-all duration-300 focus:bg-(--app-surface) focus:border-[rgba(211,29,29,0.5)]"
           />
         </div>
       </div>
@@ -60,7 +56,7 @@ import {
       @if (loading) {
         <div class="grid gap-3">
           @for (_ of skeletonArray; track $index) {
-            <div class="bg-(--card-bg) border border-(--app-border) rounded-2xl p-4.5">
+            <div class="bg-(--card-bg) border border-(--app-border) rounded-2xl shadow-(--app-shadow) p-4.5">
               <ion-skeleton-text animated class="w-[55%]! h-5!"></ion-skeleton-text>
               <ion-skeleton-text animated class="w-[35%]! h-3.5! mt-2.5"></ion-skeleton-text>
               <ion-skeleton-text animated class="w-[25%]! h-3.5! mt-2"></ion-skeleton-text>
@@ -68,7 +64,7 @@ import {
           }
         </div>
       } @else if ((items?.length ?? 0) === 0) {
-        <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] p-10 text-center">
+        <div class="bg-(--card-bg) border border-(--app-border) rounded-[18px] shadow-(--app-shadow) p-10 text-center">
           <ion-icon [name]="emptyIcon" class="text-[48px] text-(--app-text-muted) mb-4"></ion-icon>
           <p class="text-(--app-text-muted) text-sm m-0">{{ emptyMessage }}</p>
           @if (emptyAddRoute || addRoute) {
@@ -79,7 +75,7 @@ import {
           }
         </div>
       } @else {
-        <div class="grid gap-3">
+        <div class="grid gap-3 min-w-0">
           <ng-content></ng-content>
         </div>
 

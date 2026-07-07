@@ -23,7 +23,8 @@ import { WaNotifierService } from '../../core/services/wa-notifier.service';
   ],
   styles: `
     ion-header ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
+      --background: var(--app-surface);
+      --color: var(--app-text);
       --border-color: transparent;
       --padding-start: 12px;
     }
@@ -33,11 +34,11 @@ import { WaNotifierService } from '../../core/services/wa-notifier.service';
       font-weight: 700;
     }
     ion-footer ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
-      --border-color: rgba(255, 255, 255, 0.1);
+      --background: var(--app-surface);
+      --border-color: var(--app-border);
       padding: 4px 16px;
     }
-    ion-content { --background: rgba(14, 15, 26, 0.98); }
+    ion-content { --background: var(--app-bg); }
 
     .modal-body { padding: 20px; }
 

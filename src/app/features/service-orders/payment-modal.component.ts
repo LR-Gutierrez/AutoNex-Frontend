@@ -54,35 +54,30 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
       --modal-accent: #dc2626;
       --modal-accent-hover: #ef4444;
       --modal-accent-bg: rgba(220, 38, 38, 0.12);
-      --modal-card-bg: rgba(255, 255, 255, 0.04);
-      --modal-card-border: rgba(255, 255, 255, 0.1);
-      --modal-card-hover: rgba(255, 255, 255, 0.08);
-      --modal-input-bg: rgba(255, 255, 255, 0.05);
-      --modal-input-border: rgba(255, 255, 255, 0.1);
       --modal-input-focus: rgba(220, 38, 38, 0.5);
-      --modal-input-placeholder: rgba(255, 255, 255, 0.35);
     }
 
     ion-header ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
+      --background: var(--app-surface);
+      --color: var(--app-text);
       --border-color: transparent;
     }
     ion-footer ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
-      --border-color: var(--modal-card-border);
+      --background: var(--app-surface);
+      --border-color: var(--app-border);
       padding: 4px 16px;
     }
     ion-footer ion-buttons {
       gap: 8px;
     }
     ion-content {
-      --background: rgba(14, 15, 26, 0.98);
+      --background: var(--app-bg);
     }
 
     .total-section {
       text-align: center;
       padding: 20px 20px 16px;
-      border-bottom: 1px solid var(--modal-card-border);
+      border-bottom: 1px solid var(--app-border);
       margin-bottom: 20px;
     }
     .total-label {
@@ -91,14 +86,14 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
       margin-bottom: 4px;
     }
     .total-amount {
       display: block;
       font-size: 28px;
       font-weight: 700;
-      color: #fff;
+      color: var(--app-text);
       letter-spacing: -0.02em;
     }
 
@@ -107,7 +102,7 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--app-text-muted);
       padding: 0 20px;
       margin-bottom: 10px;
     }
@@ -124,17 +119,18 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
       align-items: center;
       gap: 6px;
       padding: 16px 10px;
-      border-radius: 14px;
-      border: 1.5px solid var(--modal-card-border);
-      background: var(--modal-card-bg);
+      border-radius: 12px;
+      border: 1.5px solid var(--app-border);
+      background: var(--app-surface-2);
       cursor: pointer;
       transition: all 0.2s ease;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
     .method-card:hover {
-      background: var(--modal-card-hover);
-      border-color: rgba(255, 255, 255, 0.2);
+      background: var(--app-surface-2);
+      border-color: var(--app-text-muted);
+      opacity: 0.85;
     }
     .method-card:active {
       transform: scale(0.97);
@@ -145,7 +141,7 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
     }
     .method-card ion-icon {
       font-size: 24px;
-      color: rgba(255, 255, 255, 0.7);
+      color: var(--app-text-muted);
       transition: color 0.2s;
     }
     .method-card.selected ion-icon {
@@ -154,13 +150,13 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
     .method-label {
       font-size: 12px;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.9);
+      color: var(--app-text);
       text-align: center;
       line-height: 1.3;
     }
     .method-desc {
       font-size: 10px;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--app-text-muted);
       text-align: center;
       line-height: 1.3;
     }
@@ -176,17 +172,17 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
       display: block;
       font-size: 12px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--app-text-muted);
       margin-bottom: 6px;
       margin-left: 2px;
     }
     .field-input {
-      --background: var(--modal-input-bg);
-      --color: #fff;
-      --placeholder-color: var(--modal-input-placeholder);
+      --background: var(--app-surface-2);
+      --color: var(--app-text);
+      --placeholder-color: var(--app-text-muted);
       --padding-start: 16px;
       --padding-end: 16px;
-      --border-color: var(--modal-input-border);
+      --border-color: var(--app-border);
       --border-radius: 12px;
       --border-style: solid;
       --border-width: 1.5px;
@@ -204,17 +200,17 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
       display: block;
       font-size: 12px;
       font-weight: 600;
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--app-text-muted);
       margin-bottom: 6px;
       margin-left: 2px;
     }
     .date-input {
-      --background: var(--modal-input-bg);
-      --color: #fff;
-      --placeholder-color: var(--modal-input-placeholder);
+      --background: var(--app-surface-2);
+      --color: var(--app-text);
+      --placeholder-color: var(--app-text-muted);
       --padding-start: 16px;
       --padding-end: 16px;
-      --border-color: var(--modal-input-border);
+      --border-color: var(--app-border);
       --border-radius: 12px;
       --border-style: solid;
       --border-width: 1.5px;
@@ -225,8 +221,8 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
     }
 
     .rate-info {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--modal-card-border);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 12px;
       padding: 12px 16px;
       margin-bottom: 16px;
@@ -236,12 +232,12 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
     }
     .rate-label {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
     }
     .rate-value {
       font-size: 14px;
       font-weight: 700;
-      color: #fff;
+      color: var(--app-text);
     }
 
     .error-msg {
@@ -250,7 +246,7 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
       gap: 6px;
       background: rgba(220, 38, 38, 0.12);
       border: 1px solid rgba(220, 38, 38, 0.3);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px 14px;
       margin: 0 20px 16px;
       font-size: 13px;
@@ -268,7 +264,7 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="cancel()" color="light">
+          <ion-button (click)="cancel()" color="medium">
             <ion-icon name="close-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -389,7 +385,7 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
 
           <!-- Gratis -->
           @if (method === 'Gratis') {
-            <p style="text-align:center;padding:24px 0;color:rgba(255,255,255,0.5);font-size:14px;">
+            <p style="text-align:center;padding:24px 0;color:var(--app-text-muted);font-size:14px;">
               <ion-icon name="checkmark-circle-outline" style="font-size:32px;display:block;margin:0 auto 8px;color:var(--modal-accent)"></ion-icon>
               La orden se marcará como pagada sin costo.
             </p>

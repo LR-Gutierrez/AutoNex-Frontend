@@ -458,12 +458,6 @@ ion-content.app-page {
   --topbar-surface: rgba(0, 0, 0, 0.04) !important;
 }
 
-[data-theme="light"] app-topbar .ghost-button {
-  --background: rgba(0, 0, 0, 0.04) !important;
-  --background-hover: rgba(0, 0, 0, 0.08) !important;
-  --border-color: #e5e7eb !important;
-}
-
 [data-theme="light"] app-topbar .profile-chip {
   background: rgba(0, 0, 0, 0.04) !important;
 }
@@ -664,13 +658,8 @@ ion-content.app-page {
   opacity: 0.5;
 }
 
-[data-theme="light"] app-topbar .dashboard-search::part(icon),
 [data-theme="light"] app-topbar .icon-button ion-icon {
   color: var(--topbar-text-muted);
-}
-
-[data-theme="light"] app-topbar .dashboard-search::part(container) {
-  border-color: rgba(0, 0, 0, 0.2);
 }
 
 @mixin input-light {
@@ -722,6 +711,16 @@ ion-alert {
   --ion-color-medium: #9a9cb3;
   --ion-text-color: #f3f4fb;
   --ion-text-color-step-150: #9a9cb3;
+}
+
+/* Light mode alerts */
+[data-theme="light"] ion-alert {
+  --background: #ffffff;
+  --border-color: #e5e7eb;
+  --color: #111827;
+  --ion-color-medium: #6b7280;
+  --ion-text-color: #111827;
+  --ion-text-color-step-150: #6b7280;
 }
 
 /* System light mode */

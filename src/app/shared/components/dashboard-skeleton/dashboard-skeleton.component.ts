@@ -11,12 +11,8 @@ import { IonSkeletonText } from '@ionic/angular/standalone';
     }
 
     .skeleton-stat-card {
-      background: linear-gradient(
-        145deg,
-        rgba(28, 30, 50, 0.95),
-        rgba(20, 22, 40, 0.95)
-      );
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--app-surface);
+      border: 1px solid var(--app-border);
       border-radius: 16px;
       padding: 20px;
       min-height: 130px;
@@ -24,20 +20,16 @@ import { IonSkeletonText } from '@ionic/angular/standalone';
     }
 
     .skeleton-detail-card {
-      background: linear-gradient(
-        145deg,
-        rgba(28, 30, 50, 0.95),
-        rgba(20, 22, 40, 0.95)
-      );
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--app-surface);
+      border: 1px solid var(--app-border);
       border-radius: 16px;
       padding: 20px;
       backdrop-filter: blur(12px);
     }
 
     .skeleton-metric-box {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 14px;
       padding: 14px;
     }
@@ -136,10 +128,10 @@ import { IonSkeletonText } from '@ionic/angular/standalone';
           }
         </div>
 
-        <div class="mt-5 pt-4 border-t border-[rgba(255,255,255,0.06)]">
+        <div class="mt-5 pt-4 border-t" style="border-color: var(--app-border)">
           <ion-skeleton-text animated class="w-[35%]! h-4!"></ion-skeleton-text>
           @for (_ of [1, 2]; track $index) {
-            <div class="flex items-center justify-between p-3 mt-2 rounded-xl bg-[rgba(255,59,48,0.06)] border border-[rgba(255,59,48,0.1)]">
+            <div class="flex items-center justify-between p-3 mt-2 rounded-xl" style="background: var(--app-surface-2); border: 1px solid var(--app-border)">
               <ion-skeleton-text animated class="w-[55%]! h-4!"></ion-skeleton-text>
               <ion-skeleton-text animated class="w-[18%]! h-4!"></ion-skeleton-text>
             </div>

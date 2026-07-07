@@ -10,6 +10,7 @@ import { AlertController } from '@ionic/angular';
   styles: `
     :host {
       display: block;
+      min-width: 0;
       animation: fadeSlideIn 0.25s ease both;
     }
     @keyframes fadeSlideIn {
@@ -23,9 +24,11 @@ import { AlertController } from '@ionic/angular';
       padding: 1.125rem 1.125rem 0;
       transition: all 0.2s ease;
       min-width: 0;
+      box-shadow: var(--app-shadow);
+      backdrop-filter: blur(12px);
     }
     .card:hover {
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--app-surface-2);
     }
     .icon-btn {
       background: transparent !important;
@@ -34,7 +37,7 @@ import { AlertController } from '@ionic/angular';
         color 0.18s ease;
     }
     .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.06) !important;
+      background: var(--app-surface-2) !important;
       color: var(--app-text) !important;
     }
     .icon-btn--danger:hover {
@@ -44,7 +47,7 @@ import { AlertController } from '@ionic/angular';
   `,
   template: `
     <div class="card">
-      <div class="flex items-center justify-between gap-3 overflow-hidden pb-[1.125rem]">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 overflow-hidden pb-[1.125rem]">
         <div class="min-w-0 flex-1">
           <ng-content></ng-content>
         </div>

@@ -101,44 +101,42 @@ import { constructOutline } from 'ionicons/icons';
           [hideEdit]="true"
           [hideDelete]="true"
         >
-          <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
+          <h3 class="m-0 text-sm font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
             {{ alert.vehicleInfo }}
           </h3>
-          <p class="m-0 mt-1 text-xs text-(--app-text-muted)">
-            <ion-icon name="construct-outline" class="text-[12px] mr-1 align-middle"></ion-icon>
-            {{ alert.serviceName }}
-          </p>
-          <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-(--app-text-muted)">
-            <span class="flex items-center gap-1">
-              <ion-icon name="speedometer-outline" class="text-[14px]"></ion-icon>
-              Último: {{ alert.currentKm | number }} km
+          @if (alert.serviceName) {
+            <p class="m-0 mt-0.5 text-xs text-(--app-text-muted) text-ellipsis overflow-hidden whitespace-nowrap">
+              <ion-icon name="construct-outline" class="text-[12px] mr-1 align-middle"></ion-icon>
+              {{ alert.serviceName }}
+            </p>
+          }
+          <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 mt-2 text-xs text-(--app-text-muted)">
+            <span class="flex items-center gap-1.5 @max-2xs:col-span-2">
+              <ion-icon name="speedometer-outline" class="text-[14px] shrink-0"></ion-icon>
+              <span class="truncate">Último: {{ alert.currentKm | number }} km</span>
             </span>
-            <span class="flex items-center gap-1">
-              <ion-icon name="refresh-outline" class="text-[14px]"></ion-icon>
-              Semanal: ~{{ alert.estimatedWeeklyKm | number }} km
+            <span class="flex items-center gap-1.5">
+              <ion-icon name="refresh-outline" class="text-[14px] shrink-0"></ion-icon>
+              <span class="truncate">~{{ alert.estimatedWeeklyKm | number }} km/sem</span>
             </span>
-            <span class="flex items-center gap-1">
-              <ion-icon name="flag-outline" class="text-[14px]"></ion-icon>
-              Próxima alerta: {{ alert.nextAlertKm | number }} km
+            <span class="flex items-center gap-1.5">
+              <ion-icon name="flag-outline" class="text-[14px] shrink-0"></ion-icon>
+              <span class="truncate">Alerta: {{ alert.nextAlertKm | number }} km</span>
             </span>
-            <span class="flex items-center gap-1">
-              <ion-icon name="resize-outline" class="text-[14px]"></ion-icon>
-              Restan: {{ alert.remainingKm != null ? (alert.remainingKm | number) : '—' }} km
+            <span class="flex items-center gap-1.5">
+              <ion-icon name="resize-outline" class="text-[14px] shrink-0"></ion-icon>
+              <span class="truncate">Restan: {{ alert.remainingKm != null ? (alert.remainingKm | number) : '—' }} km</span>
             </span>
-            <span class="flex items-center gap-1">
+            <span class="flex items-center gap-1.5 @max-2xs:col-span-2">
               <span class="badge-due" [class.badge-due--yes]="alert.isDue" [class.badge-due--no]="!alert.isDue">
                 <ion-icon [name]="alert.isDue ? 'warning-outline' : 'checkmark-outline'" class="text-[12px]"></ion-icon>
                 {{ alert.isDue ? 'Vencida' : 'Al día' }}
               </span>
-            </span>
-            @let days = estimatedDays(alert);
-            <span class="flex items-center gap-1">
+              @let days = estimatedDays(alert);
               <span class="badge-days" [class.badge-days--danger]="days !== null && days <= 7" [class.badge-days--warn]="days !== null && days > 7 && days <= 30" [class.badge-days--safe]="days !== null && days > 30">
                 <ion-icon name="time-outline" class="text-[12px]"></ion-icon>
                 {{ days !== null ? '~' + days + ' días' : '—' }}
               </span>
-            </span>
-            <span class="flex items-center gap-1">
               <span class="badge-status" [class.badge-status--pending]="alert.isActive" [class.badge-status--completed]="!alert.isActive">
                 {{ alert.isActive ? 'Pendiente' : 'Atendida' }}
               </span>

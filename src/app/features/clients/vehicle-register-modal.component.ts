@@ -37,19 +37,20 @@ import { CreateVehicleRequest } from '../../core/models/vehicle.model';
   ],
   styles: `
     ion-header ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
+      --background: var(--app-surface);
+      --color: var(--app-text);
       --border-color: transparent;
     }
     ion-footer ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
-      --border-color: rgba(255, 255, 255, 0.1);
+      --background: var(--app-surface);
+      --border-color: var(--app-border);
       padding: 4px 16px;
     }
     ion-footer ion-buttons {
       gap: 8px;
     }
     ion-content {
-      --background: rgba(14, 15, 26, 0.98);
+      --background: var(--app-bg);
     }
 
     .modal-body {
@@ -60,16 +61,16 @@ import { CreateVehicleRequest } from '../../core/models/vehicle.model';
       display: flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 12px;
       padding: 12px 16px;
       margin-bottom: 20px;
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--app-text-muted);
     }
     .client-info strong {
-      color: #fff;
+      color: var(--app-text);
     }
 
     .error-msg {
@@ -78,7 +79,7 @@ import { CreateVehicleRequest } from '../../core/models/vehicle.model';
       gap: 6px;
       background: rgba(220, 38, 38, 0.12);
       border: 1px solid rgba(220, 38, 38, 0.3);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px 14px;
       margin-bottom: 16px;
       font-size: 13px;
@@ -89,7 +90,7 @@ import { CreateVehicleRequest } from '../../core/models/vehicle.model';
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="cancel()" color="light">
+          <ion-button (click)="cancel()" color="medium">
             <ion-icon name="close-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>

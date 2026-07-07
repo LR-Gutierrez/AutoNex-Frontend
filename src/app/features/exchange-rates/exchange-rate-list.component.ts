@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { IonIcon } from '@ionic/angular/standalone';
+import { IonIcon, IonPopover } from '@ionic/angular/standalone';
 import { ModalController, ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -8,6 +8,7 @@ import {
   checkmarkCircleOutline,
   createOutline,
   documentTextOutline,
+  ellipsisVerticalOutline,
   shieldCheckmarkOutline,
   timeOutline,
   syncOutline,
@@ -35,6 +36,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
     ListShellComponent,
     ListItemComponent,
     IonIcon,
+    IonPopover,
     DatePipe,
     DecimalPipe,
   ],
@@ -111,6 +113,13 @@ import { createListSearch } from '../../shared/utils/list-search.util';
         text-decoration: none;
         font-family: inherit;
       }
+      @media (max-width: 480px) {
+        .header-btn {
+          padding: 8px 12px;
+          font-size: 12px;
+          gap: 6px;
+        }
+      }
       .header-btn:disabled {
         opacity: 0.5;
         cursor: not-allowed;
@@ -151,12 +160,13 @@ import { createListSearch } from '../../shared/utils/list-search.util';
         box-shadow: 0 0 6px rgba(52, 211, 153, 0.4);
       }
       .header-btn-logs {
-        color: rgba(255, 255, 255, 0.5);
-        border-color: rgba(255, 255, 255, 0.15);
+        color: var(--app-text-muted);
+        border-color: var(--app-border);
       }
       .header-btn-logs:hover {
-        background: rgba(255, 255, 255, 0.05);
-        border-color: rgba(255, 255, 255, 0.3);
+        background: var(--app-surface-2);
+        color: var(--app-text);
+        border-color: var(--app-text-muted);
       }
       .retry-badge {
         display: inline-flex;
@@ -181,6 +191,61 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       .app-action-btn + .app-action-btn {
         margin-left: 6px;
       }
+
+      ion-popover {
+        --backdrop-opacity: 0.3;
+      }
+      ion-popover::part(content) {
+        background: var(--app-surface);
+        border: 1px solid var(--app-border);
+        border-radius: 14px;
+        box-shadow: var(--app-shadow);
+      }
+
+      .popover-menu {
+        min-width: 180px;
+        padding: 6px;
+      }
+      .popover-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        padding: 10px 12px;
+        border: none;
+        border-radius: 10px;
+        background: transparent;
+        color: var(--app-text);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.15s;
+        font-family: inherit;
+      }
+      .popover-item:hover {
+        background: var(--app-surface-2);
+      }
+      .popover-item.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .popover-item ion-icon {
+        font-size: 16px;
+        color: var(--app-text-muted);
+      }
+      .popover-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--app-text-muted);
+        opacity: 0.4;
+        transition: all 0.3s ease;
+      }
+      .popover-dot.active {
+        background: #34d399;
+        opacity: 1;
+        box-shadow: 0 0 6px rgba(52, 211, 153, 0.4);
+      }
     `,
   ],
   template: `
@@ -199,7 +264,8 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       (search)="search.onSearch($event)"
       (pageChange)="search.goToPage($event)"
     >
-      <div header-actions class="flex items-center gap-2">
+      <!-- Desktop buttons -->
+      <div header-actions class="hidden md:flex items-center gap-2">
         <button
           class="header-btn header-btn-toggle"
           [class.active]="autoConsultEnabled()"
@@ -230,6 +296,45 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           <ion-icon name="document-text-outline" class="text-[18px]"></ion-icon>
           Logs
         </button>
+      </div>
+
+      <!-- Mobile kebab -->
+      <div header-actions class="md:hidden">
+        <button
+          id="rate-actions-trigger"
+          class="header-btn header-btn-logs"
+          title="Acciones"
+        >
+          <ion-icon name="ellipsis-vertical-outline" class="text-[18px]"></ion-icon>
+        </button>
+        <ion-popover
+          #rateActionsPopover
+          trigger="rate-actions-trigger"
+          trigger-action="click"
+          side="bottom"
+          alignment="end"
+        >
+          <ng-template>
+            <div class="popover-menu">
+              <button class="popover-item" (click)="toggleAutoConsult(); rateActionsPopover.dismiss()">
+                <span class="popover-dot" [class.active]="autoConsultEnabled()"></span>
+                Auto BCV
+              </button>
+              <button class="popover-item" [class.disabled]="syncing()" (click)="syncBcv(); rateActionsPopover.dismiss()">
+                @if (syncing()) {
+                  <ion-icon name="sync-outline" class="text-[16px] animate-spin"></ion-icon>
+                } @else {
+                  <ion-icon name="sync-outline" class="text-[16px]"></ion-icon>
+                }
+                Sincronizar
+              </button>
+              <button class="popover-item" (click)="openLogs(); rateActionsPopover.dismiss()">
+                <ion-icon name="document-text-outline" class="text-[16px]"></ion-icon>
+                Logs
+              </button>
+            </div>
+          </ng-template>
+        </ion-popover>
       </div>
       <div class="flex items-center gap-2 mt-2 max-md:mt-1.5">
         @if (autoConsultEnabled() && retryEnabled() && nextRetryUtc()) {
@@ -363,6 +468,7 @@ export class ExchangeRateListComponent implements OnInit {
       checkmarkCircleOutline,
       createOutline,
       documentTextOutline,
+      ellipsisVerticalOutline,
       shieldCheckmarkOutline,
       checkmarkDoneOutline,
       timeOutline,

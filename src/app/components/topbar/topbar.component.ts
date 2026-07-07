@@ -41,7 +41,6 @@ import { RecurringExpenseService } from '../../core/services/recurring-expense.s
     RouterLink,
     IonButtons,
     IonMenuButton,
-    IonSearchbar,
     IonButton,
     IonIcon,
     IonBadge,
@@ -97,40 +96,6 @@ import { RecurringExpenseService } from '../../core/services/recurring-expense.s
       justify-content: flex-end;
       gap: 8px;
       flex-shrink: 0;
-    }
-
-    .dashboard-search {
-      width: 260px;
-      min-width: 200px;
-    }
-
-    .dashboard-search::part(container) {
-      background: var(--topbar-surface);
-      border: 1px solid var(--topbar-border);
-      box-shadow: none;
-      border-radius: 14px;
-    }
-
-    .dashboard-search::part(input) {
-      color: var(--topbar-text);
-      font-size: 14px;
-    }
-
-    .dashboard-search::part(icon) {
-      color: var(--topbar-text-muted);
-    }
-
-    .ghost-button {
-      --background: var(--topbar-surface);
-      --background-hover: rgba(255, 255, 255, 0.07);
-      --color: var(--topbar-text);
-      --border-color: var(--topbar-border);
-      --border-radius: 12px;
-      --box-shadow: none;
-      height: 44px;
-      text-transform: none;
-      font-weight: 600;
-      margin: 0;
     }
 
     .primary-button {
@@ -279,10 +244,6 @@ import { RecurringExpenseService } from '../../core/services/recurring-expense.s
         display: none;
       }
 
-      .dashboard-search {
-        display: none;
-      }
-
       .profile-role {
         display: none;
       }
@@ -297,10 +258,6 @@ import { RecurringExpenseService } from '../../core/services/recurring-expense.s
 
       .dashboard-title {
         font-size: 16px;
-      }
-
-      .ghost-button {
-        display: none;
       }
 
       .primary-button {
@@ -486,17 +443,6 @@ import { RecurringExpenseService } from '../../core/services/recurring-expense.s
     </div>
 
     <div class="header-actions">
-      <ion-searchbar
-        class="dashboard-search"
-        placeholder="Buscar..."
-        show-clear-button="focus"
-      ></ion-searchbar>
-
-      <ion-button fill="outline" class="ghost-button">
-        <ion-icon name="calendar-outline" slot="start"></ion-icon>
-        <span>30 días</span>
-      </ion-button>
-
       <ion-button class="primary-button" routerLink="/services">
         <ion-icon
           name="add-circle-outline"

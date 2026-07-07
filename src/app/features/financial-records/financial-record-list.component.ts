@@ -44,12 +44,8 @@ import { createListSearch } from '../../shared/utils/list-search.util';
   ],
   styles: `
     .balance-card {
-      background: linear-gradient(
-        145deg,
-        rgba(28, 30, 50, 0.95),
-        rgba(20, 22, 40, 0.95)
-      );
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--app-surface);
+      border: 1px solid var(--app-border);
       border-radius: 16px;
       padding: 20px 24px;
       transition: all 0.3s ease;
@@ -57,8 +53,8 @@ import { createListSearch } from '../../shared/utils/list-search.util';
     }
     .balance-card:hover {
       transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      border-color: var(--app-text-muted);
+      box-shadow: var(--app-shadow);
     }
     .balance-value {
       font-size: 32px;
@@ -71,7 +67,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--app-text-muted);
     }
     .account-badge {
       display: inline-flex;
@@ -94,8 +90,8 @@ import { createListSearch } from '../../shared/utils/list-search.util';
     .tab-bar {
       display: flex;
       gap: 4px;
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 14px;
       padding: 4px;
       margin: 0 20px 16px;
@@ -110,23 +106,20 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       cursor: pointer;
       transition: all 0.2s ease;
       background: transparent;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--app-text-muted);
     }
     .tab-btn.active {
       background: rgba(211, 29, 29, 0.2);
       color: #ef4444;
     }
     .tab-btn:hover:not(.active) {
-      background: rgba(255, 255, 255, 0.06);
-      color: rgba(255, 255, 255, 0.7);
+      background: var(--app-surface-2);
+      color: var(--app-text);
+      opacity: 0.85;
     }
     .recurring-card {
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--app-surface);
+      border: 1px solid var(--app-border);
       border-radius: 14px;
       padding: 16px;
       margin: 0 20px 10px;
@@ -152,15 +145,15 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       color: #22c55e;
     }
     .recurring-badge.inactive {
-      background: rgba(255, 255, 255, 0.08);
-      color: rgba(255, 255, 255, 0.4);
+      background: var(--app-surface-2);
+      color: var(--app-text-muted);
     }
     .recurring-details {
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
     }
     .recurring-actions {
       display: flex;
@@ -168,9 +161,9 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       margin-top: 12px;
     }
     .icon-btn {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--app-surface-2);
       border: none;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
       cursor: pointer;
       border-radius: 8px;
       width: 34px;
@@ -182,8 +175,9 @@ import { createListSearch } from '../../shared/utils/list-search.util';
       text-decoration: none;
     }
     .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: rgba(255, 255, 255, 0.9);
+      background: var(--app-surface-2);
+      color: var(--app-text);
+      opacity: 0.85;
     }
     .icon-btn--danger:hover {
       background: rgba(255, 59, 48, 0.2);
@@ -199,7 +193,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
   template: `
     @if (accountService.balances(); as balances) {
       <div class="px-5 max-md:px-3.5 pt-5 max-md:pt-3.5">
-        <div class="grid grid-cols-2 gap-4 mb-5">
+        <div class="grid grid-cols-2 max-md:grid-cols-1 gap-4 mb-5">
           @for (bal of balances; track bal.accountType) {
             <div class="balance-card">
               <div class="balance-label">
@@ -288,7 +282,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
               </button>
             </div>
             <h3
-              class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap"
+              class="m-0 text-sm font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap"
             >
               {{ record.description }}
             </h3>

@@ -23,10 +23,10 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           background-color 0.18s ease,
           color 0.18s ease;
       }
-      .icon-btn:hover {
-        background: rgba(255, 255, 255, 0.06) !important;
-        color: var(--app-text) !important;
-      }
+    .icon-btn:hover {
+      background: var(--app-surface-2) !important;
+      color: var(--app-text) !important;
+    }
     `,
   ],
   template: `
@@ -53,7 +53,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           [deleteMessage]="getDeleteMessage(client.fullName)"
           (deleteConfirm)="deleteClient(client.id)"
         >
-          <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
+          <h3 class="m-0 text-sm font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
             {{ client.fullName }}
           </h3>
           <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-(--app-text-muted)">

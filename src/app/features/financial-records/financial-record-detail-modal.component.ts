@@ -38,8 +38,6 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     :host {
       --modal-accent: #4ade80;
       --modal-accent-bg: rgba(74, 222, 128, 0.12);
-      --modal-card-bg: rgba(255, 255, 255, 0.04);
-      --modal-card-border: rgba(255, 255, 255, 0.1);
     }
     :host.Expense {
       --modal-accent: #fb7185;
@@ -47,16 +45,17 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     }
 
     ion-header ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
+      --background: var(--app-surface);
+      --color: var(--app-text);
       --border-color: transparent;
     }
     ion-footer ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
-      --border-color: var(--modal-card-border);
+      --background: var(--app-surface);
+      --border-color: var(--app-border);
       padding: 4px 16px;
     }
     ion-content {
-      --background: rgba(14, 15, 26, 0.98);
+      --background: var(--app-bg);
     }
 
     .banner {
@@ -75,14 +74,14 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     }
     .banner .subtitle {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
       margin-top: 4px;
     }
 
     .amount-section {
       text-align: center;
       padding: 0 20px 20px;
-      border-bottom: 1px solid var(--modal-card-border);
+      border-bottom: 1px solid var(--app-border);
       margin-bottom: 16px;
     }
     .amount-section app-amount-display {
@@ -93,7 +92,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--app-text-muted);
     }
 
     .detail-list {
@@ -107,13 +106,13 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
       justify-content: space-between;
       align-items: center;
       padding: 12px 16px;
-      background: var(--modal-card-bg);
-      border: 1px solid var(--modal-card-border);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 12px;
     }
     .detail-label {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -124,7 +123,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     .detail-value {
       font-size: 14px;
       font-weight: 600;
-      color: #fff;
+      color: var(--app-text);
       text-align: right;
     }
 
@@ -166,7 +165,7 @@ import { EnumLabelPipe } from '../../shared/pipes/enum-label.pipe';
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="dismiss()" color="light">
+          <ion-button (click)="dismiss()" color="medium">
             <ion-icon name="close-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>

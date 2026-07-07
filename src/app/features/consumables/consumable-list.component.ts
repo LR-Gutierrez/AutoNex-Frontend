@@ -37,7 +37,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           [deleteMessage]="getDeleteMessage(item.name)"
           (deleteConfirm)="deleteConsumable(item.id)"
         >
-          <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
+          <h3 class="m-0 text-sm font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
             {{ item.name }}
           </h3>
           <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-(--app-text-muted)">

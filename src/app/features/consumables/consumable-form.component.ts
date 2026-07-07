@@ -29,11 +29,7 @@ import type { MaskitoOptions } from '@maskito/core';
   styles: `
     :host {
       display: block;
-      --card-bg: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
+      --card-bg: var(--app-surface);
     }
     .cancel-link {
       color: var(--app-text-muted);

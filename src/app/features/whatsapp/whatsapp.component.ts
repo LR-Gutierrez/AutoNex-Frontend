@@ -1,15 +1,32 @@
 import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+  FormsModule,
+} from '@angular/forms';
 import { HttpParams } from '@angular/common/http';
-import { ModalController, ToastController, AlertController } from '@ionic/angular';
+import {
+  ModalController,
+  ToastController,
+  AlertController,
+} from '@ionic/angular';
 import { IonIcon, IonButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  logoWhatsapp, refreshOutline, logOutOutline, sendOutline,
-  chevronBackOutline, chevronForwardOutline,
-  documentTextOutline, createOutline, checkmarkCircleOutline,
-  arrowBackOutline, informationCircleOutline, trashOutline,
+  logoWhatsapp,
+  refreshOutline,
+  logOutOutline,
+  sendOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
+  documentTextOutline,
+  createOutline,
+  checkmarkCircleOutline,
+  arrowBackOutline,
+  informationCircleOutline,
+  trashOutline,
 } from 'ionicons/icons';
 import { Subscription } from 'rxjs';
 import {
@@ -18,9 +35,7 @@ import {
 } from '../../core/services/wa-notifier.service';
 import { SignalRService } from '../../core/services/signalr.service';
 import { MessageTemplateService } from '../../core/services/message-template.service';
-import type {
-  MessageTemplateResponse,
-} from '../../core/models/message-template.model';
+import type { MessageTemplateResponse } from '../../core/models/message-template.model';
 import { TextInputComponent } from '../../shared/components/text-input/text-input.component';
 import { TextareaFieldComponent } from '../../shared/components/textarea-field/textarea-field.component';
 import { AuthButtonComponent } from '../../shared/components/auth-button/auth-button.component';
@@ -29,8 +44,14 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
   selector: 'app-whatsapp',
   standalone: true,
   imports: [
-    IonIcon, IonButton, DatePipe, ReactiveFormsModule, FormsModule,
-    TextInputComponent, TextareaFieldComponent, AuthButtonComponent,
+    IonIcon,
+    IonButton,
+    DatePipe,
+    ReactiveFormsModule,
+    FormsModule,
+    TextInputComponent,
+    TextareaFieldComponent,
+    AuthButtonComponent,
   ],
   styles: `
     :host {
@@ -51,6 +72,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       line-height: 1.1;
       font-weight: 800;
       letter-spacing: -0.03em;
+      color: var(--app-text);
     }
     .page-header p {
       margin: 6px 0 0;
@@ -63,7 +85,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       display: flex;
       gap: 4px;
       margin-bottom: 24px;
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--app-surface-2);
       border-radius: 12px;
       padding: 4px;
     }
@@ -84,18 +106,14 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       color: var(--app-text);
     }
     .tab.active {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--app-surface-2);
       color: var(--app-text);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     /* Connection card */
     .wa-card {
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
+      background: var(--app-surface);
       border: 1px solid var(--app-border);
       border-radius: 18px;
       padding: 40px 32px;
@@ -224,12 +242,13 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       margin: 0;
       font-size: 18px;
       font-weight: 700;
+      color: var(--app-text);
     }
     .logs-header .badge-total {
       font-size: 12px;
       padding: 2px 10px;
       border-radius: 100px;
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--app-surface-2);
       color: var(--app-text-muted);
     }
 
@@ -246,15 +265,16 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid var(--app-border);
     }
     .logs-table tbody td {
       padding: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--app-border);
       vertical-align: top;
+      color: var(--app-text);
     }
     .logs-table tbody tr:hover {
-      background: rgba(255, 255, 255, 0.02);
+      background: var(--app-surface-2);
     }
 
     .type-badge {
@@ -287,7 +307,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       display: inline-block;
       width: 14px;
       height: 14px;
-      border: 2px solid rgba(255, 255, 255, 0.15);
+      border: 2px solid var(--app-border);
       border-top-color: #60a5fa;
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
@@ -297,7 +317,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
     }
 
     .msg-cell {
-      max-width: 220px;
+      max-width: 260px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -311,11 +331,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
     }
 
     .logs-card {
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
+      background: var(--app-surface);
       border: 1px solid var(--app-border);
       border-radius: 18px;
       padding: 24px;
@@ -329,6 +345,12 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
     .logs-card table th,
     .logs-card table td {
       white-space: nowrap;
+    }
+    .logs-card table td:first-child,
+    .logs-card table td:nth-child(2),
+    .logs-card table td:nth-child(3) {
+      white-space: normal;
+      word-break: break-word;
     }
 
     .pagination {
@@ -344,8 +366,8 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 8px;
       padding: 6px 14px;
       color: var(--app-text);
@@ -354,7 +376,8 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       transition: background 0.15s;
     }
     .page-btn:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--app-surface-2);
+      opacity: 0.85;
     }
     .page-btn:disabled {
       opacity: 0.35;
@@ -380,6 +403,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       margin: 0;
       font-size: 18px;
       font-weight: 700;
+      color: var(--app-text);
     }
     .template-search {
       flex: 1;
@@ -387,15 +411,15 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       max-width: 300px;
       padding: 8px 12px;
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--app-border);
+      background: var(--app-surface-2);
       color: var(--app-text);
       font-size: 13px;
       outline: none;
       transition: border-color 0.2s;
     }
     .template-search:focus {
-      border-color: rgba(255, 255, 255, 0.25);
+      border-color: var(--app-text-muted);
     }
     .template-search::placeholder {
       color: var(--app-text-muted);
@@ -408,18 +432,15 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
     }
 
     .template-card {
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
+      background: var(--app-surface);
       border: 1px solid var(--app-border);
       border-radius: 16px;
       padding: 16px 20px;
       transition: border-color 0.2s;
     }
     .template-card:hover {
-      border-color: rgba(255, 255, 255, 0.15);
+      border-color: var(--app-text-muted);
+      opacity: 0.9;
     }
 
     .template-card-top {
@@ -480,7 +501,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       transition: all 0.15s;
     }
     .icon-btn:hover {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--app-surface-2);
       color: var(--app-text);
     }
     .icon-btn.activate:hover {
@@ -528,11 +549,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
     .template-empty {
       text-align: center;
       padding: 40px 20px;
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
+      background: var(--app-surface);
       border: 1px solid var(--app-border);
       border-radius: 18px;
     }
@@ -547,7 +564,8 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       font-size: 13px;
     }
     .template-empty .sub {
-      color: rgba(255, 255, 255, 0.3);
+      color: var(--app-text-muted);
+      opacity: 0.6;
       font-size: 12px;
     }
 
@@ -560,11 +578,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
 
     /* Template form */
     .template-form-section {
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
+      background: var(--app-surface);
       border: 1px solid var(--app-border);
       border-radius: 18px;
       padding: 24px;
@@ -585,14 +599,15 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       height: 36px;
       border-radius: 10px;
       border: none;
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--app-surface-2);
       color: var(--app-text-muted);
       cursor: pointer;
       transition: all 0.2s;
     }
     .back-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--app-surface-2);
       color: var(--app-text);
+      opacity: 0.85;
     }
 
     .template-form-title {
@@ -619,8 +634,8 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
 
     .placeholder-badge {
       display: inline-block;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 6px;
       padding: 3px 10px;
       font-size: 11px;
@@ -630,8 +645,9 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       transition: all 0.2s ease;
     }
     .placeholder-badge:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: var(--app-surface-2);
       color: var(--app-text);
+      opacity: 0.85;
     }
 
     .form-error {
@@ -653,7 +669,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       justify-content: center;
       height: 44px;
       padding: 0 20px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      border: 2px solid var(--app-border);
       border-radius: 12px;
       background: transparent;
       color: var(--app-text-muted);
@@ -663,16 +679,12 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       transition: all 0.2s;
     }
     .form-cancel:hover {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--app-surface-2);
       color: var(--app-text);
     }
 
     .template-list-card {
-      background: linear-gradient(
-        180deg,
-        rgba(30, 32, 52, 0.96),
-        rgba(24, 25, 42, 0.96)
-      );
+      background: var(--app-surface);
       border: 1px solid var(--app-border);
       border-radius: 18px;
       padding: 24px;
@@ -702,13 +714,25 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
 
       <!-- Tabs -->
       <div class="tabs">
-        <button class="tab" [class.active]="segment() === 'conexion'" (click)="segment.set('conexion')">
+        <button
+          class="tab"
+          [class.active]="segment() === 'conexion'"
+          (click)="segment.set('conexion')"
+        >
           Conexión
         </button>
-        <button class="tab" [class.active]="segment() === 'historial'" (click)="segment.set('historial')">
+        <button
+          class="tab"
+          [class.active]="segment() === 'historial'"
+          (click)="segment.set('historial')"
+        >
           Historial
         </button>
-        <button class="tab" [class.active]="segment() === 'plantillas'" (click)="switchToPlantillas()">
+        <button
+          class="tab"
+          [class.active]="segment() === 'plantillas'"
+          (click)="switchToPlantillas()"
+        >
           Plantillas
         </button>
       </div>
@@ -744,8 +768,8 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
             </div>
             <p class="qr-hint">
               Escanea este código con WhatsApp en tu teléfono.<br />
-              Ve a <strong>Ajustes &gt; Dispositivos vinculados</strong> y escanea
-              el código.
+              Ve a <strong>Ajustes &gt; Dispositivos vinculados</strong> y
+              escanea el código.
             </p>
           } @else {
             <p class="status-message">
@@ -754,9 +778,11 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
               } @else if (status() === 'ready') {
                 Conectado y listo para enviar mensajes.
               } @else if (status() === 'disconnected') {
-                Sesión cerrada. Presiona <strong>Reiniciar</strong> para reconectar.
+                Sesión cerrada. Presiona <strong>Reiniciar</strong> para
+                reconectar.
               } @else if (status() === 'error') {
-                Error de autenticación. Presiona <strong>Reiniciar</strong> para reconectar.
+                Error de autenticación. Presiona <strong>Reiniciar</strong> para
+                reconectar.
               }
             </p>
           }
@@ -792,7 +818,10 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
           </div>
 
           @if (lastChecked()) {
-            <p class="text-xs opacity-60 mt-4" style="color: var(--app-text-muted)">
+            <p
+              class="text-xs opacity-60 mt-4"
+              style="color: var(--app-text-muted)"
+            >
               Última actualización: {{ lastChecked() | date: 'HH:mm:ss' }}
             </p>
           }
@@ -851,7 +880,11 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                         } @else if (log.status === 'Sent' || !log.status) {
                           <span class="status-icon success">&#10003;</span>
                         } @else {
-                          <span class="status-icon fail" [title]="log.errorMessage ?? ''">&#10007;</span>
+                          <span
+                            class="status-icon fail"
+                            [title]="log.errorMessage ?? ''"
+                            >&#10007;</span
+                          >
                         }
                       </td>
                       <td>{{ log.createdAt | date: 'dd/MM/yy HH:mm' }}</td>
@@ -869,7 +902,10 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                     <ion-icon name="chevron-back-outline"></ion-icon>
                     Anterior
                   </button>
-                  <span class="page-info">Pág {{ currentPage() }} de {{ totalPages() }} · {{ logsTotal() }} registros</span>
+                  <span class="page-info"
+                    >Pág {{ currentPage() }} de {{ totalPages() }} ·
+                    {{ logsTotal() }} registros</span
+                  >
                   <button
                     class="page-btn"
                     [disabled]="currentPage() >= totalPages()"
@@ -896,7 +932,9 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                   <ion-icon name="arrow-back-outline"></ion-icon>
                 </button>
                 <h3 class="template-form-title">
-                  {{ editingTemplateId() ? 'Editar Plantilla' : 'Nueva Plantilla' }}
+                  {{
+                    editingTemplateId() ? 'Editar Plantilla' : 'Nueva Plantilla'
+                  }}
                 </h3>
               </div>
 
@@ -916,10 +954,16 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                 ></app-text-input>
 
                 <div class="mb-2">
-                  <label class="placeholder-label">Placeholders disponibles</label>
+                  <label class="placeholder-label"
+                    >Placeholders disponibles</label
+                  >
                   <div class="placeholder-grid">
                     @for (ph of placeholders; track ph.key) {
-                      <span class="placeholder-badge" [title]="'Insertar ' + ph.key" (click)="insertPlaceholder(ph.key)">
+                      <span
+                        class="placeholder-badge"
+                        [title]="'Insertar ' + ph.key"
+                        (click)="insertPlaceholder(ph.key)"
+                      >
                         {{ ph.key }}
                       </span>
                     }
@@ -940,11 +984,21 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
 
                 <div class="form-actions">
                   <app-auth-button
-                    [label]="editingTemplateId() ? 'ACTUALIZAR PLANTILLA' : 'CREAR PLANTILLA'"
+                    [label]="
+                      editingTemplateId()
+                        ? 'ACTUALIZAR PLANTILLA'
+                        : 'CREAR PLANTILLA'
+                    "
                     [disabled]="templateForm.invalid || templateSubmitting()"
                     [loading]="templateSubmitting()"
                   ></app-auth-button>
-                  <button type="button" class="form-cancel" (click)="cancelTemplateForm()">Cancelar</button>
+                  <button
+                    type="button"
+                    class="form-cancel"
+                    (click)="cancelTemplateForm()"
+                  >
+                    Cancelar
+                  </button>
                 </div>
               </form>
             </div>
@@ -959,8 +1013,16 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                   [ngModel]="templateSearch()"
                   (ngModelChange)="onTemplateSearch($event)"
                 />
-                <ion-button fill="outline" color="primary" (click)="openNewTemplate()" style="white-space: nowrap;">
-                  <ion-icon slot="start" name="document-text-outline"></ion-icon>
+                <ion-button
+                  fill="outline"
+                  color="primary"
+                  (click)="openNewTemplate()"
+                  style="white-space: nowrap;"
+                >
+                  <ion-icon
+                    slot="start"
+                    name="document-text-outline"
+                  ></ion-icon>
                   Nueva Plantilla
                 </ion-button>
               </div>
@@ -973,7 +1035,9 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                 <div class="template-empty">
                   <ion-icon name="document-text-outline"></ion-icon>
                   <p>No hay plantillas personalizadas.</p>
-                  <p class="sub">Crea tu primera plantilla para personalizar los mensajes.</p>
+                  <p class="sub">
+                    Crea tu primera plantilla para personalizar los mensajes.
+                  </p>
                 </div>
               } @else {
                 <div class="template-list">
@@ -984,22 +1048,46 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                           <h3>{{ tpl.key }}</h3>
                           @if (tpl.isActive) {
                             <span class="active-badge">
-                              <ion-icon name="checkmark-circle-outline" style="font-size: 12px;"></ion-icon>
+                              <ion-icon
+                                name="checkmark-circle-outline"
+                                style="font-size: 12px;"
+                              ></ion-icon>
                               Activa
                             </span>
                           }
                         </div>
                         <div class="template-card-actions">
                           @if (!tpl.isActive) {
-                            <button class="icon-btn activate" (click)="activateTemplate(tpl.id, tpl.key)" title="Activar como template oficial">
-                              <ion-icon name="checkmark-circle-outline" style="font-size: 16px;"></ion-icon>
+                            <button
+                              class="icon-btn activate"
+                              (click)="activateTemplate(tpl.id, tpl.key)"
+                              title="Activar como template oficial"
+                            >
+                              <ion-icon
+                                name="checkmark-circle-outline"
+                                style="font-size: 16px;"
+                              ></ion-icon>
                             </button>
                           }
-                          <button class="icon-btn edit" (click)="editTemplate(tpl)" title="Editar">
-                            <ion-icon name="create-outline" style="font-size: 16px;"></ion-icon>
+                          <button
+                            class="icon-btn edit"
+                            (click)="editTemplate(tpl)"
+                            title="Editar"
+                          >
+                            <ion-icon
+                              name="create-outline"
+                              style="font-size: 16px;"
+                            ></ion-icon>
                           </button>
-                          <button class="icon-btn delete" (click)="deleteTemplate(tpl.id, tpl.key)" title="Eliminar">
-                            <ion-icon name="trash-outline" style="font-size: 16px;"></ion-icon>
+                          <button
+                            class="icon-btn delete"
+                            (click)="deleteTemplate(tpl.id, tpl.key)"
+                            title="Eliminar"
+                          >
+                            <ion-icon
+                              name="trash-outline"
+                              style="font-size: 16px;"
+                            ></ion-icon>
                           </button>
                         </div>
                       </div>
@@ -1007,13 +1095,17 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                         <div class="template-meta">
                           @if (tpl.description) {
                             <div class="template-meta-item">
-                              <ion-icon name="information-circle-outline"></ion-icon>
+                              <ion-icon
+                                name="information-circle-outline"
+                              ></ion-icon>
                               <span>{{ tpl.description }}</span>
                             </div>
                           }
                           <div class="template-meta-item">
                             <ion-icon name="create-outline"></ion-icon>
-                            <span class="template-preview">{{ tpl.template }}</span>
+                            <span class="template-preview">{{
+                              tpl.template
+                            }}</span>
                           </div>
                         </div>
                       </div>
@@ -1030,7 +1122,10 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
                       <ion-icon name="chevron-back-outline"></ion-icon>
                       Anterior
                     </button>
-                    <span class="page-info">Pág {{ templatePage() }} de {{ templateTotalPages() }} · {{ templates().length }} plantillas</span>
+                    <span class="page-info"
+                      >Pág {{ templatePage() }} de {{ templateTotalPages() }} ·
+                      {{ templates().length }} plantillas</span
+                    >
                     <button
                       class="page-btn"
                       [disabled]="templatePage() >= templateTotalPages()"
@@ -1058,7 +1153,9 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
   readonly templateService = inject(MessageTemplateService);
   private readonly fb = inject(FormBuilder);
 
-  readonly segment = signal<'conexion' | 'historial' | 'plantillas'>('conexion');
+  readonly segment = signal<'conexion' | 'historial' | 'plantillas'>(
+    'conexion',
+  );
 
   readonly status = signal<
     'initializing' | 'qr' | 'ready' | 'disconnected' | 'error'
@@ -1118,20 +1215,33 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
 
   readonly statusLabel = () => {
     switch (this.status()) {
-      case 'ready': return 'Conectado';
-      case 'qr': return 'Esperando escaneo QR';
-      case 'initializing': return 'Inicializando...';
-      case 'disconnected': return 'Desconectado';
-      case 'error': return 'Error de autenticación';
+      case 'ready':
+        return 'Conectado';
+      case 'qr':
+        return 'Esperando escaneo QR';
+      case 'initializing':
+        return 'Inicializando...';
+      case 'disconnected':
+        return 'Desconectado';
+      case 'error':
+        return 'Error de autenticación';
     }
   };
 
   constructor() {
     addIcons({
-      logoWhatsapp, refreshOutline, logOutOutline, sendOutline,
-      chevronBackOutline, chevronForwardOutline,
-      documentTextOutline, createOutline, checkmarkCircleOutline,
-      arrowBackOutline, informationCircleOutline, trashOutline,
+      logoWhatsapp,
+      refreshOutline,
+      logOutOutline,
+      sendOutline,
+      chevronBackOutline,
+      chevronForwardOutline,
+      documentTextOutline,
+      createOutline,
+      checkmarkCircleOutline,
+      arrowBackOutline,
+      informationCircleOutline,
+      trashOutline,
     });
   }
 
@@ -1214,14 +1324,17 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
         .subscribe(async (res) => {
           this.fetchLogs(this.currentPage());
           if (res.status === 'Sent') {
-            new Audio('/assets/sounds/notification-pop.wav').play().catch(() => {});
+            new Audio('/assets/sounds/notification-pop.wav')
+              .play()
+              .catch(() => {});
           }
           const toast = await this.toastController.create({
-            message: res.status === 'Sent'
-              ? 'Mensaje enviado correctamente'
-              : res.status === 'Failed'
-                ? `Error: ${res.error ?? 'no se pudo enviar'}`
-                : 'Enviando...',
+            message:
+              res.status === 'Sent'
+                ? 'Mensaje enviado correctamente'
+                : res.status === 'Failed'
+                  ? `Error: ${res.error ?? 'no se pudo enviar'}`
+                  : 'Enviando...',
             duration: res.status === 'Sending' ? 2000 : 4000,
             color: res.status === 'Sent' ? 'success' : 'danger',
             position: 'bottom',
@@ -1232,7 +1345,8 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
   }
 
   async openTestModal() {
-    const { TestMessageModalComponent } = await import('./test-message-modal.component');
+    const { TestMessageModalComponent } =
+      await import('./test-message-modal.component');
     const modal = await this.modalCtrl.create({
       component: TestMessageModalComponent,
       cssClass: 'test-message-modal',
@@ -1254,8 +1368,8 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
         sentBy: 'Tú',
         createdAt: new Date().toISOString(),
       };
-      this.logs.update(list => [newLog, ...list]);
-      this.logsTotal.update(c => c + 1);
+      this.logs.update((list) => [newLog, ...list]);
+      this.logsTotal.update((c) => c + 1);
       (
         await this.toastController.create({
           message: 'Mensaje agregado a la cola',
@@ -1273,20 +1387,24 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
         this.status.set('disconnected');
         this.ready.set(false);
         this.qrDataUrl.set(null);
-        this.toastController.create({
-          message: 'Sesión de WhatsApp cerrada',
-          duration: 3000,
-          color: 'success',
-          position: 'bottom',
-        }).then((t) => t.present());
+        this.toastController
+          .create({
+            message: 'Sesión de WhatsApp cerrada',
+            duration: 3000,
+            color: 'success',
+            position: 'bottom',
+          })
+          .then((t) => t.present());
       },
       error: async () => {
-        (await this.toastController.create({
-          message: 'Error al cerrar sesión',
-          duration: 3000,
-          color: 'danger',
-          position: 'bottom',
-        })).present();
+        (
+          await this.toastController.create({
+            message: 'Error al cerrar sesión',
+            duration: 3000,
+            color: 'danger',
+            position: 'bottom',
+          })
+        ).present();
       },
     });
   }
@@ -1298,21 +1416,25 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
         this.status.set('initializing');
         this.qrDataUrl.set(null);
         this.restarting.set(false);
-        this.toastController.create({
-          message: 'Reiniciando cliente WhatsApp...',
-          duration: 3000,
-          color: 'tertiary',
-          position: 'bottom',
-        }).then((t) => t.present());
+        this.toastController
+          .create({
+            message: 'Reiniciando cliente WhatsApp...',
+            duration: 3000,
+            color: 'tertiary',
+            position: 'bottom',
+          })
+          .then((t) => t.present());
       },
       error: async () => {
         this.restarting.set(false);
-        (await this.toastController.create({
-          message: 'Error al reiniciar',
-          duration: 3000,
-          color: 'danger',
-          position: 'bottom',
-        })).present();
+        (
+          await this.toastController.create({
+            message: 'Error al reiniciar',
+            duration: 3000,
+            color: 'danger',
+            position: 'bottom',
+          })
+        ).present();
       },
     });
   }
@@ -1415,15 +1537,19 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
         this.editingTemplateId.set(null);
         this.templateSubmitting.set(false);
         this.loadTemplates();
-        (await this.toastController.create({
-          message: editId ? 'Plantilla actualizada' : 'Plantilla creada',
-          duration: 3000,
-          color: 'success',
-          position: 'bottom',
-        })).present();
+        (
+          await this.toastController.create({
+            message: editId ? 'Plantilla actualizada' : 'Plantilla creada',
+            duration: 3000,
+            color: 'success',
+            position: 'bottom',
+          })
+        ).present();
       },
       error: (err) => {
-        this.templateFormError.set(err.error?.message ?? err.message ?? 'Error al guardar plantilla');
+        this.templateFormError.set(
+          err.error?.message ?? err.message ?? 'Error al guardar plantilla',
+        );
         this.templateSubmitting.set(false);
       },
     });
@@ -1442,12 +1568,15 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
             this.templateService.delete(id).subscribe({
               next: () => this.loadTemplates(),
               error: async (err) => {
-                (await this.toastController.create({
-                  message: err.error?.message ?? 'Error al eliminar plantilla',
-                  duration: 3000,
-                  color: 'danger',
-                  position: 'bottom',
-                })).present();
+                (
+                  await this.toastController.create({
+                    message:
+                      err.error?.message ?? 'Error al eliminar plantilla',
+                    duration: 3000,
+                    color: 'danger',
+                    position: 'bottom',
+                  })
+                ).present();
               },
             });
           },
@@ -1470,20 +1599,24 @@ export class WhatsAppComponent implements OnInit, OnDestroy {
             this.templateService.setActive(id).subscribe({
               next: async () => {
                 this.loadTemplates();
-                (await this.toastController.create({
-                  message: `Plantilla "${key}" activada como oficial`,
-                  duration: 3000,
-                  color: 'success',
-                  position: 'bottom',
-                })).present();
+                (
+                  await this.toastController.create({
+                    message: `Plantilla "${key}" activada como oficial`,
+                    duration: 3000,
+                    color: 'success',
+                    position: 'bottom',
+                  })
+                ).present();
               },
               error: async (err) => {
-                (await this.toastController.create({
-                  message: err.error?.message ?? 'Error al activar plantilla',
-                  duration: 3000,
-                  color: 'danger',
-                  position: 'bottom',
-                })).present();
+                (
+                  await this.toastController.create({
+                    message: err.error?.message ?? 'Error al activar plantilla',
+                    duration: 3000,
+                    color: 'danger',
+                    position: 'bottom',
+                  })
+                ).present();
               },
             });
           },

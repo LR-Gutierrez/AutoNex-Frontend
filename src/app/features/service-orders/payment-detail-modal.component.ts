@@ -44,21 +44,20 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
     :host {
       --modal-accent: #22c55e;
       --modal-accent-bg: rgba(34, 197, 94, 0.12);
-      --modal-card-bg: rgba(255, 255, 255, 0.04);
-      --modal-card-border: rgba(255, 255, 255, 0.1);
     }
 
     ion-header ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
+      --background: var(--app-surface);
+      --color: var(--app-text);
       --border-color: transparent;
     }
     ion-footer ion-toolbar {
-      --background: rgba(18, 19, 32, 0.98);
-      --border-color: var(--modal-card-border);
+      --background: var(--app-surface);
+      --border-color: var(--app-border);
       padding: 4px 16px;
     }
     ion-content {
-      --background: rgba(14, 15, 26, 0.98);
+      --background: var(--app-bg);
     }
 
     .success-banner {
@@ -73,18 +72,18 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
     .success-banner .title {
       font-size: 18px;
       font-weight: 700;
-      color: #fff;
+      color: var(--app-text);
     }
     .success-banner .subtitle {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
       margin-top: 4px;
     }
 
     .amount-section {
       text-align: center;
       padding: 0 20px 20px;
-      border-bottom: 1px solid var(--modal-card-border);
+      border-bottom: 1px solid var(--app-border);
       margin-bottom: 16px;
     }
     .amount-label {
@@ -92,7 +91,7 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      color: rgba(255, 255, 255, 0.4);
+      color: var(--app-text-muted);
     }
 
     .detail-list {
@@ -106,13 +105,13 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
       justify-content: space-between;
       align-items: center;
       padding: 12px 16px;
-      background: var(--modal-card-bg);
-      border: 1px solid var(--modal-card-border);
+      background: var(--app-surface-2);
+      border: 1px solid var(--app-border);
       border-radius: 12px;
     }
     .detail-label {
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--app-text-muted);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -123,7 +122,7 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
     .detail-value {
       font-size: 14px;
       font-weight: 600;
-      color: #fff;
+      color: var(--app-text);
       text-align: right;
     }
     .detail-value .method-tag {
@@ -160,7 +159,7 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
     <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button (click)="dismiss()" color="light">
+          <ion-button (click)="dismiss()" color="medium">
             <ion-icon name="close-outline" slot="icon-only"></ion-icon>
           </ion-button>
         </ion-buttons>

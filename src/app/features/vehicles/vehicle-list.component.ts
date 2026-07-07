@@ -37,7 +37,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           (deleteConfirm)="deleteVehicle(vehicle.id)"
         >
           <a [routerLink]="['/vehicles', vehicle.id]" class="no-underline">
-            <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap hover:text-(--ion-color-danger) transition-colors">
+            <h3 class="m-0 text-sm font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap hover:text-(--ion-color-danger) transition-colors">
               {{ vehicle.brand }} {{ vehicle.model }}
             </h3>
           </a>

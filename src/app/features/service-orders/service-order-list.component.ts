@@ -118,7 +118,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
             }
           </div>
           <h3
-            class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap"
+            class="m-0 text-sm font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap"
           >
             {{ order.vehicleInfo }}
           </h3>

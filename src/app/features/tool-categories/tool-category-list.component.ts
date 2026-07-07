@@ -36,7 +36,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
           [deleteMessage]="getDeleteMessage(cat.name)"
           (deleteConfirm)="deleteCategory(cat.id)"
         >
-          <h3 class="m-0 text-base font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
+          <h3 class="m-0 text-sm font-bold text-(--app-text) text-ellipsis overflow-hidden whitespace-nowrap">
             {{ cat.name }}
           </h3>
         </app-list-item>

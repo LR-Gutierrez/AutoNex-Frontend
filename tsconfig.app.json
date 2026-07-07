@@ -17,6 +17,16 @@
     "src/app/pages/**",
     "src/app/components/**",
     "src/app/shared/components/status-badge/**",
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "src/test.ts",
+    "src/app/core/guards/role.guard.ts",
+    "src/app/core/models/inventory-movement.model.ts",
+    "src/app/features/message-templates/message-template-form.component.ts",
+    "src/app/features/message-templates/message-template-list.component.ts",
+    "src/app/features/recurring-expenses/recurring-expense-list.component.ts",
+    "src/app/shared/components/empty-state/empty-state.component.ts",
+    "src/app/shared/components/loading-spinner/loading-spinner.component.ts",
+    "src/app/shared/pipes/date-format.pipe.ts",
+    "src/app/shared/pipes/humanize.pipe.ts"
   ]
 }

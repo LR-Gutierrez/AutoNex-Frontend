@@ -19,7 +19,8 @@ import { AlertPreview } from '../../core/models/mileage-alert.model';
   styles: [
     `
       ion-header ion-toolbar {
-        --background: rgba(18, 19, 32, 0.98);
+        --background: var(--app-surface);
+        --color: var(--app-text);
         --border-color: transparent;
         --padding-start: 12px;
       }
@@ -29,11 +30,11 @@ import { AlertPreview } from '../../core/models/mileage-alert.model';
         font-weight: 700;
       }
       ion-footer ion-toolbar {
-        --background: rgba(18, 19, 32, 0.98);
-        --border-color: rgba(255, 255, 255, 0.1);
+        --background: var(--app-surface);
+        --border-color: var(--app-border);
         padding: 4px 16px;
       }
-      ion-content { --background: rgba(14, 15, 26, 0.98); }
+      ion-content { --background: var(--app-bg); }
 
       .modal-body { padding: 20px; }
 
@@ -45,14 +46,14 @@ import { AlertPreview } from '../../core/models/mileage-alert.model';
         font-size: 13px;
         font-weight: 600;
         color: var(--app-text-muted);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 1px solid var(--app-border);
         margin-bottom: 16px;
         cursor: pointer;
       }
 
       .alert-card {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--app-surface-2);
+        border: 1px solid var(--app-border);
         border-radius: 12px;
         padding: 16px;
         margin-bottom: 12px;
@@ -76,8 +77,8 @@ import { AlertPreview } from '../../core/models/mileage-alert.model';
       }
 
       .message-preview {
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
+        background: var(--app-surface-2);
+        border-radius: 12px;
         padding: 14px;
         font-size: 13px;
         line-height: 1.6;
