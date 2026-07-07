@@ -25,6 +25,7 @@ log.txt
 
 # Compiled output
 /dist
+/dist-electron
 /tmp
 /out-tsc
 /bazel-out
