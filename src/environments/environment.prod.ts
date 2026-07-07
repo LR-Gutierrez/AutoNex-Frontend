@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://192.168.2.110:5212/api',
-  hubUrl: 'http://192.168.2.110:5212/hubs',
+  apiUrl: 'https://autonex-backend-k6vb.onrender.com/api',
+  hubUrl: 'https://autonex-backend-k6vb.onrender.com/hubs',
 };
