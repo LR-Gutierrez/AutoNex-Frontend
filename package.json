@@ -1,7 +1,7 @@
 {
   "name": "autonex",
   "desktopName": "autonex",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "homepage": "https://autonex.app/",
   "main": "electron/main.js",
   "scripts": {
