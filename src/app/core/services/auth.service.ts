@@ -21,6 +21,7 @@ export class AuthService {
   }
 
   logout(): void {
+    new Audio('/assets/sounds/lock.mp3').play().catch(() => {});
     this.authState.clearAuth();
   }
 }
