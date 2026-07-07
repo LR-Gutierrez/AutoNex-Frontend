@@ -48,11 +48,7 @@ function startServer(wwwPath) {
 }
 
 async function createWindow() {
-  const resourcesPath = app.isPackaged
-    ? process.resourcesPath
-    : path.join(__dirname, '..');
-
-  const wwwPath = path.join(resourcesPath, 'www');
+  const wwwPath = path.join(__dirname, '..', 'www');
 
   if (!isDev) {
     await startServer(wwwPath);
@@ -69,7 +65,7 @@ async function createWindow() {
       nodeIntegration: false,
     },
     titleBarStyle: 'default',
-    icon: path.join(resourcesPath, 'www', 'assets', 'icon', 'favicon.png'),
+    icon: path.join(__dirname, '..', 'www', 'assets', 'icon', 'favicon.png'),
   });
 
   if (isDev) {
