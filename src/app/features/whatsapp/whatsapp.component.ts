@@ -405,9 +405,16 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
       font-weight: 700;
       color: var(--app-text);
     }
+    .template-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .template-search {
       flex: 1;
-      min-width: 180px;
+      min-width: 140px;
       max-width: 300px;
       padding: 8px 12px;
       border-radius: 10px;
@@ -1006,7 +1013,7 @@ import { AuthButtonComponent } from '../../shared/components/auth-button/auth-bu
             <!-- List -->
             <div class="template-header">
               <h2>Plantillas de mensajes</h2>
-              <div class="flex items-center gap-2">
+              <div class="template-header-actions">
                 <input
                   class="template-search"
                   placeholder="Buscar por clave o descripción..."

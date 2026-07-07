@@ -1,0 +1,590 @@
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/results.bin b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/results.bin
+new file mode 100644
+index 0000000..7ed749e
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/results.bin
+@@ -0,0 +1 @@
++o/bundleLibRuntimeToDirDebug
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity$1.dex b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity$1.dex
+new file mode 100644
+index 0000000..ddd0cfa
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity$1.dex differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity$2.dex b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity$2.dex
+new file mode 100644
+index 0000000..25208b0
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity$2.dex differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity.dex b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity.dex
+new file mode 100644
+index 0000000..a1b9a28
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/AuthActivity.dex differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/BiometricAuthenticatorConfig.dex b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/BiometricAuthenticatorConfig.dex
+new file mode 100644
+index 0000000..f837f86
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/BiometricAuthenticatorConfig.dex differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/NativeBiometric.dex b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/NativeBiometric.dex
+new file mode 100644
+index 0000000..0948204
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/bundleLibRuntimeToDirDebug_dex/ee/forgr/biometric/NativeBiometric.dex differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/desugar_graph.bin b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/desugar_graph.bin
+new file mode 100644
+index 0000000..3dc5ad7
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/5d11535311aff2b87297fc04ec7b958f/transformed/bundleLibRuntimeToDirDebug/desugar_graph.bin differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/e18f8b8d2b04c3e199e0b9c847adb751/results.bin b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/e18f8b8d2b04c3e199e0b9c847adb751/results.bin
+new file mode 100644
+index 0000000..0d259dd
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/e18f8b8d2b04c3e199e0b9c847adb751/results.bin
+@@ -0,0 +1 @@
++o/classes
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/e18f8b8d2b04c3e199e0b9c847adb751/transformed/classes/classes_dex/classes.dex b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/e18f8b8d2b04c3e199e0b9c847adb751/transformed/classes/classes_dex/classes.dex
+new file mode 100644
+index 0000000..2d9a51a
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/.transforms/e18f8b8d2b04c3e199e0b9c847adb751/transformed/classes/classes_dex/classes.dex differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/generated/updated_navigation_xml/debug/navigation/nav_graph.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/generated/updated_navigation_xml/debug/navigation/nav_graph.xml
+new file mode 100644
+index 0000000..8f4d007
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/generated/updated_navigation_xml/debug/navigation/nav_graph.xml
+@@ -0,0 +1,29 @@
++<navigation
++xmlns:android="http://schemas.android.com/apk/res/android"
++xmlns:app="http://schemas.android.com/apk/res-auto"
++xmlns:tools="http://schemas.android.com/tools"
++android:id="@+id/nav_graph"
++app:startDestination="@id/FirstFragment" >
++<fragment
++    android:id="@+id/FirstFragment"
++    android:name="ee.forgr.biometric.FirstFragment"
++    android:label="@string/first_fragment_label"
++    tools:layout="@layout/fragment_first" >
++
++    <action
++        android:id="@+id/action_FirstFragment_to_SecondFragment"
++        app:destination="@id/SecondFragment" />
++
++</fragment>
++<fragment
++    android:id="@+id/SecondFragment"
++    android:name="ee.forgr.biometric.SecondFragment"
++    android:label="@string/second_fragment_label"
++    tools:layout="@layout/fragment_second" >
++
++    <action
++        android:id="@+id/action_SecondFragment_to_FirstFragment"
++        app:destination="@id/FirstFragment" />
++
++</fragment>
++</navigation>
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..1414e56
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/AndroidManifest.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="ee.forgr.biometric.capacitornativebiometric" >
++
++    <uses-sdk android:minSdkVersion="24" />
++
++    <application>
++        <activity
++            android:name="ee.forgr.biometric.AuthActivity"
++            android:label="@string/title_activity_auth_activity"
++            android:theme="@style/AppTheme.Transparent" />
++    </application>
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json
+new file mode 100644
+index 0000000..3e94cfe
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aapt_friendly_merged_manifests/debug/processDebugManifest/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "ee.forgr.biometric.capacitornativebiometric",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aar_metadata/debug/writeDebugAarMetadata/aar-metadata.properties b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aar_metadata/debug/writeDebugAarMetadata/aar-metadata.properties
+new file mode 100644
+index 0000000..ba000c0
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/aar_metadata/debug/writeDebugAarMetadata/aar-metadata.properties
+@@ -0,0 +1,6 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=36
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
++coreLibraryDesugaringEnabled=false
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/android_res_source_set_path_map/debug/mapDebugSourceSetPaths/file-map.txt b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/android_res_source_set_path_map/debug/mapDebugSourceSetPaths/file-map.txt
+new file mode 100644
+index 0000000..1f9579a
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/android_res_source_set_path_map/debug/mapDebugSourceSetPaths/file-map.txt
+@@ -0,0 +1,9 @@
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-pngs-0 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/generated/res/pngs/debug
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-resValues-1 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/generated/res/resValues/debug
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-updated_navigation_xml-2 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/generated/updated_navigation_xml/debug
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-mergeDebugResources-3 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-mergeDebugResources-4 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-debug-5 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/merged_res/debug/mergeDebugResources
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-debug-6 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-debug-7 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/debug/res
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-main-8 /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/annotation_processor_list/debug/javaPreCompileDebug/annotationProcessors.json b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/annotation_processor_list/debug/javaPreCompileDebug/annotationProcessors.json
+new file mode 100644
+index 0000000..9e26dfe
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/annotation_processor_list/debug/javaPreCompileDebug/annotationProcessors.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar
+new file mode 100644
+index 0000000..89a4db7
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar
+new file mode 100644
+index 0000000..74ab3f3
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_r_class_jar/debug/generateDebugRFile/R.jar differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_symbol_list/debug/generateDebugRFile/R.txt b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_symbol_list/debug/generateDebugRFile/R.txt
+new file mode 100644
+index 0000000..86e1a86
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compile_symbol_list/debug/generateDebugRFile/R.txt
+@@ -0,0 +1,21 @@
++int dimen fab_margin 0x0
++int id FirstFragment 0x0
++int id SecondFragment 0x0
++int id action_FirstFragment_to_SecondFragment 0x0
++int id action_SecondFragment_to_FirstFragment 0x0
++int id nav_graph 0x0
++int id webview 0x0
++int layout activity_auth_acitivy 0x0
++int layout bridge_layout_main 0x0
++int navigation nav_graph 0x0
++int string first_fragment_label 0x0
++int string hello_first_fragment 0x0
++int string hello_second_fragment 0x0
++int string my_string 0x0
++int string next 0x0
++int string previous 0x0
++int string second_fragment_label 0x0
++int string title_activity_auth_activity 0x0
++int style AppTheme_AppBarOverlay 0x0
++int style AppTheme_PopupOverlay 0x0
++int style AppTheme_Transparent 0x0
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/layout_activity_auth_acitivy.xml.flat b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/layout_activity_auth_acitivy.xml.flat
+new file mode 100644
+index 0000000..97902c7
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/layout_activity_auth_acitivy.xml.flat differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/layout_bridge_layout_main.xml.flat b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/layout_bridge_layout_main.xml.flat
+new file mode 100644
+index 0000000..f20ea9f
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/layout_bridge_layout_main.xml.flat differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/navigation_nav_graph.xml.flat b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/navigation_nav_graph.xml.flat
+new file mode 100644
+index 0000000..e0290d6
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/compiled_local_resources/debug/compileDebugLibraryResources/out/navigation_nav_graph.xml.flat differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..dd9eac2
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1,3 @@
++#Tue Jul 07 12:12:41 VET 2026
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-main-6\:/layout/activity_auth_acitivy.xml=/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/layout/activity_auth_acitivy.xml
++ee.forgr.biometric.capacitornativebiometric.capgo-capacitor-native-biometric-main-6\:/layout/bridge_layout_main.xml=/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/layout/bridge_layout_main.xml
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/merged.dir/values/values.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/merged.dir/values/values.xml
+new file mode 100644
+index 0000000..2393ce3
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/merged.dir/values/values.xml
+@@ -0,0 +1,22 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <dimen name="fab_margin">16dp</dimen>
++    <string name="first_fragment_label">First Fragment</string>
++    <string name="hello_first_fragment">Hello first fragment</string>
++    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
++    <string name="my_string">Just a simple string</string>
++    <string name="next">Next</string>
++    <string name="previous">Previous</string>
++    <string name="second_fragment_label">Second Fragment</string>
++    <string name="title_activity_auth_activity">AuthActivity</string>
++    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
++    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
++    <style name="AppTheme.Transparent" parent="Theme.AppCompat.NoActionBar">
++        <item name="android:windowIsTranslucent">true</item>
++        <item name="android:windowBackground">@android:color/transparent</item>
++        <item name="android:windowContentOverlay">@null</item>
++        <item name="android:windowNoTitle">true</item>
++        <item name="android:windowIsFloating">true</item>
++        <item name="android:backgroundDimEnabled">false</item>
++    </style>
++</resources>
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..cf4cb41
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~:!&lt;dir>navigation"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res"><file path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res/values/colors.xml" qualifiers=""/><file path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res/values/styles.xml" qualifiers=""><style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/><style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/><style name="AppTheme.Transparent" parent="Theme.AppCompat.NoActionBar">
++        <item name="android:windowIsTranslucent">true</item>
++        <item name="android:windowBackground">@android:color/transparent</item>
++        <item name="android:windowContentOverlay">@null</item>
++        <item name="android:windowNoTitle">true</item>
++        <item name="android:windowIsFloating">true</item>
++        <item name="android:backgroundDimEnabled">false</item>
++    </style></file><file path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res/values/dimens.xml" qualifiers=""><dimen name="fab_margin">16dp</dimen></file><file path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res/values/strings.xml" qualifiers=""><string name="my_string">Just a simple string</string><string name="title_activity_auth_activity">AuthActivity</string><string name="first_fragment_label">First Fragment</string><string name="second_fragment_label">Second Fragment</string><string name="next">Next</string><string name="previous">Previous</string><string name="hello_first_fragment">Hello first fragment</string><string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string></file><file name="bridge_layout_main" path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res/layout/bridge_layout_main.xml" qualifiers="" type="layout"/><file name="activity_auth_acitivy" path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/res/layout/activity_auth_acitivy.xml" qualifiers="" type="layout"/></source></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~:!&lt;dir>navigation"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/debug/res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/generated/res/resValues/debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~:!&lt;dir>navigation"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/build/generated/res/resValues/debug"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/mergeDebugAssets/merger.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/mergeDebugAssets/merger.xml
+new file mode 100644
+index 0000000..070958b
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/mergeDebugAssets/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/assets"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/debug/assets"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
+new file mode 100644
+index 0000000..e6c30d2
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/incremental/mergeDebugJniLibFolders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/jniLibs"/></dataSet><dataSet config="debug" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/debug/jniLibs"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity$1.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity$1.class
+new file mode 100644
+index 0000000..deb706d
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity$1.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity$2.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity$2.class
+new file mode 100644
+index 0000000..b8ae9f8
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity$2.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity.class
+new file mode 100644
+index 0000000..f7678e1
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/AuthActivity.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/BiometricAuthenticatorConfig.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/BiometricAuthenticatorConfig.class
+new file mode 100644
+index 0000000..c7173b9
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/BiometricAuthenticatorConfig.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/NativeBiometric.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/NativeBiometric.class
+new file mode 100644
+index 0000000..2ca0ab1
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/ee/forgr/biometric/NativeBiometric.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/local_only_symbol_list/debug/parseDebugLocalResources/R-def.txt b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/local_only_symbol_list/debug/parseDebugLocalResources/R-def.txt
+new file mode 100644
+index 0000000..0a8fede
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/local_only_symbol_list/debug/parseDebugLocalResources/R-def.txt
+@@ -0,0 +1,23 @@
++R_DEF: Internal format may change without notice
++local
++dimen fab_margin
++id FirstFragment
++id SecondFragment
++id action_FirstFragment_to_SecondFragment
++id action_SecondFragment_to_FirstFragment
++id nav_graph
++id webview
++layout activity_auth_acitivy
++layout bridge_layout_main
++navigation nav_graph
++string first_fragment_label
++string hello_first_fragment
++string hello_second_fragment
++string my_string
++string next
++string previous
++string second_fragment_label
++string title_activity_auth_activity
++style AppTheme.AppBarOverlay
++style AppTheme.PopupOverlay
++style AppTheme.Transparent
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..f3e02b0
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/manifest_merge_blame_file/debug/processDebugManifest/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,21 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="ee.forgr.biometric.capacitornativebiometric" >
++4
++5    <uses-sdk android:minSdkVersion="24" />
++5-->INJECTED
++5-->INJECTED
++6
++7    <application>
++7-->/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:5:5-10:19
++8        <activity
++8-->/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:6:9-9:68
++9            android:name="ee.forgr.biometric.AuthActivity"
++9-->/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:7:13-59
++10            android:label="@string/title_activity_auth_activity"
++10-->/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:8:13-65
++11            android:theme="@style/AppTheme.Transparent" />
++11-->/home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:9:13-56
++12    </application>
++13
++14</manifest>
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml
+new file mode 100644
+index 0000000..1414e56
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="ee.forgr.biometric.capacitornativebiometric" >
++
++    <uses-sdk android:minSdkVersion="24" />
++
++    <application>
++        <activity
++            android:name="ee.forgr.biometric.AuthActivity"
++            android:label="@string/title_activity_auth_activity"
++            android:theme="@style/AppTheme.Transparent" />
++    </application>
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json
+new file mode 100644
+index 0000000..1cae7a1
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/navigation_json/debug/extractDeepLinksDebug/navigation.json
+@@ -0,0 +1,7 @@
++[
++  {
++    "name": "nav_graph",
++    "navigationXmlIds": [],
++    "deepLinks": []
++  }
++]
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt
+new file mode 100644
+index 0000000..08f4ebe
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/nested_resources_validation_report/debug/generateDebugResources/nestedResourcesValidationReport.txt
+@@ -0,0 +1 @@
++0 Warning/Error
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/layout/activity_auth_acitivy.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/layout/activity_auth_acitivy.xml
+new file mode 100644
+index 0000000..0f1f63a
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/layout/activity_auth_acitivy.xml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context="ee.forgr.biometric.AuthAcitivy">
++
++
++
++
++</androidx.coordinatorlayout.widget.CoordinatorLayout>
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/layout/bridge_layout_main.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/layout/bridge_layout_main.xml
+new file mode 100644
+index 0000000..56fec15
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/layout/bridge_layout_main.xml
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    xmlns:app="http://schemas.android.com/apk/res-auto"
++    xmlns:tools="http://schemas.android.com/tools"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    tools:context="com.getcapacitor.BridgeActivity"
++    >
++
++    <WebView
++        android:id="@+id/webview"
++        android:layout_width="fill_parent"
++        android:layout_height="fill_parent" />
++
++</androidx.coordinatorlayout.widget.CoordinatorLayout>
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/values/values.xml b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/values/values.xml
+new file mode 100644
+index 0000000..2393ce3
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/packaged_res/debug/packageDebugResources/values/values.xml
+@@ -0,0 +1,22 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <dimen name="fab_margin">16dp</dimen>
++    <string name="first_fragment_label">First Fragment</string>
++    <string name="hello_first_fragment">Hello first fragment</string>
++    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
++    <string name="my_string">Just a simple string</string>
++    <string name="next">Next</string>
++    <string name="previous">Previous</string>
++    <string name="second_fragment_label">Second Fragment</string>
++    <string name="title_activity_auth_activity">AuthActivity</string>
++    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
++    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
++    <style name="AppTheme.Transparent" parent="Theme.AppCompat.NoActionBar">
++        <item name="android:windowIsTranslucent">true</item>
++        <item name="android:windowBackground">@android:color/transparent</item>
++        <item name="android:windowContentOverlay">@null</item>
++        <item name="android:windowNoTitle">true</item>
++        <item name="android:windowIsFloating">true</item>
++        <item name="android:backgroundDimEnabled">false</item>
++    </style>
++</resources>
+\ No newline at end of file
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity$1.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity$1.class
+new file mode 100644
+index 0000000..deb706d
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity$1.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity$2.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity$2.class
+new file mode 100644
+index 0000000..b8ae9f8
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity$2.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity.class
+new file mode 100644
+index 0000000..f7678e1
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/AuthActivity.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/BiometricAuthenticatorConfig.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/BiometricAuthenticatorConfig.class
+new file mode 100644
+index 0000000..c7173b9
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/BiometricAuthenticatorConfig.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/NativeBiometric.class b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/NativeBiometric.class
+new file mode 100644
+index 0000000..2ca0ab1
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_dir/debug/bundleLibRuntimeToDirDebug/ee/forgr/biometric/NativeBiometric.class differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar
+new file mode 100644
+index 0000000..f798417
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/symbol_list_with_package_name/debug/generateDebugRFile/package-aware-r.txt b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/symbol_list_with_package_name/debug/generateDebugRFile/package-aware-r.txt
+new file mode 100644
+index 0000000..90cf5f1
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/intermediates/symbol_list_with_package_name/debug/generateDebugRFile/package-aware-r.txt
+@@ -0,0 +1,22 @@
++ee.forgr.biometric.capacitornativebiometric
++dimen fab_margin
++id FirstFragment
++id SecondFragment
++id action_FirstFragment_to_SecondFragment
++id action_SecondFragment_to_FirstFragment
++id nav_graph
++id webview
++layout activity_auth_acitivy
++layout bridge_layout_main
++navigation nav_graph
++string first_fragment_label
++string hello_first_fragment
++string hello_second_fragment
++string my_string
++string next
++string previous
++string second_fragment_label
++string title_activity_auth_activity
++style AppTheme_AppBarOverlay
++style AppTheme_PopupOverlay
++style AppTheme_Transparent
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/@capgo/capacitor-native-biometric/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..20cc1be
+--- /dev/null
++++ b/node_modules/@capgo/capacitor-native-biometric/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,26 @@
++-- Merging decision tree log ---
++manifest
++ADDED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:2:1-12:12
++INJECTED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:2:1-12:12
++	package
++		INJECTED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml
++	xmlns:android
++		ADDED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:2:11-69
++application
++ADDED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:5:5-10:19
++activity#ee.forgr.biometric.AuthActivity
++ADDED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:6:9-9:68
++	android:label
++		ADDED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:8:13-65
++	android:theme
++		ADDED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:9:13-56
++	android:name
++		ADDED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml:7:13-59
++uses-sdk
++INJECTED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml
++INJECTED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from /home/luis/development/AutoNex-Frontend/node_modules/@capgo/capacitor-native-biometric/android/src/main/AndroidManifest.xml
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin b/node_modules/@capgo/capacitor-native-biometric/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin
+new file mode 100644
+index 0000000..48cdb65
+Binary files /dev/null and b/node_modules/@capgo/capacitor-native-biometric/android/build/tmp/compileDebugJavaWithJavac/previous-compilation-data.bin differ
+diff --git a/node_modules/@capgo/capacitor-native-biometric/android/src/main/java/ee/forgr/biometric/AuthActivity.java b/node_modules/@capgo/capacitor-native-biometric/android/src/main/java/ee/forgr/biometric/AuthActivity.java
+index 8eafb39..5adada3 100644
+--- a/node_modules/@capgo/capacitor-native-biometric/android/src/main/java/ee/forgr/biometric/AuthActivity.java
++++ b/node_modules/@capgo/capacitor-native-biometric/android/src/main/java/ee/forgr/biometric/AuthActivity.java
+@@ -49,6 +49,7 @@ public class AuthActivity extends AppCompatActivity {
+     private int counter = 0;
+     private int authValidityDuration;
+     private BiometricAuthenticatorConfig authenticatorConfig;
++    private boolean usingFallbackNoCrypto = false;
+     private static final String AUTH_KEY_AUTH_TYPES = "auth_key_auth_types";
+ 
+     // Mirrors KeyProperties auth-type flags when older compile stubs omit symbols.
+@@ -158,7 +159,7 @@ public class AuthActivity extends AppCompatActivity {
+                         handleSetSecureCredentials(result);
+                     } else if ("getSecureCredentials".equals(mode) || "getSecureData".equals(mode)) {
+                         handleGetSecureCredentials(result);
+-                    } else if (authenticatorConfig.requiresCryptoObject) {
++                    } else if (authenticatorConfig.requiresCryptoObject && !usingFallbackNoCrypto) {
+                         if (!validateCryptoObject(result)) {
+                             finishActivity("error", 10, "Biometric security check failed");
+                             return;
+@@ -206,7 +207,14 @@ public class AuthActivity extends AppCompatActivity {
+             finishActivity("error", 0, "Biometric crypto object unavailable");
+             return;
+         }
+-        biometricPrompt.authenticate(promptInfo, cryptoObject);
++        try {
++            biometricPrompt.authenticate(promptInfo, cryptoObject);
++        } catch (IllegalArgumentException e) {
++            // Crypto-based authentication is not supported for Class 2 (Weak) biometrics
++            // (e.g. face unlock on some Android devices). Fall back to non-crypto auth.
++            usingFallbackNoCrypto = true;
++            biometricPrompt.authenticate(promptInfo);
++        }
+     }
+ 
+     void finishActivity() {

@@ -440,7 +440,7 @@ import { createListSearch } from '../../shared/utils/list-search.util';
     </app-list-shell>
   `,
 })
-export class ExchangeRateListComponent implements OnInit {
+export class ExchangeRateListComponent implements OnInit, OnDestroy {
   readonly exchangeRateService = inject(ExchangeRateService);
   private readonly authState = inject(AuthStateService);
   readonly isAdmin = computed(() => this.authState.role() === 'Admin');
