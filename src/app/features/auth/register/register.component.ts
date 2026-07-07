@@ -249,7 +249,7 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {}
 
   async onSubmit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.saving()) return;
 
     this.saving.set(true);
     this.errorMessage.set('');
@@ -263,6 +263,7 @@ export class RegisterComponent implements OnInit {
       phone: phone || undefined,
     }).subscribe({
       next: async () => {
+        this.saving.set(false);
         const alert = await this.alertController.create({
           header: 'Cuenta creada',
           message: 'El usuario ha sido registrado exitosamente.',

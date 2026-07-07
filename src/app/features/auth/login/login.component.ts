@@ -84,6 +84,7 @@ import { AuthButtonComponent } from '../../../shared/components/auth-button/auth
             label="INICIAR SESIÓN"
             icon="arrow-forward"
             [disabled]="loginForm.invalid"
+            [loading]="isSubmitting"
             [revealDelay]="200"
           ></app-auth-button>
 
@@ -505,7 +506,8 @@ import { AuthButtonComponent } from '../../../shared/components/auth-button/auth
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-  loading: any;
+  loadingOverlay: any;
+  isSubmitting = false;
   lastUser: { email: string; fullName: string } | null = null;
 
   constructor(
@@ -553,29 +555,31 @@ export class LoginComponent implements OnInit {
   }
 
   async signIn() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
+    if (this.loginForm.invalid || this.isSubmitting) return;
 
-      this.presentLoading().catch(() => {});
+    this.isSubmitting = true;
+    this.presentLoading().catch(() => {});
 
-      this.authService.login({ email, password }).subscribe({
-        next: async (response: AuthResponse) => {
-          this.saveLastUser(response);
-          await this.dismissLoading();
-          await this.handlePostLogin(email, password);
-        },
-        error: async (error) => {
-          await this.dismissLoading();
-          const message = error.message || 'Error al iniciar sesión';
-          await this.showErrorAlert(message);
-        },
-      });
-    }
+    const { email, password } = this.loginForm.value;
+    this.authService.login({ email, password }).subscribe({
+      next: async (response: AuthResponse) => {
+        this.isSubmitting = false;
+        this.saveLastUser(response);
+        await this.dismissLoading();
+        await this.handlePostLogin(email, password);
+      },
+      error: async (error) => {
+        this.isSubmitting = false;
+        await this.dismissLoading();
+        const message = error.message || 'Error al iniciar sesión';
+        await this.showErrorAlert(message);
+      },
+    });
   }
 
   private async dismissLoading() {
     try {
-      await this.loading?.dismiss();
+      await this.loadingOverlay?.dismiss();
     } catch {}
   }
 
@@ -588,6 +592,8 @@ export class LoginComponent implements OnInit {
   }
 
   async loginWithBiometric() {
+    if (this.isSubmitting) return;
+
     const authenticated = await this.biometricService.authenticate();
     if (!authenticated) return;
 
@@ -599,16 +605,19 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.isSubmitting = true;
     this.presentLoading().catch(() => {});
     this.authService
       .login({ email: credentials.username, password: credentials.password })
       .subscribe({
         next: async (response: AuthResponse) => {
+          this.isSubmitting = false;
           this.saveLastUser(response);
           await this.dismissLoading();
           this.router.navigate(['/dashboard']);
         },
         error: async (error) => {
+          this.isSubmitting = false;
           await this.dismissLoading();
           await this.showErrorAlert(error.message || 'Error al iniciar sesión');
         },
@@ -665,14 +674,14 @@ export class LoginComponent implements OnInit {
   }
 
   async presentLoading() {
-    this.loading = await this.loadingController.create({
+    this.loadingOverlay = await this.loadingController.create({
       cssClass: 'loader-container',
       message: 'Iniciando sesión...',
       duration: 10000,
       spinner: 'circular',
       backdropDismiss: false,
     });
-    await this.loading.present();
+    await this.loadingOverlay.present();
   }
 
   async showErrorAlert(message: string) {
