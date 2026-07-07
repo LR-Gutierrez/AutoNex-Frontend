@@ -151,6 +151,10 @@ import { AmountDisplayComponent } from '../../shared/components/amount-display/a
       background: rgba(251, 191, 36, 0.15);
       color: #fbbf24;
     }
+    .method-tag.Gratis {
+      background: rgba(244, 114, 182, 0.15);
+      color: #f472b6;
+    }
   `,
   template: `
     <ion-header class="ion-no-border">
@@ -249,6 +253,7 @@ export class PaymentDetailModalComponent {
     Transferencia: 'Transferencia Bancaria',
     EfectivoDolares: 'Efectivo Dólares',
     EfectivoBolivares: 'Efectivo Bolívares',
+    Gratis: 'Gratis',
   };
 
   constructor() {

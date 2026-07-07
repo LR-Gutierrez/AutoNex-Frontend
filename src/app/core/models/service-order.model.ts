@@ -24,7 +24,7 @@ export interface ServiceOrderResponse {
   laborPercentage?: number;
   laborCharge?: number;
   notes?: string;
-  paymentMethod?: string;
+  paymentMethod?: 'PagoMovil' | 'Transferencia' | 'EfectivoDolares' | 'EfectivoBolivares' | 'Gratis';
   operationNumber?: string;
   operationDate?: string;
   amountInBs?: number;
@@ -69,7 +69,7 @@ export interface UpdateServiceOrderStatusRequest {
 }
 
 export interface PayServiceOrderRequest {
-  paymentMethod: 'PagoMovil' | 'Transferencia' | 'EfectivoDolares' | 'EfectivoBolivares';
+  paymentMethod: 'PagoMovil' | 'Transferencia' | 'EfectivoDolares' | 'EfectivoBolivares' | 'Gratis';
   operationNumber?: string;
   operationDate?: string;
   amountInBs?: number;

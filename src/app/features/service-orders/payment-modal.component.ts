@@ -23,6 +23,8 @@ import {
   businessOutline,
   cashOutline,
   closeOutline,
+  giftOutline,
+  checkmarkCircleOutline,
 } from 'ionicons/icons';
 import { ExchangeRateService } from '../../core/services/exchange-rate.service';
 import { ServiceOrderService } from '../../core/services/service-order.service';
@@ -385,6 +387,14 @@ import { PayServiceOrderRequest } from '../../core/models/service-order.model';
             </div>
           }
 
+          <!-- Gratis -->
+          @if (method === 'Gratis') {
+            <p style="text-align:center;padding:24px 0;color:rgba(255,255,255,0.5);font-size:14px;">
+              <ion-icon name="checkmark-circle-outline" style="font-size:32px;display:block;margin:0 auto 8px;color:var(--modal-accent)"></ion-icon>
+              La orden se marcará como pagada sin costo.
+            </p>
+          }
+
           <!-- Efectivo Bolívares -->
           @if (method === 'EfectivoBolivares') {
             @if (bsRate(); as rate) {
@@ -493,10 +503,11 @@ export class PaymentModalComponent {
     { value: 'Transferencia', label: 'Transferencia Bancaria', icon: 'business-outline', desc: 'Transferencia desde banco' },
     { value: 'EfectivoDolares', label: 'Efectivo Dólares', icon: 'cash-outline', desc: 'Pago en efectivo en USD' },
     { value: 'EfectivoBolivares', label: 'Efectivo Bolívares', icon: 'cash-outline', desc: 'Pago en efectivo en Bs.' },
+    { value: 'Gratis', label: 'Gratis', icon: 'gift-outline', desc: 'Cortesía / $0' },
   ];
 
   constructor() {
-    addIcons({ phonePortraitOutline, businessOutline, cashOutline, closeOutline });
+    addIcons({ phonePortraitOutline, businessOutline, cashOutline, closeOutline, giftOutline, checkmarkCircleOutline });
   }
 
   private formatPrice(value: number): string {
@@ -546,7 +557,9 @@ export class PaymentModalComponent {
     const method = this.selectedMethod();
     if (!method) return;
 
-    if (method === 'PagoMovil' || method === 'Transferencia') {
+    if (method === 'Gratis') {
+      // no fields required
+    } else if (method === 'PagoMovil' || method === 'Transferencia') {
       if (!this.amountBs || this.parsePrice(this.amountBs) <= 0 || !this.operationNumber?.trim() || !this.operationDate) {
         this.error.set('Completa todos los campos requeridos');
         return;
