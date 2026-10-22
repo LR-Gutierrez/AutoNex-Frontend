@@ -1,6 +1,6 @@
-import { Injectable, OnDestroy, inject, signal, effect, untracked } from '@angular/core';
+import { Injectable, OnDestroy, inject, signal, computed, effect, untracked } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
-import { Observable, tap, catchError, throwError, takeUntil, Subject, debounceTime, switchMap } from 'rxjs';
+import { Observable, tap, catchError, throwError, takeUntil, Subject, debounceTime, switchMap, EMPTY } from 'rxjs';
 import { ApiService } from './api.service';
 import { SignalRService } from './signalr.service';
 import { DashboardResponse, DateRange, PresetKey } from '../models/dashboard.model';
@@ -79,6 +79,7 @@ export class DashboardService implements OnDestroy {
   private readonly api = inject(ApiService);
   private readonly signalr = inject(SignalRService);
   private readonly destroy$ = new Subject<void>();
+  private readonly reload$ = new Subject<void>();
 
   private readonly dataSignal = signal<DashboardResponse | null>(null);
   private readonly loadingSignal = signal(false);
@@ -89,19 +90,28 @@ export class DashboardService implements OnDestroy {
   readonly loading = this.loadingSignal.asReadonly();
   readonly error = this.errorSignal.asReadonly();
   readonly selectedRange = this.rangeSignal.asReadonly();
+  /** Primera carga: aún no hay datos que mostrar. */
+  readonly initialLoading = computed(() => this.loadingSignal() && !this.dataSignal());
+  /** Recarga con datos previos en pantalla (cambio de filtro, evento en vivo). */
+  readonly refreshing = computed(() => this.loadingSignal() && !!this.dataSignal());
 
   private previousPreset: PresetKey | null = null;
 
   constructor() {
     this.signalr.startConnection('dashboard');
 
-    this.signalr.on<void>('dashboard', 'dashboardUpdated')
+    // switchMap cancela la petición anterior si llega otra antes de responder,
+    // evitando que una respuesta vieja sobrescriba el filtro actual.
+    this.reload$
       .pipe(
-        debounceTime(500),
-        switchMap(() => this.load()),
+        switchMap(() => this.load().pipe(catchError(() => EMPTY))),
         takeUntil(this.destroy$),
       )
       .subscribe();
+
+    this.signalr.on<void>('dashboard', 'dashboardUpdated')
+      .pipe(debounceTime(500), takeUntil(this.destroy$))
+      .subscribe(() => this.reload$.next());
 
     effect(() => {
       const status = this.signalr.dashboardStatus();
@@ -133,7 +143,7 @@ export class DashboardService implements OnDestroy {
       this.signalr.joinGroup('dashboard', preset);
     }
 
-    this.load().subscribe();
+    this.reload$.next();
   }
 
   load(): Observable<DashboardResponse> {

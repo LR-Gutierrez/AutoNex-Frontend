@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { DashboardSkeletonComponent } from '../../shared/components/dashboard-skeleton/dashboard-skeleton.component';
@@ -15,7 +15,8 @@ import { PageTitleService } from '../../core/services/page-title.service';
 import { CurrencyFormatterPipe } from '../../shared/pipes/currency-formatter.pipe';
 import { PresetKey } from '../../core/models/dashboard.model';
 import { DailySummaryResponse } from '../../core/models/financial-record.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { catchError, finalize, of, switchMap } from 'rxjs';
 import { IonIcon } from '@ionic/angular/standalone';
 import { ChartComponent } from 'ng-apexcharts';
 import {
@@ -41,6 +42,15 @@ import {
 
     .fade-transition {
       animation: fadeIn 0.3s ease;
+    }
+
+    /* Mientras se recargan datos, el contenido se atenúa en lugar de desmontarse */
+    .refresh-fade {
+      transition: opacity 0.25s ease;
+    }
+
+    .refresh-fade.is-refreshing {
+      opacity: 0.55;
     }
 
     @keyframes fadeIn {
@@ -931,9 +941,7 @@ import {
       }
 
       <!-- Date Range Label -->
-      @if (
-        dashboard.selectedRange().preset !== 'today' && !dashboard.loading()
-      ) {
+      @if (dashboard.selectedRange().preset !== 'today') {
         <p
           class="text-xs text-(--app-text-muted) font-medium mb-5 flex items-center gap-2 max-sm:text-[10px]"
         >
@@ -945,7 +953,7 @@ import {
       }
 
       <!-- Loading -->
-      @if (dashboard.loading()) {
+      @if (dashboard.initialLoading()) {
         <div class="fade-transition">
           <app-dashboard-skeleton />
         </div>
@@ -966,7 +974,8 @@ import {
       <!-- Stats -->
       @else {
         <section
-          class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-6 fade-transition"
+          class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-6 fade-transition refresh-fade"
+          [class.is-refreshing]="dashboard.refreshing()"
         >
           <!-- Orders -->
           <div
@@ -1161,7 +1170,10 @@ import {
       }
 
       <!-- Detail Sections -->
-      <section class="min-w-0 fade-transition flex flex-col gap-4">
+      <section
+        class="min-w-0 fade-transition refresh-fade flex flex-col gap-4"
+        [class.is-refreshing]="dashboard.refreshing()"
+      >
         <!-- Full-width Line Chart -->
         <div class="detail-card bg-(--card-bg) rounded-2xl shadow-(--app-shadow) p-5">
           <div class="flex items-center justify-between mb-1">
@@ -1190,20 +1202,22 @@ import {
             </span>
           </p>
 
-          @if (chartOptions(); as opts) {
+          @if (chartSeries(); as series) {
             <apx-chart
-              [series]="opts.series"
-              [chart]="opts.chart"
-              [xaxis]="opts.xaxis"
-              [yaxis]="opts.yaxis"
-              [stroke]="opts.stroke"
-              [fill]="opts.fill"
-              [markers]="opts.markers"
-              [colors]="opts.colors"
-              [grid]="opts.grid"
-              [tooltip]="opts.tooltip"
-              [dataLabels]="opts.dataLabels"
-              [legend]="opts.legend"
+              class="refresh-fade"
+              [class.is-refreshing]="chartLoading()"
+              [series]="series"
+              [chart]="chartConfig.chart"
+              [xaxis]="chartConfig.xaxis"
+              [yaxis]="chartConfig.yaxis"
+              [stroke]="chartConfig.stroke"
+              [fill]="chartConfig.fill"
+              [markers]="chartConfig.markers"
+              [colors]="chartConfig.colors"
+              [grid]="chartConfig.grid"
+              [tooltip]="chartConfig.tooltip"
+              [dataLabels]="chartConfig.dataLabels"
+              [legend]="chartConfig.legend"
               style="height: 220px;"
             />
           } @else if (chartLoading()) {
@@ -1492,82 +1506,101 @@ export class DashboardComponent implements OnInit {
   protected readonly dailySummary = signal<DailySummaryResponse[]>([]);
   protected readonly chartLoading = signal(false);
 
-  protected readonly chartOptions = computed(() => {
+  /**
+   * Solo la serie cambia entre filtros. Si cambia cualquier otra opción,
+   * ng-apexcharts destruye y vuelve a crear la gráfica (parpadeo); con solo
+   * la serie hace updateSeries y anima la transición.
+   */
+  protected readonly chartSeries = computed<ApexAxisChartSeries | null>(() => {
     const data = this.dailySummary();
     if (!data.length) return null;
 
-    return {
-      series: [
-        { name: 'Ingresos', data: data.map(d => +d.income.toFixed(2)) },
-        { name: 'Egresos', data: data.map(d => +d.expense.toFixed(2)) },
-      ] as ApexAxisChartSeries,
-      chart: {
-        type: 'area',
-        height: 220,
-        toolbar: { show: false },
-        zoom: { enabled: false },
-        fontFamily: 'Inter, system-ui, sans-serif',
-        foreColor: 'rgba(255,255,255,0.35)',
-        background: 'transparent',
-        animations: { enabled: true, easing: 'easeinout', speed: 800 },
-      } as ApexChart,
-      colors: ['#4ade80', '#ff6b63'],
-      dataLabels: { enabled: false } as ApexDataLabels,
-      stroke: { curve: 'smooth', width: 2 } as ApexStroke,
-      fill: {
-        type: 'gradient',
-        gradient: {
-          shadeIntensity: 0,
-          opacityFrom: 0.4,
-          opacityTo: 0.05,
-          stops: [0, 100],
-        },
-      } as ApexFill,
-      markers: {
-        size: 3,
-        strokeWidth: 0,
-        hover: { size: 6 },
-      } as ApexMarkers,
-      xaxis: {
-        type: 'datetime',
-        categories: data.map(d => d.date),
-        axisBorder: { show: false },
-        axisTicks: { show: false },
-        labels: { style: { colors: 'rgba(255,255,255,0.3)', fontSize: '10px', fontWeight: 500 } },
-        crosshairs: { show: true, width: 1, stroke: { color: 'rgba(255,255,255,0.08)' } },
-      } as ApexXAxis,
-      yaxis: {
-        labels: {
-          style: { colors: 'rgba(255,255,255,0.3)', fontSize: '10px', fontWeight: 500 },
-          formatter: (val: number) => (val >= 1000 ? '$' + (val / 1000).toFixed(1) + 'k' : '$' + val.toFixed(0)),
-        },
-      } as ApexYAxis,
-      grid: {
-        borderColor: 'rgba(255,255,255,0.05)',
-        strokeDashArray: 4,
-        xaxis: { lines: { show: false } },
-        padding: { left: 0, right: 0 },
-      } as ApexGrid,
-      tooltip: {
-        theme: 'dark',
-        style: { fontSize: '12px', fontFamily: 'Inter, system-ui, sans-serif' },
-        y: {
-          formatter: (val: number) => '$' + val.toFixed(2),
-        },
-      } as ApexTooltip,
-      legend: { show: false } as ApexLegend,
-    };
+    return [
+      { name: 'Ingresos', data: data.map(d => ({ x: d.date, y: +d.income.toFixed(2) })) },
+      { name: 'Egresos', data: data.map(d => ({ x: d.date, y: +d.expense.toFixed(2) })) },
+    ];
   });
+
+  protected readonly chartConfig = {
+    chart: {
+      type: 'area',
+      height: 220,
+      toolbar: { show: false },
+      zoom: { enabled: false },
+      fontFamily: 'Inter, system-ui, sans-serif',
+      foreColor: 'rgba(255,255,255,0.35)',
+      background: 'transparent',
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800,
+        dynamicAnimation: { enabled: true, speed: 400 },
+      },
+    } as ApexChart,
+    colors: ['#4ade80', '#ff6b63'],
+    dataLabels: { enabled: false } as ApexDataLabels,
+    stroke: { curve: 'smooth', width: 2 } as ApexStroke,
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 0,
+        opacityFrom: 0.4,
+        opacityTo: 0.05,
+        stops: [0, 100],
+      },
+    } as ApexFill,
+    markers: {
+      size: 3,
+      strokeWidth: 0,
+      hover: { size: 6 },
+    } as ApexMarkers,
+    xaxis: {
+      type: 'datetime',
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: { style: { colors: 'rgba(255,255,255,0.3)', fontSize: '10px', fontWeight: 500 } },
+      crosshairs: { show: true, width: 1, stroke: { color: 'rgba(255,255,255,0.08)' } },
+    } as ApexXAxis,
+    yaxis: {
+      labels: {
+        style: { colors: 'rgba(255,255,255,0.3)', fontSize: '10px', fontWeight: 500 },
+        formatter: (val: number) => (val >= 1000 ? '$' + (val / 1000).toFixed(1) + 'k' : '$' + val.toFixed(0)),
+      },
+    } as ApexYAxis,
+    grid: {
+      borderColor: 'rgba(255,255,255,0.05)',
+      strokeDashArray: 4,
+      xaxis: { lines: { show: false } },
+      padding: { left: 0, right: 0 },
+    } as ApexGrid,
+    tooltip: {
+      theme: 'dark',
+      style: { fontSize: '12px', fontFamily: 'Inter, system-ui, sans-serif' },
+      y: {
+        formatter: (val: number) => '$' + val.toFixed(2),
+      },
+    } as ApexTooltip,
+    legend: { show: false } as ApexLegend,
+  };
 
   constructor() {
     addIcons({ statsChartOutline, walletOutline, syncOutline, flameOutline, pulseOutline, swapHorizontalOutline, speedometerOutline });
 
-    effect(() => {
-      const range = this.dashboard.selectedRange();
-      if (range) {
-        this.loadChartData(range.startDate, range.endDate);
-      }
-    });
+    // switchMap descarta respuestas de filtros anteriores si el usuario cambia rápido
+    toObservable(this.dashboard.selectedRange)
+      .pipe(
+        switchMap(range => {
+          this.chartLoading.set(true);
+          return this.financialRecordService.getDailySummary(range.startDate, range.endDate).pipe(
+            catchError(() => of(null)),
+            finalize(() => this.chartLoading.set(false)),
+          );
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe(data => {
+        if (data) this.dailySummary.set(data);
+      });
 
     this.refreshService.refresh$
       .pipe(takeUntilDestroyed())
@@ -1576,17 +1609,6 @@ export class DashboardComponent implements OnInit {
         this.exchangeRateService.getCurrentUsd().subscribe(r => this.usdRate.set(r.value));
         this.recurringExpenseService.loadDueToday().subscribe();
       });
-  }
-
-  private loadChartData(start: string, end: string): void {
-    this.chartLoading.set(true);
-    this.financialRecordService.getDailySummary(start, end).subscribe({
-      next: (data) => {
-        this.dailySummary.set(data);
-        this.chartLoading.set(false);
-      },
-      error: () => this.chartLoading.set(false),
-    });
   }
 
   ngOnInit() {
