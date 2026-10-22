@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal, untracked, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { DashboardSkeletonComponent } from '../../shared/components/dashboard-skeleton/dashboard-skeleton.component';
@@ -1202,7 +1202,7 @@ import {
             </span>
           </p>
 
-          @if (chartSeries(); as series) {
+          @if (chartInitialSeries(); as series) {
             <apx-chart
               class="refresh-fade"
               [class.is-refreshing]="chartLoading()"
@@ -1506,11 +1506,8 @@ export class DashboardComponent implements OnInit {
   protected readonly dailySummary = signal<DailySummaryResponse[]>([]);
   protected readonly chartLoading = signal(false);
 
-  /**
-   * Solo la serie cambia entre filtros. Si cambia cualquier otra opción,
-   * ng-apexcharts destruye y vuelve a crear la gráfica (parpadeo); con solo
-   * la serie hace updateSeries y anima la transición.
-   */
+  private readonly chart = viewChild(ChartComponent);
+
   protected readonly chartSeries = computed<ApexAxisChartSeries | null>(() => {
     const data = this.dailySummary();
     if (!data.length) return null;
@@ -1520,6 +1517,18 @@ export class DashboardComponent implements OnInit {
       { name: 'Egresos', data: data.map(d => ({ x: d.date, y: +d.expense.toFixed(2) })) },
     ];
   });
+
+  /**
+   * Serie con la que se crea la gráfica; solo cambia cuando la gráfica aparece
+   * o desaparece. Si el input [series] cambiara en cada filtro, ng-apexcharts
+   * llamaría a updateSeries, que no recalcula los ejes. Los cambios posteriores
+   * se aplican con updateOptions (ver constructor), que sí los recalcula y anima.
+   */
+  private readonly hasChartData = computed(() => this.chartSeries() !== null);
+
+  protected readonly chartInitialSeries = computed(() =>
+    this.hasChartData() ? untracked(this.chartSeries) : null,
+  );
 
   protected readonly chartConfig = {
     chart: {
@@ -1585,6 +1594,14 @@ export class DashboardComponent implements OnInit {
 
   constructor() {
     addIcons({ statsChartOutline, walletOutline, syncOutline, flameOutline, pulseOutline, swapHorizontalOutline, speedometerOutline });
+
+    effect(() => {
+      const series = this.chartSeries();
+      const chart = this.chart();
+      // chartInstance se asigna de forma asíncrona tras crear la gráfica; leerlo aquí
+      // hace que el effect vuelva a correr cuando existe y no se pierda una serie nueva.
+      if (series && chart?.chartInstance()) chart.updateOptions({ series }, false, true);
+    });
 
     // switchMap descarta respuestas de filtros anteriores si el usuario cambia rápido
     toObservable(this.dashboard.selectedRange)
