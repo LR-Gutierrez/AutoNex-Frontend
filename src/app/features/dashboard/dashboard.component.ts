@@ -1609,20 +1609,19 @@ export class DashboardComponent implements OnInit {
         switchMap(range => {
           this.chartLoading.set(true);
           return this.financialRecordService.getDailySummary(range.startDate, range.endDate).pipe(
-            catchError(() => of(null)),
+            // Ante un error se vacía la serie: mantener la anterior mostraría otro período como actual
+            catchError(() => of([])),
             finalize(() => this.chartLoading.set(false)),
           );
         }),
         takeUntilDestroyed(),
       )
-      .subscribe(data => {
-        if (data) this.dailySummary.set(data);
-      });
+      .subscribe(data => this.dailySummary.set(data));
 
     this.refreshService.refresh$
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
-        this.dashboard.load().subscribe();
+        this.dashboard.reload();
         this.exchangeRateService.getCurrentUsd().subscribe(r => this.usdRate.set(r.value));
         this.recurringExpenseService.loadDueToday().subscribe();
       });
@@ -1633,7 +1632,7 @@ export class DashboardComponent implements OnInit {
     this.pageTitle.subtitle.set(
       'Resumen operativo de la red de servicios AutoNex',
     );
-    this.dashboard.load().subscribe();
+    this.dashboard.reload();
     this.exchangeRateService.getCurrentUsd().subscribe(r => this.usdRate.set(r.value));
     this.recurringExpenseService.loadDueToday().subscribe();
   }

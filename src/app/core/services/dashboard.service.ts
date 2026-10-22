@@ -146,6 +146,11 @@ export class DashboardService implements OnDestroy {
     this.reload$.next();
   }
 
+  /** Recarga pasando por reload$, para que el switchMap descarte respuestas viejas. */
+  reload(): void {
+    this.reload$.next();
+  }
+
   load(): Observable<DashboardResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
